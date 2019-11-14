@@ -1,4 +1,4 @@
-# Website-002
+# Website-002-Snake
 
 **Ziele:** <br>
 - Es soll ein Multiplayer Snake Spiel mit Kommentarfunktion und Score Anzeige implementiert. 
