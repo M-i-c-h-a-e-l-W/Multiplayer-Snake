@@ -3,22 +3,6 @@ var user;
 time = new Date();
 window.onload = fethAllComments();
 
-function changeText(id) {
-    id.innerHTML = "Click on this text :-<red>)<red>";
-
-    fetch("http://localhost:8080/api/comments").then(function (ev) {
-        console.log(ev);
-        ev.json().then(function (test) {
-            var x = document.getElementsByTagName("p");
-            console.clear();
-            console.log("TagName of elements: " + x)
-            //document.getElementById(id).onclick = function() { "intro" }
-            console.log("TestID:" + test.id + "\n");
-            console.log(test);
-        })
-    });
-}
-
 function mOver(obj) {
     obj.innerHTML = "Thank You"
 }
@@ -91,15 +75,15 @@ function yourComment(newComment) {
 }
 
 function generiereKommentare() {
-  /*
-    var newComments = ["Dies", "ist", "ein", "Satz", "Test 9 Millionen 832 Tausend 732", "automatischgenerierter Kommentar"];
-    for (var i = 0; i <= 100; i++) {
-        newComments.push("generierter Kommentar Nr: " + (i + 1))
-    }
-    for (var commentCounter = 0; commentCounter < newComments.length; commentCounter++) {
-        yourComment(newComments[commentCounter]);
-    }
-    */
+    /*
+      var newComments = ["Dies", "ist", "ein", "Satz", "Test 9 Millionen 832 Tausend 732", "automatischgenerierter Kommentar"];
+      for (var i = 0; i <= 100; i++) {
+          newComments.push("generierter Kommentar Nr: " + (i + 1))
+      }
+      for (var commentCounter = 0; commentCounter < newComments.length; commentCounter++) {
+          yourComment(newComments[commentCounter]);
+      }
+      */
 
     fetch("http://localhost:8080/api/comments/generator", {
         method: 'POST',
@@ -112,6 +96,61 @@ function generiereKommentare() {
 }
 
 function fethAllComments(showDeleteComments) {
+    /*
+import Stomp from "stompjs";
+
+class InfoController{
+
+    static webSocket = null;
+    static listeners = [];
+    static domain = "solar.tost-soft.de/";
+    static wsUrl = "wss://"+this.domain+"ws";
+    static url = "https://"+this.domain+"api/solar/info";
+
+    static registerListener(func){
+        this.listeners.push(func);
+    }
+
+    static connectWebSocket(){
+        let socket = new WebSocket(this.wsUrl);
+        let ws = Stomp.over(socket);
+        let that = this;
+        ws.connect({}, (frame) => {
+            ws.subscribe("/info", (message)=> {
+                //console.log(message);
+                let status = JSON.parse(message.body)[0];
+                //this.setState({solarInfo:status});
+                this.listeners.forEach((func)=>{
+                    func(status);
+                })
+                //this.observersUpdate.map((observer) => observer(JSON.parse(message.body) as Category[]));
+            });
+            that.webSocket = ws;
+        }, function(error) {
+            console.log("STOMP error " + error);
+            that.webSocket = null;
+        });
+    }
+
+    static fetchInitData(){
+        return fetch(this.url,{ credentials: "include" });
+    }
+}
+
+export default InfoController;
+     */
+
+    var connection = new WebSocket('wss://localhost:8080/ws', ['soap', 'xmpp']);
+    connection.onopen = function () {
+        connection.send("Ping");
+    };
+    connection.onerror = function (error) {
+        console.log("WebSocket Error " + error);
+    };
+    connection.onmessage = function (e) {
+        console.log("Server: " + e.data);
+    };
+
     fetch("http://localhost:8080/api/comments").then(function (ev) {
         console.clear();
         console.log(ev);

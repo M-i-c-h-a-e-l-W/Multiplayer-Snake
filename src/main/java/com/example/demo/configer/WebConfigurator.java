@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.configer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
-class WebController implements WebMvcConfigurer {
+class WebConfigurator implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -24,6 +24,6 @@ public class WebController {
     public String web() {
         return "index.html";
     }
-    //public String js() {return "firstScript.js";}
+    //public String js() {return "commentHandler.js";}
 }
 */
