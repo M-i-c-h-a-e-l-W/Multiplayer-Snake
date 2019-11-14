@@ -11,7 +11,7 @@
 - Opensource Snake ist eingefügt grundlegend an einige Dinge angepasst
 
 **TODO:** <br>
-- Struktur schaffen
+~~- Struktur schaffen~~
 - Server/Client Kommunikation Testfunktion schreiben
 - Snake Score einfügen
 - Snake Multiplayerfähig
