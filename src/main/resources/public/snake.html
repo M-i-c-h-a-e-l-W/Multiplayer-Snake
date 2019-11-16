@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html> lang="en">
 <head>
+  <link rel="stylesheet" href="optic.css">
 
-  <title></title>
+  <title>Snake</title>
   <style>
     html, body {
       height: 100%;
       margin: 0;
     }
+
     body {
       background: black;
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
     canvas {
       border: 1px solid white;
-    }
-    whitecolor{
-      color: white;
     }
   </style>
 </head>
 <body>
+<white>
+  <br> Score:
+  <span id="Score">0</span>
+</white>
 <canvas width="1800" height="1200" id="game"></canvas>
+
+
 <script>
     var canvas = document.getElementById('game');
     var context = canvas.getContext('2d');
@@ -53,6 +59,7 @@
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
     }
+
     // game loop
     function loop() {
         requestAnimationFrame(loop);
@@ -61,23 +68,21 @@
             return;
         }
         count = 0;
-        context.clearRect(0,0,canvas.width,canvas.height);
+        context.clearRect(0, 0, canvas.width, canvas.height);
         // move snake by it's velocity
         snake.x += snake.dx;
         snake.y += snake.dy;
         // wrap snake position horizontally on edge of screen
         if (snake.x < 0) {
             snake.x = canvas.width - grid;
-        }
-        else if (snake.x >= canvas.width) {
+        } else if (snake.x >= canvas.width) {
             snake.x = 0;
         }
 
         // wrap snake position vertically on edge of screen
         if (snake.y < 0) {
             snake.y = canvas.height - grid;
-        }
-        else if (snake.y >= canvas.height) {
+        } else if (snake.y >= canvas.height) {
             snake.y = 0;
         }
         // keep track of where snake has been. front of the array is always the head
@@ -88,13 +93,13 @@
         }
         // draw apple
         context.fillStyle = 'red';
-        context.fillRect(apple.x, apple.y, grid-1, grid-1);
+        context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
         // draw snake one cell at a time
         context.fillStyle = 'green';
-        snake.cells.forEach(function(cell, index) {
+        snake.cells.forEach(function (cell, index) {
 
             // drawing 1 px smaller than the grid creates a grid effect in the snake body so you can see how long it is
-            context.fillRect(cell.x, cell.y, grid-1, grid-1);
+            context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
             // snake ate apple
             if (cell.x === apple.x && cell.y === apple.y) {
                 snake.maxCells++;
@@ -120,8 +125,9 @@
             }
         });
     }
+
     // listen to keyboard events to move the snake
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         // prevent snake from backtracking on itself by checking that it's
         // not already moving on the same axis (pressing left while moving
         // left won't do anything, and pressing right while moving left
@@ -150,6 +156,7 @@
     });
     // start the game
     requestAnimationFrame(loop);
+
 </script>
 </body>
 </html>

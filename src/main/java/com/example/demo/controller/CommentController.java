@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 @Transactional
 public class CommentController {
+    @Autowired
+    private SimpMessagingTemplate webSocket;
 
     @Autowired
     private CommentRepository commentRepository;
@@ -52,6 +56,8 @@ public class CommentController {
             System.out.println(commentRepository.findAll().get(i));
         }
         System.out.println("-----------------------------------------------------------------------------------------------------------");
+        webSocket.convertAndSend("/comment/new", comment);
+
         return ResponseEntity.ok().build();
     }
 
@@ -102,7 +108,7 @@ public class CommentController {
     public ResponseEntity getComments() {
 
         return ResponseEntity.ok(commentRepository.findAll());
-    } //(commentList);
+    }
 
 
     @GetMapping("/comments/delete")
@@ -115,7 +121,6 @@ public class CommentController {
         }).collect(Collectors.toList());
         commentRepository.deleteAll(comments);
         */
-
         commentRepository.deleteAllByTextContaining(suchAnfrage);
         return true;
     }
@@ -123,5 +128,9 @@ public class CommentController {
     @DeleteMapping("/comments/deleteById/{id}")
     public void deleteCommentById(@PathVariable("id") long ID) {
         commentRepository.deleteById(ID);
+        webSocket.convertAndSend("/comment/deleteById", "{id:"+ ID +"}");
     }
+
+
+
 }

@@ -27,6 +27,10 @@ blue {
     color: blue;
 }
 
+white{
+    color: white;
+    background-color: blue;
+}
 small {
     font-size: x-small;
 }
