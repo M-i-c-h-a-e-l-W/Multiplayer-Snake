@@ -39,6 +39,7 @@ public class CommentService {
         }
         List<Comment> ret = new ArrayList<>();
         commentRepository.saveAll(generatedComments).forEach(ret::add);
+
         return ret;
     }
 

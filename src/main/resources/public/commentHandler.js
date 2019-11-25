@@ -14,7 +14,6 @@ function connectWebSocket() {
     let that = this;
     ws.connect({}, (frame) => {
         ws.subscribe("/comment/new", (message) => {
-            console.log("FINALLY");
             console.log("WebSocket is Connected\nVariable Message: ", message);
             let commentJSONObject = JSON.parse(message.body);
             console.log(commentJSONObject.text);

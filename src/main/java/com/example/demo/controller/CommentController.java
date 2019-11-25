@@ -82,7 +82,12 @@ public class CommentController {
         }else{
             id = comments.get(comments.toArray().length-1).getId();
         }*/
-        return commentService.generateComment();
+        List<Comment> comments = commentService.generateComment();
+        for (int i = 0; i < comments.size(); i++) {
+            webSocket.convertAndSend("/comment/new", comments.get(i));
+        }
+
+        return comments;
     }
 
 /*
@@ -128,9 +133,8 @@ public class CommentController {
     @DeleteMapping("/comments/deleteById/{id}")
     public void deleteCommentById(@PathVariable("id") long ID) {
         commentRepository.deleteById(ID);
-        webSocket.convertAndSend("/comment/deleteById", "{id:"+ ID +"}");
+        webSocket.convertAndSend("/comment/deleteById", "{id:" + ID + "}");
     }
-
 
 
 }
