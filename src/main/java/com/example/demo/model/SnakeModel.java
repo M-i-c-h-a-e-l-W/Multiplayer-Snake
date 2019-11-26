@@ -2,8 +2,7 @@ package com.example.demo.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -13,6 +12,7 @@ public class SnakeModel {
     int Score = 0;
     int[] posX;
     int[] posY;
+    int playerNr;
     String direction;
-    String client;
+    UUID client;
 }

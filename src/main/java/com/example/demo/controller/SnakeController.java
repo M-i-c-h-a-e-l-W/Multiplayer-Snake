@@ -1,20 +1,36 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.SnakeModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/snake")
 public class SnakeController {
+    private List<SnakeModel> snakeModels = new ArrayList<>();
     private SnakeModel snakeModel;
+
     private int anzPlayer = 0;
 
-    @GetMapping("/snake/newGame")
-    public int insertPlayerIntoGame(@RequestParam String Session) {
+    @GetMapping("/newPlayer")
+    public ResponseEntity<SnakeModel> insertPlayerIntoGame() {
+        SnakeModel newPlayer = new SnakeModel();
 
-        return ++anzPlayer;
+        snakeModels.add(newPlayer);
+        snakeModels.get(anzPlayer).setClient(UUID.randomUUID());
+        snakeModels.get(anzPlayer).setPlayerNr(anzPlayer++);
+
+        return ResponseEntity.ok(snakeModels.get(anzPlayer-1));
     }
 
-    @GetMapping("/snake/changeDirection")
+    @GetMapping("/changeDirection")
     public int searchCommentWithArray(@RequestParam String changeD) {
 
         String[] snakeModelData = changeD.split(";");

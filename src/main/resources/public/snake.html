@@ -36,6 +36,17 @@
             ctx = canvas.getContext('2d');
             getPosition();
 
+            fetch("http://localhost:8080/api/snake/newPlayer", {
+                method: 'GET',
+                headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+            }).then(function (ev) {
+
+
+
+            }).catch((function (error) {
+                console.log("Error: ", error);
+            }));
+
             // Connection Backend & PlayerGetID from Backend
         } else {
             alert("I am sorry, but your browser is bullshit. It does not support the canvas tag.");

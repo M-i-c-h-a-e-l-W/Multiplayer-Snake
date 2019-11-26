@@ -9,7 +9,7 @@ public class WebSocketConfigurator implements  WebSocketMessageBrokerConfigurer 
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/comment/new","/comment/deleteById","/snake/changeDirection", "/snake/newGame");
+        config.enableSimpleBroker("/comment/new","/comment/deleteById","/snake/changeDirection", "/snake/newPlayer");
         //config.enableSimpleBroker("/comment/deleteById");
     }
 
