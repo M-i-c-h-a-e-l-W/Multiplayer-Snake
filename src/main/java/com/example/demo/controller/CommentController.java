@@ -133,7 +133,7 @@ public class CommentController {
     @DeleteMapping("/comments/deleteById/{id}")
     public void deleteCommentById(@PathVariable("id") long ID) {
         commentRepository.deleteById(ID);
-        webSocket.convertAndSend("/comment/deleteById", "{id:" + ID + "}");
+        webSocket.convertAndSend("/comment/deleteById", "{ \"id\": " + ID + " }");
     }
 
 

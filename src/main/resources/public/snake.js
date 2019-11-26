@@ -1,3 +1,38 @@
+window.onload = initialization();
+var canvas, ctx;
+
+function initialization(){
+    canvas = document.getElementById("canvas");
+    if(canvas.getContext)
+    {
+        ctx = canvas.getContext('2d');
+        drawSnakes();
+        // Connection Backend & PlayerGetID from Backend
+    }else {
+        alert("I am sorry, but your browser is bullshit. It does not support the canvas tag.");
+    }
+
+}
+
+function drawSnakes(){
+    ctx.fillRect(25, 25, 10, 10);
+    ctx.clearRect(27, 27, 5, 5);
+
+    ctx.fillStyle = "rgb(250,0,0)";
+
+    var x = 250;
+    var y = 250;
+    var width = 10;
+    var height = 10;
+
+    ctx.strokeStyle = "#ffffff";
+    ctx.fillRect(x, y, width, height);
+
+    ctx.strokeRect(x,y,width,height);
+    //ctx.clearRect(x,y,width,height);
+}
+
+
 /*
 console.log("JavaScript ist eingebunden!\n");
 var user;
@@ -257,7 +292,7 @@ function loescheKommentar(commentId) {
  */
 
 
-
+/*
 
 var canvas = document.getElementById('game');
 var context = canvas.getContext('2d');
@@ -384,3 +419,5 @@ document.addEventListener('keydown', function(e) {
 });
 // start the game
 requestAnimationFrame(loop);
+
+ */

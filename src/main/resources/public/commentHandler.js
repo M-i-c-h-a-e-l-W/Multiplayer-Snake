@@ -22,8 +22,8 @@ function connectWebSocket() {
             console.log("TEST: " + message);
         });
         ws.subscribe("/comment/deleteById", (message) => {
-            let commentJSONObjectID = JSON.parse(message.body);
             console.log("TEST: ", message);
+            let commentJSONObjectID = JSON.parse(message.body);
             document.getElementById("comment_" + commentJSONObjectID.id).remove();
         });
         that.webSocket = ws;
@@ -117,7 +117,7 @@ function durchsuchKommentare() {
     if (msg.toString().split("/d").length > 1) {
         deleteComments = true;
     }
-    //console.log("FUCKING SHOW DELETE: " + deleteComments + "\nLänge: " + msg.toString().split("/d").length);
+    //console.log("SHOW DELETE: " + deleteComments + "\nLänge: " + msg.toString().split("/d").length);
 
     msg = msg.toString().replace("/all/d", "/all");
     msg = msg.toString().replace("&/d", "");
@@ -143,8 +143,6 @@ function durchsuchKommentare() {
         method: 'GET',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {
-        //console.log(ev.text());
-
         document.getElementById('spanId').innerHTML = "";
         ev.json().then(function (searchResult) {
             var Ausgabe;
@@ -166,7 +164,7 @@ function durchsuchKommentare() {
                 Ausgabe = "";
                 for (a = 0; a < suchAnfragen.length; a++) {
 
-                    console.log("Gefundener Kommentar: " + searchResult.comments[i].text);
+                    //console.log("Gefundener Kommentar: " + searchResult.comments[i].text);
                     var splitResult = searchResult.comments[i].text.split(suchAnfragen[a]);
                     if (a !== 0) {
                         splitResult = Ausgabe.split(suchAnfragen[a]);
@@ -231,8 +229,8 @@ function loescheKommentar(commentId) {
         fetch("http://localhost:8080/api/comments/deleteById/" + commentId, {
             method: 'DELETE'
         }).then(function (ev) {
-            console.log(ev + "\n\nDie CommenId des Kommentars welcher gelöscht wird: " + commentId);
-            document.getElementById("comment_" + commentId).remove();
+            console.log(ev + "\n\nDie CommentId des Kommentars welcher gelöscht wird: " + commentId);
+            //document.getElementById("comment_" + commentId).remove();
 
             var e1 = parseInt(localStorage.getItem("AnzahlTreffer")) - 1;
             var e2 = parseInt(localStorage.getItem("AnzahlKommentare")) - 1;
