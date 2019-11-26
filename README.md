@@ -14,8 +14,11 @@
 - ~~Struktur schaffen~~
 - ~~Server/Client Kommunikation Testfunktion schreiben~~
 - ~~Server/Client Kommunikation neue Kommentare aus anderem Tab aktualisieren~~
-- gelöschte Kommentare aktualisieren
-- Unnötige Console.log entfernen
+- ~~gelöschte Kommentare aktualisieren~~
+- ~~generierte Kommentare aktualisieren~~
+- ~~Unnötige Console.log entfernen~~ dauerhaft Relevant
+- Snake Server/Clients Kommunikation erschaffen
+- Snake Oberflächen Layout erschaffen (Feld + Snake´s)
 - Snake Score einfügen
 - Snake Multiplayerfähig
 - Session mit Anmeldefunktion
