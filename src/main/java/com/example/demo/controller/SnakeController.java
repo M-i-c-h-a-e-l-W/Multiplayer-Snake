@@ -1,11 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.SnakeModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,9 @@ import java.util.UUID;
 @RequestMapping("/api/snake")
 public class SnakeController {
     private List<SnakeModel> snakeModels = new ArrayList<>();
-    private SnakeModel snakeModel;
+    private SnakeModel snakeModel = new SnakeModel();
+    @Autowired
+    private SimpMessagingTemplate webSocket;
 
     private int anzPlayer = 0;
 
@@ -25,21 +26,24 @@ public class SnakeController {
 
         snakeModels.add(newPlayer);
         snakeModels.get(anzPlayer).setClient(UUID.randomUUID());
-        snakeModels.get(anzPlayer).setPlayerNr(anzPlayer++);
+        snakeModels.get(anzPlayer).setPlayerNr(anzPlayer);
 
-        return ResponseEntity.ok(snakeModels.get(anzPlayer-1));
+        return ResponseEntity.ok(snakeModels.get(anzPlayer++));
     }
 
-    @GetMapping("/changeDirection")
-    public int searchCommentWithArray(@RequestParam String changeD) {
+    @PostMapping("/changeDirection")
+    public void snakeChangeDirection(@RequestParam String changeD) {
 
         String[] snakeModelData = changeD.split(";");
-        snakeDirection(snakeModelData[0]);
+        // snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
 
-        return 0;
+        System.out.println("Correct: " +  snakeDirection(snakeModelData[0], Integer.parseInt(snakeModelData[1])) );
+
+        webSocket.convertAndSend("/snake/changeDirection", snakeModelData[0]);
+        snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
     }
 
-    public boolean snakeDirection(String newDirection) {
+    public boolean snakeDirection(String newDirection, int playerNr) {
         /*
         if (newDirection == snakeModel.getDirection()) {
             return false;
@@ -54,28 +58,28 @@ public class SnakeController {
         }*/
 
         // Optimierung
-        if (newDirection.equals(snakeModel.getDirection())) {
+        if (newDirection.equals(snakeModels.get(playerNr).getDirection())) {
             return false;
         } else if (newDirection.equals("o")) {
-            if (snakeModel.getDirection().equals("u")) {
+            if (snakeModels.get(playerNr).getDirection().equals("u")) {
                 return false;
             } else {
                 return true;
             }
         } else if (newDirection.equals("u")) {
-            if (snakeModel.getDirection().equals("o")) {
+            if (snakeModels.get(playerNr).getDirection().equals("o")) {
                 return false;
             } else {
                 return true;
             }
         } else if (newDirection.equals("r")) {
-            if (snakeModel.getDirection().equals("l")) {
+            if (snakeModels.get(playerNr).getDirection().equals("l")) {
                 return false;
             } else {
                 return true;
             }
         } else if (newDirection.equals("l")) {
-            if (snakeModel.getDirection().equals("r")) {
+            if (snakeModels.get(playerNr).getDirection().equals("r")) {
                 return false;
             } else {
                 return true;

@@ -13,6 +13,6 @@ public class SnakeModel {
     int[] posX;
     int[] posY;
     int playerNr;
-    String direction;
+    String direction = "r";
     UUID client;
 }

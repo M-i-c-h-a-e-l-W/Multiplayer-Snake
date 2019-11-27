@@ -27,7 +27,7 @@
 
 <script>
     window.onload = initialization();
-    var canvas, ctx;
+    var canvas, ctx, playerNr = -1;
     var pause = false;
 
     function initialization() {
@@ -40,9 +40,11 @@
                 method: 'GET',
                 headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
             }).then(function (ev) {
-
-
-
+                console.log("Erzeugte Snake Klasse ohne JSON:\n\n" + ev.toString());
+                ev.json().then(function (snakeClass) {
+                    console.log("Erzeugte Snake Klasse:\n\n" + snakeClass.playerNr);
+                    playerNr = snakeClass.playerNr;
+                });
             }).catch((function (error) {
                 console.log("Error: ", error);
             }));
@@ -76,7 +78,7 @@
 
     function getPosition() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawSnakes("blue", i, i / 2);
+        drawSnakes("blue", i, 100);
 
         if (i === 999) {
             i = 0;
@@ -84,7 +86,8 @@
         i++;
 
         document.onkeydown = function (event) {
-            var keyCode;
+            var keyCode, changeD = "Error";
+            var sendKeyCode = false;
 
             if (event == null) {
                 keyCode = window.event.keyCode;
@@ -96,29 +99,38 @@
             switch (keyCode) {
                 // left
                 case 37:
+                    changeD = "l";
+                    sendKeyCode = true;
                     // action when pressing left key
                     break;
-
                 // up
                 case 38:
+                    changeD = "o";
+                    sendKeyCode = true;
                     // action when pressing up key
                     break;
 
                 // right
                 case 39:
+                    changeD = "r";
+                    sendKeyCode = true;
                     // action when pressing right key
                     break;
-
                 // down
                 case 40:
+                    changeD = "u";
+                    sendKeyCode = true;
+                    // action when pressing down key
+                    break;
+                case 8:
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     // action when pressing down key
                     break;
                 case 32:
-                    if(!pause){
+                    if (!pause) {
                         clearInterval(interval);
                         pause = true;
-                    }else{
+                    } else {
                         interval = setInterval(getPosition, 10);
                         pause = false;
                     }
@@ -127,12 +139,54 @@
                     console.log("Fehlerhafte Eingabe: " + keyCode);
                     break;
             }
+
+            if(sendKeyCode && changeD !== "Error"){
+                changeD+= ";" + playerNr.toString();
+                //changeD = changeD.toString();
+                fetch("http://localhost:8080/api/snake/changeDirection?changeD=" + changeD, {
+                    method: 'POST',
+                    headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+                }).then(function (ev) {
+                    if(ev.status !== 200){
+                        console.log("Errorcode: " + ev.status);
+                        console.log("ChangeD ist gleich: " + changeD);
+                    }
+
+                }).catch((function (error) {
+                    console.log("Error: ", error);
+                }));
+
+                changeD = "Error";
+                sendKeyCode = false;
+            }
         };
 
     }
 
     var interval = setInterval(getPosition, 10);
     //setTimeout(getPosition, 5);
+
+function connectWebSocketCHangeDirection() {
+    let socket = new WebSocket("ws://localhost:8080/ws");
+    let ws = Stomp.over(socket);
+    let that = this;
+    ws.connect({}, (frame) => {
+        ws.subscribe("/snake/changeDirection", (message) => {
+            console.log("WebSocket is Connected\nVariable Message: ", message);
+            let commentJSONObject = JSON.parse(message.body);
+            console.log(commentJSONObject.text);
+            insertComment(commentJSONObject.text);
+
+            console.log("TEST: " + message);
+        });
+
+        that.webSocket = ws;
+    }, function (error) {
+        console.log("STOMP error " + error);
+        //that.webSocket = null;
+    });
+
+}
 
 </script>
 <a href="index.html"> Hauptseite</a>
