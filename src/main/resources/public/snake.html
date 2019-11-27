@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <link rel="stylesheet" href="optic.css">
+  <script src="stomp.js"></script>
   <!--<script src="snake.js"></script> -->
   <title>Snake Game of MW</title>
 
@@ -34,7 +35,6 @@
         canvas = document.getElementById("canvas");
         if (canvas.getContext) {
             ctx = canvas.getContext('2d');
-            getPosition();
 
             fetch("http://localhost:8080/api/snake/newPlayer", {
                 method: 'GET',
@@ -53,7 +53,7 @@
         } else {
             alert("I am sorry, but your browser is bullshit. It does not support the canvas tag.");
         }
-
+        connectWebSocketChangeDirection();
     }
 
     var i = 0;
@@ -65,7 +65,7 @@
         var width = 10;
         var height = 10;
 
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1.5;
 
         ctx.strokeStyle = "#ffffff";
         ctx.fillRect(posX, posY, width, height);
@@ -78,6 +78,8 @@
 
     function getPosition() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        drawSnakes("blue", i-10 , 100);
         drawSnakes("blue", i, 100);
 
         if (i === 999) {
@@ -166,16 +168,15 @@
     var interval = setInterval(getPosition, 10);
     //setTimeout(getPosition, 5);
 
-function connectWebSocketCHangeDirection() {
+function connectWebSocketChangeDirection() {
     let socket = new WebSocket("ws://localhost:8080/ws");
     let ws = Stomp.over(socket);
     let that = this;
     ws.connect({}, (frame) => {
-        ws.subscribe("/snake/changeDirection", (message) => {
+        ws.subscribe("/snake/changeDofP", (message) => {
             console.log("WebSocket is Connected\nVariable Message: ", message);
             let commentJSONObject = JSON.parse(message.body);
-            console.log(commentJSONObject.text);
-            insertComment(commentJSONObject.text);
+            console.log(commentJSONObject.direction);
 
             console.log("TEST: " + message);
         });

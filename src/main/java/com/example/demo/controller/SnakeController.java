@@ -37,10 +37,16 @@ public class SnakeController {
         String[] snakeModelData = changeD.split(";");
         // snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
 
-        System.out.println("Correct: " +  snakeDirection(snakeModelData[0], Integer.parseInt(snakeModelData[1])) );
+        if (snakeDirection(snakeModelData[0], Integer.parseInt(snakeModelData[1]))) {
+            System.out.println("Correct: true");
+            snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
 
-        webSocket.convertAndSend("/snake/changeDirection", snakeModelData[0]);
-        snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
+            /// Klasse SnakeModel des Spielers mit der Richtungsänderung wird an alle Clients versendet
+            webSocket.convertAndSend("/snake/changeDofP", snakeModels.get(Integer.parseInt(snakeModelData[1])));
+
+        } else {
+            System.out.println("Correct: false");
+        }
     }
 
     public boolean snakeDirection(String newDirection, int playerNr) {
