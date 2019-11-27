@@ -28,7 +28,32 @@ public class SnakeController {
         snakeModels.get(anzPlayer).setClient(UUID.randomUUID());
         snakeModels.get(anzPlayer).setPlayerNr(anzPlayer);
 
+        snakeModels.get(anzPlayer).newSnake(0,0);
+
         return ResponseEntity.ok(snakeModels.get(anzPlayer++));
+    }
+
+    @GetMapping("/runGame")
+    public void runGame() throws InterruptedException {
+        while (true) {
+            // TODO Step 10 not 1
+            webSocket.convertAndSend("/snake/changeDofP", snakeModels);
+            for (int i = 0; i < anzPlayer; i++) {
+                if (snakeModels.get(i).getDirection().equals("u")) {
+                    snakeModels.get(i).addPosY( 10);
+
+                } else if (snakeModels.get(i).getDirection().equals("o")) {
+                    snakeModels.get(i).addPosY(-10);
+
+                } else if (snakeModels.get(i).getDirection().equals("l")) {
+                    snakeModels.get(i).addPosX(-10);
+
+                } else if (snakeModels.get(i).getDirection().equals("r")) {
+                    snakeModels.get(i).addPosX(10);
+                }
+            }
+            Thread.sleep(150);
+        }
     }
 
     @PostMapping("/changeDirection")
@@ -38,14 +63,15 @@ public class SnakeController {
         // snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
 
         if (snakeDirection(snakeModelData[0], Integer.parseInt(snakeModelData[1]))) {
-            System.out.println("Correct: true");
+            // System.out.println("Correct: true");
             snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
 
             /// Klasse SnakeModel des Spielers mit der Richtungsänderung wird an alle Clients versendet
-            webSocket.convertAndSend("/snake/changeDofP", snakeModels.get(Integer.parseInt(snakeModelData[1])));
+            //webSocket.convertAndSend("/snake/changeDofP", snakeModels.get(Integer.parseInt(snakeModelData[1])));
+            webSocket.convertAndSend("/snake/changeDofP", snakeModels);
 
         } else {
-            System.out.println("Correct: false");
+            // System.out.println("Correct: false");
         }
     }
 

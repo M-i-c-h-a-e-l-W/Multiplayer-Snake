@@ -28,9 +28,11 @@
 
 <script>
     window.onload = initialization();
-    var canvas, ctx, playerNr = -1;
+    var canvas, ctx, playerNr = -1, maxPlayer = 0;
     var pause = false;
+    var i = 0;
 
+    // TODO 2 SPieler pro Rechner soll möglich sein über "wasd"
     function initialization() {
         canvas = document.getElementById("canvas");
         if (canvas.getContext) {
@@ -54,9 +56,21 @@
             alert("I am sorry, but your browser is bullshit. It does not support the canvas tag.");
         }
         connectWebSocketChangeDirection();
+        startGame();
     }
 
-    var i = 0;
+    function startGame() {
+
+        fetch("http://localhost:8080/api/snake/runGame", {
+            method: 'GET',
+            headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+        }).then(function (ev) {
+
+
+        }).catch((function (error) {
+            console.log("Error: ", error);
+        }));
+    }
 
     function drawSnakes(color, posX, posY) {
         ctx.beginPath();
@@ -75,17 +89,21 @@
         ctx.closePath();
     }
 
+    var interval = setInterval(getPosition, 5);
 
     function getPosition() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        //ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        drawSnakes("blue", i-10 , 100);
+        /*
+
         drawSnakes("blue", i, 100);
 
         if (i === 999) {
             i = 0;
         }
         i++;
+
+         */
 
         document.onkeydown = function (event) {
             var keyCode, changeD = "Error";
@@ -142,14 +160,14 @@
                     break;
             }
 
-            if(sendKeyCode && changeD !== "Error"){
-                changeD+= ";" + playerNr.toString();
+            if (sendKeyCode && changeD !== "Error") {
+                changeD += ";" + playerNr.toString();
                 //changeD = changeD.toString();
                 fetch("http://localhost:8080/api/snake/changeDirection?changeD=" + changeD, {
                     method: 'POST',
                     headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
                 }).then(function (ev) {
-                    if(ev.status !== 200){
+                    if (ev.status !== 200) {
                         console.log("Errorcode: " + ev.status);
                         console.log("ChangeD ist gleich: " + changeD);
                     }
@@ -162,32 +180,52 @@
                 sendKeyCode = false;
             }
         };
-
     }
 
-    var interval = setInterval(getPosition, 10);
+
     //setTimeout(getPosition, 5);
 
-function connectWebSocketChangeDirection() {
-    let socket = new WebSocket("ws://localhost:8080/ws");
-    let ws = Stomp.over(socket);
-    let that = this;
-    ws.connect({}, (frame) => {
-        ws.subscribe("/snake/changeDofP", (message) => {
-            console.log("WebSocket is Connected\nVariable Message: ", message);
-            let commentJSONObject = JSON.parse(message.body);
-            console.log(commentJSONObject.direction);
+    function connectWebSocketChangeDirection() {
+        let socket = new WebSocket("ws://localhost:8080/ws");
+        let ws = Stomp.over(socket);
+        let that = this;
+        ws.connect({}, (frame) => {
+            ws.subscribe("/snake/changeDofP", (message) => {
+                console.log("WebSocket is Connected\nVariable Message: ", message);
+                let snakeNewData = JSON.parse(message.body);
 
-            console.log("TEST: " + message);
+                maxPlayer = snakeNewData.length;
+                console.log("MaxPlayer: " + maxPlayer);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
+                    console.log("Spielerrichtung: " + snakeNewData[0].direction);
+                    console.log("Richtung: " + snakeNewData[currentPlayer].direction + "\nSpielerNr: " + snakeNewData[currentPlayer].playerNr);
+
+                    console.log("posY Laenge: " + snakeNewData[currentPlayer].posY.length);
+
+
+                    if (snakeNewData[currentPlayer].posX === null || snakeNewData[currentPlayer].posY === null
+                        && snakeNewData[currentPlayer].posX.length === 0) {
+
+                    } else if (snakeNewData[currentPlayer].posX.length === snakeNewData[currentPlayer].posY.length) {
+                        for (var i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
+                            // TODO Snakefarbe anpassen an playerNr
+                            drawSnakes("blue", snakeNewData[currentPlayer].posX[i], snakeNewData[currentPlayer].posY[i]);
+                        }
+                    }
+                }
+
+
+            });
+
+            that.webSocket = ws;
+        }, function (error) {
+            console.log("STOMP error " + error);
+            //that.webSocket = null;
         });
 
-        that.webSocket = ws;
-    }, function (error) {
-        console.log("STOMP error " + error);
-        //that.webSocket = null;
-    });
-
-}
+    }
 
 </script>
 <a href="index.html"> Hauptseite</a>
