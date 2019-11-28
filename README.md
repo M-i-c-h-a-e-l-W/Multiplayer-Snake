@@ -23,3 +23,4 @@
 - ~~Snake Multiplayerfähig~~
 - ~~Snake Bugg "Länge der Schlange" beheben~~
 - Session mit Anmeldefunktion
+- parallelität beim Spielstand beachten mutex
