@@ -17,8 +17,9 @@
 - ~~gelöschte Kommentare aktualisieren~~
 - ~~generierte Kommentare aktualisieren~~
 - ~~Unnötige Console.log entfernen~~ dauerhaft Relevant
-- Snake Server/Clients Kommunikation erschaffen
-- Snake Oberflächen Layout erschaffen (Feld + Snake´s)
+- ~~Snake Server/Clients Kommunikation erschaffen~~
+- ~~Snake Oberflächen Layout erschaffen (Feld + Snake´s)~~
 - Snake Score einfügen
-- Snake Multiplayerfähig
+- ~~Snake Multiplayerfähig~~
+- ~~Snake Bugg "Länge der Schlange" beheben~~
 - Session mit Anmeldefunktion
