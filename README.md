@@ -21,5 +21,5 @@
 - ~~Snake Oberflächen Layout erschaffen (Feld + Snake´s)~~
 - Snake Score einfügen
 - ~~Snake Multiplayerfähig~~
-- ~~Snake Bugg "Länge der Schlange" beheben~
+- ~~Snake Bugg "Länge der Schlange" beheben~~
 - Session mit Anmeldefunktion
