@@ -36,23 +36,28 @@ public class SnakeController {
     @GetMapping("/runGame")
     public void runGame() throws InterruptedException {
         while (true) {
+            Thread.sleep(150);
             // TODO Step 10 not 1
             webSocket.convertAndSend("/snake/changeDofP", snakeModels);
             for (int i = 0; i < anzPlayer; i++) {
                 if (snakeModels.get(i).getDirection().equals("u")) {
                     snakeModels.get(i).addPosY( 10);
+                    snakeModels.get(i).addPosX( 0);
 
                 } else if (snakeModels.get(i).getDirection().equals("o")) {
                     snakeModels.get(i).addPosY(-10);
+                    snakeModels.get(i).addPosX( 0);
 
                 } else if (snakeModels.get(i).getDirection().equals("l")) {
                     snakeModels.get(i).addPosX(-10);
+                    snakeModels.get(i).addPosY( 0);
 
                 } else if (snakeModels.get(i).getDirection().equals("r")) {
                     snakeModels.get(i).addPosX(10);
+                    snakeModels.get(i).addPosY( 0);
                 }
             }
-            Thread.sleep(150);
+
         }
     }
 

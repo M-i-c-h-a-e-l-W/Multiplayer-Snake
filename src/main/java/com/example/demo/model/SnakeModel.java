@@ -27,19 +27,19 @@ public class SnakeModel {
     public void addPosX(int x) {
         posX.add(posX.get(posX.size() - 1) + x);
         if (posX.size() > Score) {
-            posX.remove(posX.size() - Score);
+            posX.remove(posX.size() - Score-1);
         }
 
-        System.out.println("X: " + posX);
+        //System.out.println("X: " + posX);
     }
 
     public void addPosY(int y) {
         posY.add(posY.get(posY.size() - 1) + y);
         if (posY.size() > Score) {
-            posY.remove(posY.size() - Score);
+            posY.remove(posY.size() - Score-1);
         }
 
-        System.out.println("Y: " + posY);
+        //System.out.println("Y: " + posY);
     }
 
     public void changePosX(int index, int wertX) {
