@@ -19,6 +19,7 @@ public class SnakeController {
     private SimpMessagingTemplate webSocket;
 
     private int anzPlayer = 0;
+    private boolean isRunning = false;
 
     @GetMapping("/newPlayer")
     public ResponseEntity<SnakeModel> insertPlayerIntoGame() {
@@ -27,34 +28,41 @@ public class SnakeController {
         snakeModels.add(newPlayer);
         snakeModels.get(anzPlayer).setClient(UUID.randomUUID());
         snakeModels.get(anzPlayer).setPlayerNr(anzPlayer);
-
-        snakeModels.get(anzPlayer).newSnake(0,0);
+        if(anzPlayer == 0){
+            isRunning = true;
+        }
+        snakeModels.get(anzPlayer).newSnake(0, 0);
 
         return ResponseEntity.ok(snakeModels.get(anzPlayer++));
     }
 
     @GetMapping("/runGame")
     public void runGame() throws InterruptedException {
+        if(isRunning){
+            return;
+        }
+
         while (true) {
-            Thread.sleep(150);
+            Thread.sleep(100);
+            // TODO no Sleep
             // TODO Step 10 not 1
             webSocket.convertAndSend("/snake/changeDofP", snakeModels);
             for (int i = 0; i < anzPlayer; i++) {
                 if (snakeModels.get(i).getDirection().equals("u")) {
-                    snakeModels.get(i).addPosY( 10);
-                    snakeModels.get(i).addPosX( 0);
+                    snakeModels.get(i).addPosY(10);
+                    snakeModels.get(i).addPosX(0);
 
                 } else if (snakeModels.get(i).getDirection().equals("o")) {
                     snakeModels.get(i).addPosY(-10);
-                    snakeModels.get(i).addPosX( 0);
+                    snakeModels.get(i).addPosX(0);
 
                 } else if (snakeModels.get(i).getDirection().equals("l")) {
                     snakeModels.get(i).addPosX(-10);
-                    snakeModels.get(i).addPosY( 0);
+                    snakeModels.get(i).addPosY(0);
 
                 } else if (snakeModels.get(i).getDirection().equals("r")) {
                     snakeModels.get(i).addPosX(10);
-                    snakeModels.get(i).addPosY( 0);
+                    snakeModels.get(i).addPosY(0);
                 }
             }
 

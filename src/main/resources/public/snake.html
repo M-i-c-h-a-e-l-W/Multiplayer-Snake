@@ -30,7 +30,6 @@
     window.onload = initialization();
     var canvas, ctx, playerNr = -1, maxPlayer = 0;
     var pause = false;
-    var i = 0;
 
     // TODO 2 SPieler pro Rechner soll möglich sein über "wasd"
     function initialization() {
@@ -211,7 +210,8 @@
                     } else if (snakeNewData[currentPlayer].posX.length === snakeNewData[currentPlayer].posY.length) {
                         for (var i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
                             // TODO Snakefarbe anpassen an playerNr
-                            drawSnakes("blue", snakeNewData[currentPlayer].posX[i], snakeNewData[currentPlayer].posY[i]);
+                            drawSnakes(snakeNewData[currentPlayer].playerColor, snakeNewData[currentPlayer].posX[i], snakeNewData[currentPlayer].posY[i]);
+
                         }
                     }
                 }
