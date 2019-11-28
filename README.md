@@ -19,6 +19,7 @@
 - ~~Unnötige Console.log entfernen~~ dauerhaft Relevant
 - ~~Snake Server/Clients Kommunikation erschaffen~~
 - ~~Snake Oberflächen Layout erschaffen (Feld + Snake´s)~~
+- ~~unterschiedliche Random Snake Farben einfügen~~
 - Snake Score einfügen
 - ~~Snake Multiplayerfähig~~
 - ~~Snake Bugg "Länge der Schlange" beheben~~
