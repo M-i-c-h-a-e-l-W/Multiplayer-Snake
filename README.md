@@ -20,9 +20,10 @@
 - ~~Snake Server/Clients Kommunikation erschaffen~~
 - ~~Snake Oberflächen Layout erschaffen (Feld + Snake´s)~~
 - ~~unterschiedliche Random Snake Farben einfügen~~
-- ~~currentMilis anstatt Sleep()
-- Snake Score einfügen
+- ~~currentMilis anstatt Sleep()~~
+- ~~Snake Score einfügen~~
 - ~~Snake Multiplayerfähig~~
 - ~~Snake Bugg "Länge der Schlange" beheben~~
+- Snake schadne durch andere SPieler und sich selbst
 - Session mit Anmeldefunktion
 - parallelität beim Spielstand beachten mutex
