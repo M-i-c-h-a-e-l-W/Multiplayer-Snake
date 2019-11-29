@@ -33,7 +33,7 @@ public class SnakeController {
         snakeModels.get(anzPlayer).setPlayerNr(anzPlayer);
 
         snakeModels.get(anzPlayer).newSnake(0, 0);
-        webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
+        //webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
 
         return ResponseEntity.ok(snakeModels.get(anzPlayer++));
     }
@@ -45,6 +45,7 @@ public class SnakeController {
         }
         isRunning = true;
         snakeFodder.setNewPosition();
+        webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
 
         long time;
 
