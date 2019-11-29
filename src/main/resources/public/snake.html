@@ -24,11 +24,14 @@
 
 <body>
 
+
 <canvas width="1000" height="600" id="canvas" style="border:5px solid #000000;"></canvas>
+
 
 <script>
     window.onload = initialization();
     var canvas, ctx, playerNr = -1, maxPlayer = 0;
+    var fodderX = 100, fodderY = 100;
     var pause = false;
 
     // TODO 2 SPieler pro Rechner soll möglich sein über "wasd"
@@ -36,26 +39,32 @@
         canvas = document.getElementById("canvas");
         if (canvas.getContext) {
             ctx = canvas.getContext('2d');
+            connectWebSocketChangeDirection(()=>{
+                fetch("http://localhost:8080/api/snake/newPlayer", {
+                    method: 'GET',
+                    headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+                }).then(function (ev) {
+                    if(ev.status !== 200){
+                        console.log("Error: not 200");
+                        return;
+                    }
+                    console.log("Erzeugte Snake Klasse ohne JSON:\n\n" + ev.toString());
+                    ev.json().then(function (snakeClass) {
+                        console.log("Erzeugte Snake Klasse:\n\n" + snakeClass.playerNr);
+                        playerNr = snakeClass.playerNr;
+                    });
+                    startGame();
+                }).catch((function (error) {
+                    console.log("Error: ", error);
+                }));
 
-            fetch("http://localhost:8080/api/snake/newPlayer", {
-                method: 'GET',
-                headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
-            }).then(function (ev) {
-                console.log("Erzeugte Snake Klasse ohne JSON:\n\n" + ev.toString());
-                ev.json().then(function (snakeClass) {
-                    console.log("Erzeugte Snake Klasse:\n\n" + snakeClass.playerNr);
-                    playerNr = snakeClass.playerNr;
-                });
-            }).catch((function (error) {
-                console.log("Error: ", error);
-            }));
+            });
 
             // Connection Backend & PlayerGetID from Backend
         } else {
             alert("I am sorry, but your browser is bullshit. It does not support the canvas tag.");
         }
-        connectWebSocketChangeDirection();
-        startGame();
+
     }
 
     function startGame() {
@@ -184,24 +193,33 @@
 
     //setTimeout(getPosition, 5);
 
-    function connectWebSocketChangeDirection() {
+    function connectWebSocketChangeDirection(succesFunction) {
         let socket = new WebSocket("ws://localhost:8080/ws");
         let ws = Stomp.over(socket);
         let that = this;
         ws.connect({}, (frame) => {
+            ws.subscribe("/snake/fodderOfSnake", (message) => {
+                let newFodder = JSON.parse(message.body);
+                fodderX = newFodder.posX;
+                fodderY = newFodder.posY;
+                console.log("NewFodder: ", message)
+
+            });
             ws.subscribe("/snake/changeDofP", (message) => {
-                console.log("WebSocket is Connected\nVariable Message: ", message);
+                // console.log("WebSocket is Connected\nVariable Message: ", message);
                 let snakeNewData = JSON.parse(message.body);
 
                 maxPlayer = snakeNewData.length;
                 console.log("MaxPlayer: " + maxPlayer);
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
-                    console.log("Spielerrichtung: " + snakeNewData[0].direction);
-                    console.log("Richtung: " + snakeNewData[currentPlayer].direction + "\nSpielerNr: " + snakeNewData[currentPlayer].playerNr);
+                drawSnakes("#FF0000", fodderX, fodderY);
 
-                    console.log("posY Laenge: " + snakeNewData[currentPlayer].posY.length);
+                for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
+                    //console.log("Spielerrichtung: " + snakeNewData[0].direction);
+                    //console.log("Richtung: " + snakeNewData[currentPlayer].direction + "\nSpielerNr: " + snakeNewData[currentPlayer].playerNr);
+
+                    //console.log("posY Laenge: " + snakeNewData[currentPlayer].posY.length);
 
 
                     if (snakeNewData[currentPlayer].posX === null || snakeNewData[currentPlayer].posY === null
@@ -215,11 +233,9 @@
                         }
                     }
                 }
-
-
             });
-
             that.webSocket = ws;
+            succesFunction();
         }, function (error) {
             console.log("STOMP error " + error);
             //that.webSocket = null;
@@ -228,7 +244,8 @@
     }
 
 </script>
-<a href="index.html"> Hauptseite</a>
+<br>
+<a href="index.html"> Hauptseite</a> Dies ist eine Testausgabe
 
 </body>
 </html>

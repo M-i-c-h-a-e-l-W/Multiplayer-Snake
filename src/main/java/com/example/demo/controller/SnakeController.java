@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.SnakeFodder;
 import com.example.demo.model.SnakeModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +15,14 @@ import java.util.UUID;
 @RequestMapping("/api/snake")
 public class SnakeController {
     private List<SnakeModel> snakeModels = new ArrayList<>();
+    private SnakeFodder snakeFodder = new SnakeFodder();
     private SnakeModel snakeModel = new SnakeModel();
     @Autowired
     private SimpMessagingTemplate webSocket;
 
     private int anzPlayer = 0;
     private boolean isRunning = false;
+    int kästchenGröße = 10;
 
     @GetMapping("/newPlayer")
     public ResponseEntity<SnakeModel> insertPlayerIntoGame() {
@@ -28,10 +31,9 @@ public class SnakeController {
         snakeModels.add(newPlayer);
         snakeModels.get(anzPlayer).setClient(UUID.randomUUID());
         snakeModels.get(anzPlayer).setPlayerNr(anzPlayer);
-        if(anzPlayer == 0){
-            isRunning = true;
-        }
+
         snakeModels.get(anzPlayer).newSnake(0, 0);
+        webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
 
         return ResponseEntity.ok(snakeModels.get(anzPlayer++));
     }
@@ -41,31 +43,46 @@ public class SnakeController {
         if(isRunning){
             return;
         }
+        isRunning = true;
+        snakeFodder.setNewPosition();
+
+        long time;
+
 
         while (true) {
-            Thread.sleep(100);
-            // TODO no Sleep
+            time = System.currentTimeMillis();
+
             // TODO Step 10 not 1
             webSocket.convertAndSend("/snake/changeDofP", snakeModels);
             for (int i = 0; i < anzPlayer; i++) {
                 if (snakeModels.get(i).getDirection().equals("u")) {
-                    snakeModels.get(i).addPosY(10);
+                    snakeModels.get(i).addPosY(1*kästchenGröße);
                     snakeModels.get(i).addPosX(0);
 
                 } else if (snakeModels.get(i).getDirection().equals("o")) {
-                    snakeModels.get(i).addPosY(-10);
+                    snakeModels.get(i).addPosY(-1*kästchenGröße);
                     snakeModels.get(i).addPosX(0);
 
                 } else if (snakeModels.get(i).getDirection().equals("l")) {
-                    snakeModels.get(i).addPosX(-10);
+                    snakeModels.get(i).addPosX(-1*kästchenGröße);
                     snakeModels.get(i).addPosY(0);
 
                 } else if (snakeModels.get(i).getDirection().equals("r")) {
-                    snakeModels.get(i).addPosX(10);
+                    snakeModels.get(i).addPosX(1*kästchenGröße);
                     snakeModels.get(i).addPosY(0);
                 }
             }
 
+            for (int i = 0; i < snakeModels.size(); i++){
+                if(snakeModels.get(i).getPosXHead() == snakeFodder.getPosX() && snakeModels.get(i).getPosYHead() == snakeFodder.getPosY()){
+                    snakeModels.get(i).setScore(snakeModels.get(i).getScore() + 5);
+                    snakeFodder.setNewPosition();
+                    webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
+                }
+            }
+            while(System.currentTimeMillis() <= (time + 6*kästchenGröße)){
+
+            }
         }
     }
 
