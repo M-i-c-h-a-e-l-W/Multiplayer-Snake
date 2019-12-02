@@ -40,7 +40,7 @@ public class SnakeController {
 
     @GetMapping("/runGame")
     public void runGame() throws InterruptedException {
-        if(isRunning){
+        if (isRunning) {
             return;
         }
         isRunning = true;
@@ -53,36 +53,59 @@ public class SnakeController {
         while (true) {
             time = System.currentTimeMillis();
 
-            // TODO Step 10 not 1
+            // TODO Steps flüssige Bewegung
             webSocket.convertAndSend("/snake/changeDofP", snakeModels);
             for (int i = 0; i < anzPlayer; i++) {
                 if (snakeModels.get(i).getDirection().equals("u")) {
-                    snakeModels.get(i).addPosY(1*kästchenGröße);
+                    snakeModels.get(i).addPosY(1 * kästchenGröße);
                     snakeModels.get(i).addPosX(0);
 
                 } else if (snakeModels.get(i).getDirection().equals("o")) {
-                    snakeModels.get(i).addPosY(-1*kästchenGröße);
+                    snakeModels.get(i).addPosY(-1 * kästchenGröße);
                     snakeModels.get(i).addPosX(0);
 
                 } else if (snakeModels.get(i).getDirection().equals("l")) {
-                    snakeModels.get(i).addPosX(-1*kästchenGröße);
+                    snakeModels.get(i).addPosX(-1 * kästchenGröße);
                     snakeModels.get(i).addPosY(0);
 
                 } else if (snakeModels.get(i).getDirection().equals("r")) {
-                    snakeModels.get(i).addPosX(1*kästchenGröße);
+                    snakeModels.get(i).addPosX(1 * kästchenGröße);
                     snakeModels.get(i).addPosY(0);
                 }
             }
 
-            for (int i = 0; i < snakeModels.size(); i++){
-                if(snakeModels.get(i).getPosXHead() == snakeFodder.getPosX() && snakeModels.get(i).getPosYHead() == snakeFodder.getPosY()){
+            for (int i = 0; i < snakeModels.size(); i++) {
+                if (snakeModels.get(i).getPosXHead() == snakeFodder.getPosX() && snakeModels.get(i).getPosYHead() == snakeFodder.getPosY()) {
                     snakeModels.get(i).setScore(snakeModels.get(i).getScore() + 5);
                     snakeFodder.setNewPosition();
                     webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
                 }
-            }
-            while(System.currentTimeMillis() <= (time + 6*kästchenGröße)){
 
+                if (true) {
+
+                    for (int snakeBodyCouter = 0; snakeBodyCouter < snakeModels.size(); snakeBodyCouter++) {
+                        if (snakeBodyCouter != i) {
+                            for (int bodyLength = 0; bodyLength < snakeModels.get(snakeBodyCouter).getLengthOfBody(); bodyLength++) {
+                                if (snakeModels.get(i).getPosXHead() == snakeModels.get(snakeBodyCouter).getPosX().get(bodyLength) &&
+                                        snakeModels.get(i).getPosYHead() == snakeModels.get(snakeBodyCouter).getPosY().get(bodyLength)) {
+
+                                    System.out.println("HITTED");
+                                    if(!snakeModels.get(i).reduceScore()){
+                                        snakeModels.remove(i);
+                                        anzPlayer--;
+                                        webSocket.convertAndSend("/snake/deleted", "{\"deletedPlayer\": "+ i +  "}");
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+            }
+            while (System.currentTimeMillis() <= (time + 6 * kästchenGröße)) {
+                // Waiting for next Step
             }
         }
     }

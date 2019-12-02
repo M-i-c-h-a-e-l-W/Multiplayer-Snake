@@ -41,7 +41,7 @@ public class SnakeModel {
         posXHead = posX.get(posX.size() - 1) + x;
 
         for (int i = 1; i < posX.size(); i++) {
-           // posX.set(i, posX.get(i) + x*10);
+            // posX.set(i, posX.get(i) + x*10);
         }
 
         if (posXHead > 1000) {
@@ -61,7 +61,7 @@ public class SnakeModel {
         posYHead = posY.get(posY.size() - 1) + y;
 
         for (int i = 1; i < posY.size(); i++) {
-         //   posY.set(i, posY.get(i) + y*10);
+            //   posY.set(i, posY.get(i) + y*10);
         }
 
         if (posYHead > 600) {
@@ -75,6 +75,29 @@ public class SnakeModel {
         }
 
         //System.out.println("Y: " + posY);
+    }
+
+    public int getLengthOfBody() {
+        if (posX.size() != posY.size()) {
+            return -1;
+        } else return posX.size();
+    }
+
+    public boolean reduceScore() {
+        if (Score - 1 > 0) {
+
+            posX.remove(posX.size() - Score);
+            posY.remove(posY.size() - Score);
+
+            Score--;
+            return true;
+        } else {
+            posX.clear();
+            posY.clear();
+
+            Score = 0;
+            return false;
+        }
     }
 
     public void changePosX(int index, int wertX) {

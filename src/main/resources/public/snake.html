@@ -39,12 +39,12 @@
         canvas = document.getElementById("canvas");
         if (canvas.getContext) {
             ctx = canvas.getContext('2d');
-            connectWebSocketChangeDirection(()=>{
+            connectWebSocketChangeDirection(() => {
                 fetch("http://localhost:8080/api/snake/newPlayer", {
                     method: 'GET',
                     headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
                 }).then(function (ev) {
-                    if(ev.status !== 200){
+                    if (ev.status !== 200) {
                         console.log("Error: not 200");
                         return;
                     }
@@ -80,16 +80,24 @@
         }));
     }
 
-    function drawSnakes(color, posX, posY) {
+    function drawSnakes(color, posX, posY, partOfHead) {
         ctx.beginPath();
         //ctx.fillStyle = "rgb(250,0,0)";
+
         ctx.fillStyle = color;
+        if (partOfHead === 0) {
+            ctx.strokeStyle = "#000000";
+        } else if (partOfHead === 404) {
+            ctx.strokeStyle = "#ff0000";
+        } else {
+            ctx.strokeStyle = "#ffffff";
+        }
+
+
         var width = 10;
         var height = 10;
 
         ctx.lineWidth = 1.5;
-
-        ctx.strokeStyle = "#ffffff";
         ctx.fillRect(posX, posY, width, height);
 
         ctx.strokeRect(posX, posY, width, height);
@@ -203,7 +211,13 @@
                 fodderX = newFodder.posX;
                 fodderY = newFodder.posY;
                 console.log("NewFodder: ", message)
-
+            });
+            ws.subscribe("/snake/deleted", (message) => {
+                let newFodder = JSON.parse(message.body);
+                if(newFodder.deletedPlayer === playerNr){
+                    alert("Du bist offensichtlich weniger talentiert als dein Gegner.\nDu bist Tod!\nSeite neuladen um wiedereinzusteigen ;-)");
+                }
+                console.log("NewFodder: ", message)
             });
             ws.subscribe("/snake/changeDofP", (message) => {
                 // console.log("WebSocket is Connected\nVariable Message: ", message);
@@ -213,7 +227,7 @@
                 console.log("MaxPlayer: " + maxPlayer);
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                drawSnakes("#FF0000", fodderX, fodderY);
+                drawSnakes("#FF0000", fodderX, fodderY, 404);
 
                 for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
                     //console.log("Spielerrichtung: " + snakeNewData[0].direction);
@@ -227,8 +241,9 @@
 
                     } else if (snakeNewData[currentPlayer].posX.length === snakeNewData[currentPlayer].posY.length) {
                         for (var i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
-                            // TODO Snakefarbe anpassen an playerNr
-                            drawSnakes(snakeNewData[currentPlayer].playerColor, snakeNewData[currentPlayer].posX[i], snakeNewData[currentPlayer].posY[i]);
+                            drawSnakes(snakeNewData[currentPlayer].playerColor,
+                                snakeNewData[currentPlayer].posX[i], snakeNewData[currentPlayer].posY[i],
+                                snakeNewData[currentPlayer].posX.length - (i + 1));
 
                         }
                     }
