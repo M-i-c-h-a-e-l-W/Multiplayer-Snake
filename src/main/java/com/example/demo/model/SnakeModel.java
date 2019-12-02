@@ -33,7 +33,7 @@ public class SnakeModel {
         int rand_num = obj.nextInt(0xffffff + 1);
         playerColor = String.format("#%06x", rand_num);
 
-        System.out.println("Hex Farb: " + playerColor);
+        // System.out.println("Hex Farb: " + playerColor);
     }
 
     // TODO bei flüssiger Bewegung alle alten Snake Körper neu setzen
@@ -84,20 +84,20 @@ public class SnakeModel {
     }
 
     public boolean reduceScore() {
-        if (Score - 1 > 0) {
+        for(int i = 0; i < 7; i++){
+            if (Score - 1 > 0) {
+                posX.remove(posX.size() - Score);
+                posY.remove(posY.size() - Score);
+                Score--;
+            } else {
+                posX.clear();
+                posY.clear();
 
-            posX.remove(posX.size() - Score);
-            posY.remove(posY.size() - Score);
-
-            Score--;
-            return true;
-        } else {
-            posX.clear();
-            posY.clear();
-
-            Score = 0;
-            return false;
+                Score = 0;
+                return false;
+            }
         }
+        return true;
     }
 
     public void changePosX(int index, int wertX) {

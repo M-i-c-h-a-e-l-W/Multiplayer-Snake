@@ -17,6 +17,7 @@ public class SnakeController {
     private List<SnakeModel> snakeModels = new ArrayList<>();
     private SnakeFodder snakeFodder = new SnakeFodder();
     private SnakeModel snakeModel = new SnakeModel();
+    private int[][] Spielfeld = new int[100][60];
     @Autowired
     private SimpMessagingTemplate webSocket;
 
@@ -33,7 +34,9 @@ public class SnakeController {
         snakeModels.get(anzPlayer).setPlayerNr(anzPlayer);
 
         snakeModels.get(anzPlayer).newSnake(0, 0);
-        //webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
+        if (anzPlayer != 0) {
+            webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
+        }
 
         return ResponseEntity.ok(snakeModels.get(anzPlayer++));
     }
@@ -81,27 +84,28 @@ public class SnakeController {
                     webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
                 }
 
-                if (true) {
 
-                    for (int snakeBodyCouter = 0; snakeBodyCouter < snakeModels.size(); snakeBodyCouter++) {
-                        if (snakeBodyCouter != i) {
-                            for (int bodyLength = 0; bodyLength < snakeModels.get(snakeBodyCouter).getLengthOfBody(); bodyLength++) {
-                                if (snakeModels.get(i).getPosXHead() == snakeModels.get(snakeBodyCouter).getPosX().get(bodyLength) &&
-                                        snakeModels.get(i).getPosYHead() == snakeModels.get(snakeBodyCouter).getPosY().get(bodyLength)) {
+                for (int snakeBodyCouter = 0; snakeBodyCouter < snakeModels.size(); snakeBodyCouter++) {
+                    if (snakeBodyCouter != i) {
+                        for (int bodyLength = 0; bodyLength < snakeModels.get(snakeBodyCouter).getLengthOfBody(); bodyLength++) {
+                            if (snakeModels.get(i).getPosXHead() == snakeModels.get(snakeBodyCouter).getPosX().get(bodyLength) &&
+                                    snakeModels.get(i).getPosYHead() == snakeModels.get(snakeBodyCouter).getPosY().get(bodyLength)) {
 
-                                    System.out.println("HITTED");
-                                    if(!snakeModels.get(i).reduceScore()){
-                                        snakeModels.remove(i);
-                                        anzPlayer--;
-                                        webSocket.convertAndSend("/snake/deleted", "{\"deletedPlayer\": "+ i +  "}");
-                                        break;
-                                    }
+                                System.out.println("HITTED");
+
+                                snakeModels.get(snakeBodyCouter).setScore( snakeModels.get(snakeBodyCouter).getScore() + 4);
+                                if (!snakeModels.get(i).reduceScore()) {
+                                    snakeModels.remove(i);
+                                    anzPlayer--;
+                                    webSocket.convertAndSend("/snake/deleted", "{\"deletedPlayer\": " + i + "}");
+                                    break;
                                 }
                             }
                         }
-
                     }
+
                 }
+
 
             }
             while (System.currentTimeMillis() <= (time + 6 * kästchenGröße)) {
