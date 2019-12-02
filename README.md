@@ -8,7 +8,8 @@
 **Aktueller Stand:** <br>
 - Kommentare werden in DB gespeichert und können durchsucht & gelöscht von jeden Nutzer
 - Nutzer & Anmeldefunktion fehlt völlig
-- Opensource Snake ist eingefügt grundlegend an einige Dinge angepasst
+- ~~Opensource Snake ist eingefügt grundlegend an einige Dinge angepasst~~ <-- komplett gelöscht und selbst geschrieben
+- Snake Spiel über Websockets implementiert
 
 **TODO:** <br>
 - ~~Struktur schaffen~~
@@ -24,6 +25,8 @@
 - ~~Snake Score einfügen~~
 - ~~Snake Multiplayerfähig~~
 - ~~Snake Bugg "Länge der Schlange" beheben~~
-- Snake schadne durch andere SPieler und sich selbst
+- ~~Snake Head farblich erkennbar~~
+- Score anzeigen
+- Snake schaden durch andere Spieler und sich selbst
 - Session mit Anmeldefunktion
 - parallelität beim Spielstand beachten mutex
