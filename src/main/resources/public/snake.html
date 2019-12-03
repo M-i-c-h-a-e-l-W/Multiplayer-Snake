@@ -64,6 +64,7 @@
             // Connection Backend & PlayerGetID from Backend
         } else {
             alert("I am sorry, but your browser is bullshit. It does not support the canvas tag.");
+
         }
 
     }
@@ -217,6 +218,8 @@
                 let newFodder = JSON.parse(message.body);
                 if(newFodder.deletedPlayer === playerNr){
                     alert("Du bist offensichtlich weniger talentiert als dein Gegner.\nDu bist Tod!\nSeite neuladen um wiedereinzusteigen ;-)");
+                    alert("Bei \"Ok\" wird die Seite neugeladen");
+                    location.reload(true);
                 }
                 console.log("NewFodder: ", message)
             });

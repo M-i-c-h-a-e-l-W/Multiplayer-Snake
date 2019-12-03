@@ -16,7 +16,7 @@ public class SnakeModel {
     List<Integer> posX = new ArrayList<Integer>();
     List<Integer> posY = new ArrayList<Integer>();
 
-    boolean gameRunning = false;
+    boolean gameRunning = false, playerAlife = true;
     int posXHead, posYHead;
     int playerNr;
 
@@ -86,13 +86,13 @@ public class SnakeModel {
     public boolean reduceScore() {
         for(int i = 0; i < 7; i++){
             if (Score - 1 > 0) {
-                posX.remove(posX.size() - Score);
-                posY.remove(posY.size() - Score);
+                posX.remove(posX.size() - (posX.size()-1));
+                posY.remove(posY.size() - (posY.size() -1));
                 Score--;
             } else {
                 posX.clear();
                 posY.clear();
-
+                playerAlife = false;
                 Score = 0;
                 return false;
             }
@@ -108,4 +108,7 @@ public class SnakeModel {
         posY.set(index, posY.get(index) + wertY);
     }
 
+    public boolean getPlayerAlife() {
+        return playerAlife;
+    }
 }
