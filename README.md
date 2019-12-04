@@ -26,6 +26,7 @@
 - ~~Snake Multiplayerfähig~~
 - ~~Snake Bugg "Länge der Schlange" beheben~~
 - ~~Snake Head farblich erkennbar~~
+- ~~Snake in anderer Snake gespawnt Execption gelöst bei Tod~~
 - Score anzeigen
 - Snake schaden durch andere Spieler und sich selbst
 - Session mit Anmeldefunktion
