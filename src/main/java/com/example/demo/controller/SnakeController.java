@@ -18,7 +18,7 @@ public class SnakeController {
     private SnakeFodder snakeFodder = new SnakeFodder();
     private SnakeModel snakeModel = new SnakeModel();
     private int[][] Spielfeld = new int[100][60];
-    private boolean[] playerAlife = new boolean[200];
+    private boolean[] playerAlife = new boolean[1000];
     @Autowired
     private SimpMessagingTemplate webSocket;
 
@@ -63,6 +63,7 @@ public class SnakeController {
 
             boolean exit = false;
             for (int i = 0; i < anzPlayer; i++) {
+
                 if (!snakeModels.get(i).getPlayerAlife()) {
                     // is Dead
                 } else if (snakeModels.get(i).getDirection().equals("u")) {
@@ -120,7 +121,9 @@ public class SnakeController {
                     exit = false;
                 }
             }
-
+            while(snakeFodder.isPause()){
+                // waiting
+            }
             while (System.currentTimeMillis() <= (time + 7 * kästchenGröße)) {
                 // Waiting for next Step
             }
@@ -132,7 +135,11 @@ public class SnakeController {
 
         String[] snakeModelData = changeD.split(";");
         // snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
-
+        if(snakeModelData[0].equals("pause")){
+            snakeFodder.togglePause();
+            webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
+            return;
+        }
         if (snakeDirection(snakeModelData[0], Integer.parseInt(snakeModelData[1]))) {
             // System.out.println("Correct: true");
             snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
@@ -148,25 +155,15 @@ public class SnakeController {
 
     @PostMapping("/playerDead")
     public void snakePlayerDead(@RequestParam int deadPlayerNr) {
+        if(snakeModels == null || snakeModels.size() == 0){
+            return;
+        }
         while(snakeModels.get(deadPlayerNr).getScore() != 0){
             snakeModels.get(deadPlayerNr).reduceScore();
         }
     }
 
     public boolean snakeDirection(String newDirection, int playerNr) {
-        /*
-        if (newDirection == snakeModel.getDirection()) {
-            return false;
-        } else if (newDirection == 'o' && snakeModel.getDirection() == 'u') {
-            return false;
-        } else if (newDirection == 'u' && snakeModel.getDirection() == 'o') {
-            return false;
-        } else if (newDirection == 'r' && snakeModel.getDirection() == 'l') {
-            return false;
-        } else if (newDirection == 'l' && snakeModel.getDirection() == 'r') {
-            return false;
-        }*/
-
         // Optimierung
         if (newDirection.equals(snakeModels.get(playerNr).getDirection())) {
             return false;

@@ -4,6 +4,9 @@ var fodderX = 100, fodderY = 100;
 var pause = false;
 
 window.onbeforeunload = function () {
+    if(playerNr === -1 || maxPlayer === 0){
+        return;
+    }
     fetch("http://localhost:8080/api/snake/playerDead?deadPlayerNr=" + playerNr, {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
@@ -145,13 +148,8 @@ function getPosition() {
                 // action when pressing down key
                 break;
             case 32:
-                if (!pause) {
-                    clearInterval(interval);
-                    pause = true;
-                } else {
-                    interval = setInterval(getPosition, 10);
-                    pause = false;
-                }
+                changeD = "pause";
+                sendKeyCode = true;
                 break;
             default:
                 console.log("Fehlerhafte Eingabe: " + keyCode);
@@ -175,7 +173,6 @@ function getPosition() {
             }));
 
             changeD = "Error";
-            sendKeyCode = false;
         }
     };
 }
