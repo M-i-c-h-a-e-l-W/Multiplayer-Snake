@@ -11,7 +11,7 @@
 - ~~Opensource Snake ist eingefügt grundlegend an einige Dinge angepasst~~ <-- komplett gelöscht und selbst geschrieben
 - Snake Spiel über Websockets implementiert
 
-**TODO:** <br>
+**Finished TODO:** <br>
 - ~~Struktur schaffen~~
 - ~~Server/Client Kommunikation Testfunktion schreiben~~
 - ~~Server/Client Kommunikation neue Kommentare aus anderem Tab aktualisieren~~
@@ -27,7 +27,12 @@
 - ~~Snake Bugg "Länge der Schlange" beheben~~
 - ~~Snake Head farblich erkennbar~~
 - ~~Snake in anderer Snake gespawnt Execption gelöst bei Tod~~
-- Score anzeigen
-- Snake schaden durch andere Spieler und sich selbst
+- ~~bei Disconnected Dead~~
+- ~~Score anzeigen~~
+- ~~Farbe bei der Score anzeige~~
+
+**TODO:** <br>
+- Pause Button
+- ~~Snake Schaden durch andere Spieler~~ und sich selbst
 - Session mit Anmeldefunktion
 - parallelität beim Spielstand beachten mutex

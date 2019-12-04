@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SnakeModel {
-    int Score = 15;
+    int score = 15;
     List<Integer> posX = new ArrayList<Integer>();
     List<Integer> posY = new ArrayList<Integer>();
 
@@ -50,8 +50,8 @@ public class SnakeModel {
             posXHead = 1000;
         }
         posX.add(posXHead);
-        if (posX.size() > Score) {
-            posX.remove(posX.size() - Score - 1);
+        if (posX.size() > score) {
+            posX.remove(posX.size() - score - 1);
         }
 
         //System.out.println("X: " + posX);
@@ -70,8 +70,8 @@ public class SnakeModel {
             posYHead = 600;
         }
         posY.add(posYHead);
-        if (posY.size() > Score) {
-            posY.remove(posY.size() - Score - 1);
+        if (posY.size() > score) {
+            posY.remove(posY.size() - score - 1);
         }
 
         //System.out.println("Y: " + posY);
@@ -84,16 +84,17 @@ public class SnakeModel {
     }
 
     public boolean reduceScore() {
-        for(int i = 0; i < 7; i++){
-            if (Score - 1 > 0) {
-                posX.remove(posX.size() - (posX.size()-1));
-                posY.remove(posY.size() - (posY.size() -1));
-                Score--;
+        for (int i = 0; i < 7; i++) {
+            if (score - 1 > 0 && posX.size() - 1 != 0 &&
+                   posY.size() - 1 != 0) {
+                posX.remove(posX.size() - (posX.size() - 1));
+                posY.remove(posY.size() - (posY.size() - 1));
+                score--;
             } else {
                 posX.clear();
                 posY.clear();
                 playerAlife = false;
-                Score = 0;
+                score = 0;
                 return false;
             }
         }

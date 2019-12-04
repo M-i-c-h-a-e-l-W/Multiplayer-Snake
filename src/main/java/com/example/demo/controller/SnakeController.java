@@ -18,7 +18,7 @@ public class SnakeController {
     private SnakeFodder snakeFodder = new SnakeFodder();
     private SnakeModel snakeModel = new SnakeModel();
     private int[][] Spielfeld = new int[100][60];
-    private boolean[] playerAlife = new boolean[100];
+    private boolean[] playerAlife = new boolean[200];
     @Autowired
     private SimpMessagingTemplate webSocket;
 
@@ -106,7 +106,8 @@ public class SnakeController {
                                         //snakeModels.remove(i);
                                         snakeModels.get(i).setPlayerAlife(false);
                                         //anzPlayer--;
-                                        webSocket.convertAndSend("/snake/deleted", "{\"deletedPlayer\": " + i + "}");
+                                        webSocket.convertAndSend("/snake/deleted",
+                                                "{\"" + "deletedPlayer\": " + i + "}");
                                         exit = true;
                                         break;
                                     }
@@ -120,7 +121,7 @@ public class SnakeController {
                 }
             }
 
-            while (System.currentTimeMillis() <= (time + 6 * kästchenGröße)) {
+            while (System.currentTimeMillis() <= (time + 7 * kästchenGröße)) {
                 // Waiting for next Step
             }
         }
@@ -142,6 +143,13 @@ public class SnakeController {
 
         } else {
             // System.out.println("Correct: false");
+        }
+    }
+
+    @PostMapping("/playerDead")
+    public void snakePlayerDead(@RequestParam int deadPlayerNr) {
+        while(snakeModels.get(deadPlayerNr).getScore() != 0){
+            snakeModels.get(deadPlayerNr).reduceScore();
         }
     }
 
