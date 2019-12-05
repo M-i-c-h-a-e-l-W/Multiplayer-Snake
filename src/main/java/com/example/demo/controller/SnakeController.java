@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.FieldData;
 import com.example.demo.model.SnakeFodder;
 import com.example.demo.model.SnakeModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class SnakeController {
     private List<SnakeModel> snakeModels = new ArrayList<>();
     private SnakeFodder snakeFodder = new SnakeFodder();
     private SnakeModel snakeModel = new SnakeModel();
-    private int[][] Spielfeld = new int[100][60];
+    private FieldData[][] Spielfeld = new FieldData[100][60];
     private boolean[] playerAlife = new boolean[1000];
     @Autowired
     private SimpMessagingTemplate webSocket;
@@ -35,7 +36,7 @@ public class SnakeController {
         snakeModels.get(anzPlayer).setPlayerNr(anzPlayer);
 
         playerAlife[anzPlayer] = true;
-        snakeModels.get(anzPlayer).newSnake(0, 0);
+        snakeModels.get(anzPlayer).newSnake(0, anzPlayer * 10 % 600);
         if (anzPlayer != 0) {
             webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
         }
@@ -52,11 +53,13 @@ public class SnakeController {
         snakeFodder.setNewPosition();
         webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
 
+        setFeldArray();
         long time;
 
 
         while (true) {
             time = System.currentTimeMillis();
+
 
             // TODO Steps flüssige Bewegung
             webSocket.convertAndSend("/snake/changeDofP", snakeModels);
@@ -67,22 +70,57 @@ public class SnakeController {
                 if (!snakeModels.get(i).getPlayerAlife()) {
                     // is Dead
                 } else if (snakeModels.get(i).getDirection().equals("u")) {
-                    snakeModels.get(i).addPosY(1 * kästchenGröße);
+                    snakeModels.get(i).addPosY(kästchenGröße);
                     snakeModels.get(i).addPosX(0);
 
                 } else if (snakeModels.get(i).getDirection().equals("o")) {
-                    snakeModels.get(i).addPosY(-1 * kästchenGröße);
+                    snakeModels.get(i).addPosY(-kästchenGröße);
                     snakeModels.get(i).addPosX(0);
 
                 } else if (snakeModels.get(i).getDirection().equals("l")) {
-                    snakeModels.get(i).addPosX(-1 * kästchenGröße);
+                    snakeModels.get(i).addPosX(-kästchenGröße);
                     snakeModels.get(i).addPosY(0);
 
                 } else if (snakeModels.get(i).getDirection().equals("r")) {
-                    snakeModels.get(i).addPosX(1 * kästchenGröße);
+                    snakeModels.get(i).addPosX(kästchenGröße);
                     snakeModels.get(i).addPosY(0);
                 }
+                setSnakePositionOnField(i);
             }
+
+  /*
+            for (int i = 0; i < snakeModels.size() && i >= 0; i++) {
+                if (snakeModels.get(i).getPlayerAlife()) {
+                    for (int xy = 0; xy < snakeModels.get(i).getPosX().size() &&
+                            snakeModels.get(i).getPosX().size() == snakeModels.get(i).getPosY().size(); xy++) {
+                        if (Spielfeld[snakeModels.get(i).getPosX().get(xy)/100][snakeModels.get(i).getPosY().get(xy)/100].getSnakeModels().size() > 1) {
+
+                            if (!snakeModels.get(i).reduceScore()) {
+                                //snakeModels.remove(i);
+                                snakeModels.get(i).setPlayerAlife(false);
+                                //anzPlayer--;
+                                webSocket.convertAndSend("/snake/deleted",
+                                        "{\"" + "deletedPlayer\": " + i + "}");
+                                break;
+                            }
+
+                            snakeModels.get(
+                                    Spielfeld[snakeModels.get(i).getPosX().get(xy)]
+                                            [snakeModels.get(i).getPosY().get(xy)].
+                                            getSnakeModels().get(0).getPlayerNr()).setScore(snakeModels.get(
+                                    Spielfeld[snakeModels.get(i).getPosX().get(xy)]
+                                            [snakeModels.get(i).getPosY().get(xy)].
+                                            getSnakeModels().get(0).getPlayerNr()).getScore() + 4);
+
+
+
+                        }
+                    }
+
+                }
+
+            }
+                    */
 
             for (int i = 0; i < snakeModels.size() && i >= 0; i++) {
                 if (snakeModels.get(i).getPlayerAlife()) {
@@ -114,8 +152,8 @@ public class SnakeController {
                                     snakeModels.get(snakeBodyCouter).setScore(snakeModels.get(snakeBodyCouter).getScore() + 4);
                                 }
                             }
-                        }else {
-                            for (int bodyLength = 0; bodyLength < snakeModels.get(snakeBodyCouter).getLengthOfBody()-1; bodyLength++) {
+                        } else {
+                            for (int bodyLength = 0; bodyLength < snakeModels.get(snakeBodyCouter).getLengthOfBody() - 1; bodyLength++) {
                                 if (snakeModels.get(i).getPosXHead() == snakeModels.get(snakeBodyCouter).getPosX().get(bodyLength) &&
                                         snakeModels.get(i).getPosYHead() == snakeModels.get(snakeBodyCouter).getPosY().get(bodyLength)) {
 
@@ -139,11 +177,46 @@ public class SnakeController {
                     exit = false;
                 }
             }
-            while(snakeFodder.isPause()){
+
+            setFieldEmpty();
+            while (snakeFodder.isPause()) {
                 // waiting
             }
             while (System.currentTimeMillis() <= (time + 7 * kästchenGröße)) {
                 // Waiting for next Step
+            }
+        }
+    }
+
+    public void setFeldArray() {
+        for (int x = 0; x < 100; x++) {
+            for (int y = 0; y < 60; y++) {
+                Spielfeld[x][y] = new FieldData();
+            }
+        }
+    }
+
+    public void setSnakePositionOnField(int indexOfSnake) {
+        int indexSize;
+        if (snakeModels.get(indexOfSnake).getPosX().size() != snakeModels.get(indexOfSnake).getPosY().size()) {
+            return;
+        }
+        indexSize = snakeModels.get(indexOfSnake).getPosX().size() - 1;
+
+        int posX, posY;
+        for (int i = 0; i < indexSize; i++) {
+            posX = snakeModels.get(indexOfSnake).getPosX().get(i);
+            posY = snakeModels.get(indexOfSnake).getPosY().get(i);
+            if (posX < 100 && posY < 60) {
+                Spielfeld[posX / 10][posY / 10].getSnakeModels().add(snakeModels.get(indexOfSnake));
+            }
+        }
+    }
+
+    public void setFieldEmpty() {
+        for (int x = 0; x < 100; x++) {
+            for (int y = 0; y < 60; y++) {
+                Spielfeld[x][y].getSnakeModels().clear();
             }
         }
     }
@@ -153,7 +226,7 @@ public class SnakeController {
 
         String[] snakeModelData = changeD.split(";");
         // snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
-        if(snakeModelData[0].equals("pause")){
+        if (snakeModelData[0].equals("pause")) {
             snakeFodder.togglePause();
             webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
             return;
@@ -173,10 +246,10 @@ public class SnakeController {
 
     @PostMapping("/playerDead")
     public void snakePlayerDead(@RequestParam int deadPlayerNr) {
-        if(snakeModels == null || snakeModels.size() == 0){
+        if (snakeModels == null || snakeModels.size() == 0) {
             return;
         }
-        while(snakeModels.get(deadPlayerNr).getScore() != 0){
+        while (snakeModels.get(deadPlayerNr).getScore() != 0) {
             snakeModels.get(deadPlayerNr).reduceScore();
         }
     }

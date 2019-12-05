@@ -187,8 +187,8 @@ function connectWebSocketChangeDirection(succesFunction) {
     ws.connect({}, (frame) => {
         ws.subscribe("/snake/fodderOfSnake", (message) => {
             let newFodder = JSON.parse(message.body);
-            fodderX = newFodder.posX;
-            fodderY = newFodder.posY;
+            fodderX = newFodder.posX * 10;
+            fodderY = newFodder.posY * 10;
             console.log("NewFodder: ", message)
         });
         ws.subscribe("/snake/deleted", (message) => {
@@ -233,9 +233,8 @@ function connectWebSocketChangeDirection(succesFunction) {
                 } else if (snakeNewData[currentPlayer].posX.length === snakeNewData[currentPlayer].posY.length) {
                     for (var i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
                         drawSnakes(snakeNewData[currentPlayer].playerColor,
-                            snakeNewData[currentPlayer].posX[i], snakeNewData[currentPlayer].posY[i],
+                            snakeNewData[currentPlayer].posX[i]*10, snakeNewData[currentPlayer].posY[i]*10,
                             snakeNewData[currentPlayer].posX.length - (i + 1));
-
                     }
                 }
             }

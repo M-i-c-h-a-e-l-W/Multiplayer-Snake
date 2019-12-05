@@ -17,8 +17,8 @@ public class SnakeFodder {
     boolean pause = false;
 
     public void setNewPosition() {
-        posX = new Random().nextInt((canvasX - 1) % 10)*100 + 10;
-        posY = new Random().nextInt((canvasY - 1) % 10)*60 + 10;
+        posX = new Random().nextInt((canvasX - 1) % 10)*10 + 1;
+        posY = new Random().nextInt((canvasY - 1) % 10)*6 + 1;
     }
 
     public void togglePause(){

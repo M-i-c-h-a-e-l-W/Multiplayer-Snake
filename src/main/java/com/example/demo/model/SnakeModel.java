@@ -13,6 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class SnakeModel {
     int score = 15;
+    // x Max = 100 & y Max = 60
     List<Integer> posX = new ArrayList<Integer>();
     List<Integer> posY = new ArrayList<Integer>();
 
@@ -26,8 +27,8 @@ public class SnakeModel {
     int posApple;
 
     public void newSnake(int x, int y) {
-        posX.add(x);
-        posY.add(y);
+        posX.add(x/10);
+        posY.add(y/10);
 
         Random obj = new Random();
         int rand_num = obj.nextInt(0xffffff + 1);
@@ -38,16 +39,17 @@ public class SnakeModel {
 
     // TODO bei flüssiger Bewegung alle alten Snake Körper neu setzen
     public void addPosX(int x) {
+        x/= 10;
         posXHead = posX.get(posX.size() - 1) + x;
 
         for (int i = 1; i < posX.size(); i++) {
             // posX.set(i, posX.get(i) + x*10);
         }
 
-        if (posXHead > 1000) {
+        if (posXHead > 100) {
             posXHead = 0;
         } else if (posXHead < 0) {
-            posXHead = 1000;
+            posXHead = 100;
         }
         posX.add(posXHead);
         if (posX.size() > score) {
@@ -58,16 +60,17 @@ public class SnakeModel {
     }
 
     public void addPosY(int y) {
+        y /= 10;
         posYHead = posY.get(posY.size() - 1) + y;
 
         for (int i = 1; i < posY.size(); i++) {
             //   posY.set(i, posY.get(i) + y*10);
         }
 
-        if (posYHead > 600) {
+        if (posYHead > 60) {
             posYHead = 0;
         } else if (posYHead < 0) {
-            posYHead = 600;
+            posYHead = 60;
         }
         posY.add(posYHead);
         if (posY.size() > score) {
