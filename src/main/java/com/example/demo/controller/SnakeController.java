@@ -87,9 +87,8 @@ public class SnakeController {
             for (int i = 0; i < snakeModels.size() && i >= 0; i++) {
                 if (snakeModels.get(i).getPlayerAlife()) {
 
-
                     if (snakeModels.get(i).getPosXHead() == snakeFodder.getPosX() && snakeModels.get(i).getPosYHead() == snakeFodder.getPosY()) {
-                        snakeModels.get(i).setScore(snakeModels.get(i).getScore() + 5);
+                        snakeModels.get(i).setScore(snakeModels.get(i).getScore() + 5); // neu dazugewonnene Blöcke
                         snakeFodder.setNewPosition();
                         webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
                     }
@@ -115,6 +114,25 @@ public class SnakeController {
                                     snakeModels.get(snakeBodyCouter).setScore(snakeModels.get(snakeBodyCouter).getScore() + 4);
                                 }
                             }
+                        }else {
+                            for (int bodyLength = 0; bodyLength < snakeModels.get(snakeBodyCouter).getLengthOfBody()-1; bodyLength++) {
+                                if (snakeModels.get(i).getPosXHead() == snakeModels.get(snakeBodyCouter).getPosX().get(bodyLength) &&
+                                        snakeModels.get(i).getPosYHead() == snakeModels.get(snakeBodyCouter).getPosY().get(bodyLength)) {
+
+                                    System.out.println("HITTED");
+
+                                    if (!snakeModels.get(i).reduceScore()) {
+                                        //snakeModels.remove(i);
+                                        snakeModels.get(i).setPlayerAlife(false);
+                                        //anzPlayer--;
+                                        webSocket.convertAndSend("/snake/deleted",
+                                                "{\"" + "deletedPlayer\": " + i + "}");
+                                        exit = true;
+                                        break;
+                                    }
+                                }
+                            }
+
                         }
 
                     }

@@ -30,9 +30,9 @@
 - ~~bei Disconnected Dead~~
 - ~~Score anzeigen~~
 - ~~Farbe bei der Score anzeige~~
-- ~~Pause Button~~~
+- ~~Pause Button~~
+- ~~Snake Schaden durch andere Spieler und sich selbst~~
 
 *TODO:** <br>
-- ~~Snake Schaden durch andere Spieler~~ und sich selbst
 - Session mit Anmeldefunktion
 - parallelität beim Spielstand beachten mutex
