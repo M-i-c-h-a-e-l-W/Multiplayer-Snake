@@ -33,6 +33,7 @@
 - ~~Pause Button~~
 - ~~Snake Schaden durch andere Spieler und sich selbst~~
 
-*TODO:** <br>
+**TODO:** <br>
+- Überprüfung bei Schaden durch andere / sich selbst optimieren (Feld Array)
 - Session mit Anmeldefunktion
 - parallelität beim Spielstand beachten mutex
