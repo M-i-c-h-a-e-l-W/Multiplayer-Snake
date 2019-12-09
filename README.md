@@ -35,5 +35,5 @@
 
 **TODO:** <br>
 - Überprüfung bei Schaden durch andere / sich selbst optimieren (Feld Array)
-- Session mit Anmeldefunktion
+- Session mit Anmeldefunktion und login
 - parallelität beim Spielstand beachten mutex
