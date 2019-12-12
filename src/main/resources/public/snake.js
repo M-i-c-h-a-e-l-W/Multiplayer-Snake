@@ -4,7 +4,7 @@ var fodderX = 100, fodderY = 100;
 var pause = false;
 
 window.onbeforeunload = function () {
-    if(playerNr === -1 || maxPlayer === 0){
+    if (playerNr === -1 || maxPlayer === 0) {
         return;
     }
     fetch("http://localhost:8080/api/snake/playerDead?deadPlayerNr=" + playerNr, {
@@ -21,6 +21,8 @@ window.onbeforeunload = function () {
 // TODO 2 Spieler pro Rechner soll möglich sein über "wasd"
 
 function initialization() {
+    document.getElementById('messages').innerHTML = "";
+
     canvas = document.getElementById("canvas");
     if (canvas.getContext) {
         ctx = canvas.getContext('2d');
@@ -213,19 +215,24 @@ function connectWebSocketChangeDirection(succesFunction) {
             document.getElementById('spanId').innerHTML = "";
 
             for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
-                //console.log("Spielerrichtung: " + snakeNewData[0].direction);
-                //console.log("Richtung: " + snakeNewData[currentPlayer].direction + "\nSpielerNr: " + snakeNewData[currentPlayer].playerNr);
-
-                //console.log("posY Laenge: " + snakeNewData[currentPlayer].posY.length);
 
                 console.log("Player: " + currentPlayer + " has a Score of:" +
                     snakeNewData[currentPlayer].score);
 
                 if (snakeNewData[currentPlayer].score !== null && snakeNewData[currentPlayer].score !== 0) {
-                    document.getElementById('spanId').innerHTML += "<ol><font color=\"" +
-                        snakeNewData[currentPlayer].playerColor + "\">" + "Player: " +
-                        currentPlayer + " </font>has a Score of: " +
-                        snakeNewData[currentPlayer].score + "</ol>";
+
+                    if(snakeNewData[currentPlayer].bestPlayer){
+                        document.getElementById('spanId').innerHTML += "<h3><font color=\"" +
+                            snakeNewData[currentPlayer].playerColor + "\">" + "Player: " +
+                            currentPlayer + " </font>has a Score of: " +
+                            snakeNewData[currentPlayer].score + "</h3>";
+                    }else{
+                        document.getElementById('spanId').innerHTML += "<font color=\"" +
+                            snakeNewData[currentPlayer].playerColor + "\">" + "Player: " +
+                            currentPlayer + " </font>has a Score of: " +
+                            snakeNewData[currentPlayer].score;
+                    }
+                    document.getElementById('spanId').innerHTML += "<br>";
                 }
                 if (snakeNewData[currentPlayer].posX === null || snakeNewData[currentPlayer].posY === null
                     && snakeNewData[currentPlayer].posX.length === 0) {
@@ -233,11 +240,24 @@ function connectWebSocketChangeDirection(succesFunction) {
                 } else if (snakeNewData[currentPlayer].posX.length === snakeNewData[currentPlayer].posY.length) {
                     for (var i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
                         drawSnakes(snakeNewData[currentPlayer].playerColor,
-                            snakeNewData[currentPlayer].posX[i]*10, snakeNewData[currentPlayer].posY[i]*10,
+                            snakeNewData[currentPlayer].posX[i] * 10, snakeNewData[currentPlayer].posY[i] * 10,
                             snakeNewData[currentPlayer].posX.length - (i + 1));
                     }
                 }
             }
+        });
+        ws.subscribe("/snake/chat", (message) => {
+            let theNewMessage = JSON.parse(message.body);
+
+            console.log(theNewMessage.playerNr + " Message: " + theNewMessage.newMessage);
+
+            document.getElementById('messages').innerHTML +=
+                "<span style='color:" + theNewMessage.playerColor + ";'> " +
+                "Spielernummer " + theNewMessage.playerNr +
+                "</span>" + " schrieb folgendes: ";
+
+            document.getElementById('messages').innerHTML += "<span style='color: #707070;'>" +
+                theNewMessage.newMessage + "</span><br>";
         });
         that.webSocket = ws;
         succesFunction();
@@ -246,4 +266,17 @@ function connectWebSocketChangeDirection(succesFunction) {
         //that.webSocket = null;
     });
 
+}
+
+function newMessage() {
+    let newMessage = document.querySelector("#chatWindow").value;
+
+    fetch("http://localhost:8080/api/snake/chat?playerNr=" + playerNr + "&message=" + newMessage, {
+        method: 'POST',
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    }).then(function (ev) {
+        console.log("NEW MESSAGE AVAIBLE");
+    }).catch((function (error) {
+        console.log("Error: ", error);
+    }));
 }

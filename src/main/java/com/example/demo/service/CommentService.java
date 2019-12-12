@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.model.Comment;
+import com.example.demo.dto.Comment;
 import com.example.demo.model.CommentSearchResult;
 import com.example.demo.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;

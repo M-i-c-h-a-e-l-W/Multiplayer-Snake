@@ -1,23 +1,19 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Comment;
+import com.example.demo.dto.Comment;
 import com.example.demo.model.CommentSearchResult;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.service.CommentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @EnableAutoConfiguration
 @RestController

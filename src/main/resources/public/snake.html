@@ -24,17 +24,34 @@
 <body>
 
 <main>
-  <div class="head">
-    <a href="index.html"> Hauptseite</a>
-    <br>
-  </div>
+
+  <h1>Scores:</h1>
+  <ol>
+    <span id="spanId"> ERROR nothing Avaible</span>
+  </ol>
 
   <div class="screen">
     <canvas width="1000" height="600" id="canvas" style="border:5px solid #000000;"></canvas>
   </div>
 
-  <h3>Scores:</h3>
-  <span id="spanId"> ERROR nothing Avaible</span>
+  <br>
+  <h2>
+    Chat zum mobben:
+  </h2>
+    <div style="background-color: lightgray;">
+    <textarea name="chat" id="chatWindow" data-adaptheight rows="3" cols="40" placeholder="deine diskriminierende Nachricht..."
+              style="padding: 16px; line-height: 1.5; width: 50%; " autofocus></textarea>
+
+      <input type="button" value="Senden" onClick="newMessage()"/>
+      <br>
+
+      <span id="messages"> keine Nachrichten</span>
+    </div>
+
+  <div class="footer"; style="text-align: right">
+    <a href="index.html"> Kommentarseite</a>
+    <br>
+  </div>
 </main>
 
 <script src="snake.js" type="application/javascript"></script>

@@ -17,7 +17,7 @@ public class SnakeModel {
     List<Integer> posX = new ArrayList<Integer>();
     List<Integer> posY = new ArrayList<Integer>();
 
-    boolean gameRunning = false, playerAlife = true;
+    boolean gameRunning = false, playerAlife = true, bestPlayer = false;
     int posXHead, posYHead;
     int playerNr;
 

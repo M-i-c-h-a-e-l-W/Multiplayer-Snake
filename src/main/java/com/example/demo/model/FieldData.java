@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.example.demo.model.SnakeModel;
 import lombok.Getter;
 import lombok.Setter;
 

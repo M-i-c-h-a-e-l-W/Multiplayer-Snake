@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ChatMessageDTO;
 import com.example.demo.model.FieldData;
 import com.example.demo.model.SnakeFodder;
 import com.example.demo.model.SnakeModel;
@@ -123,14 +124,13 @@ public class SnakeController {
                     */
 
             for (int i = 0; i < snakeModels.size() && i >= 0; i++) {
+                snakeModels.get(i).setBestPlayer(false);
                 if (snakeModels.get(i).getPlayerAlife()) {
-
                     if (snakeModels.get(i).getPosXHead() == snakeFodder.getPosX() && snakeModels.get(i).getPosYHead() == snakeFodder.getPosY()) {
                         snakeModels.get(i).setScore(snakeModels.get(i).getScore() + 5); // neu dazugewonnene Blöcke
                         snakeFodder.setNewPosition();
                         webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
                     }
-
 
                     for (int snakeBodyCouter = 0; snakeBodyCouter < snakeModels.size() && !exit; snakeBodyCouter++) {
                         if (snakeBodyCouter != i) {
@@ -178,11 +178,22 @@ public class SnakeController {
                 }
             }
 
+            int bestScore = 0, idBestplayer = -1;
+            for (int i = 0; i < snakeModels.size() && i >= 0; i++){
+                if(snakeModels.get(i).getScore() > bestScore){
+                    bestScore = snakeModels.get(i).getScore();
+                    idBestplayer = i;
+                }
+            }
+            if(idBestplayer != -1){
+                snakeModels.get(idBestplayer).setBestPlayer(true);
+            }
+
             setFieldEmpty();
             while (snakeFodder.isPause()) {
                 // waiting
             }
-            while (System.currentTimeMillis() <= (time + 7 * kästchenGröße)) {
+            while (System.currentTimeMillis() <= (time + 6 * kästchenGröße)) {
                 // Waiting for next Step
             }
         }
@@ -252,6 +263,14 @@ public class SnakeController {
         while (snakeModels.get(deadPlayerNr).getScore() != 0) {
             snakeModels.get(deadPlayerNr).reduceScore();
         }
+    }
+
+    @PostMapping("/chat")
+    public void chatController(@RequestParam int playerNr, @RequestParam String message) {
+
+        ChatMessageDTO chatMessageDTO = new ChatMessageDTO(message, playerNr, snakeModels.get(playerNr).getPlayerColor());
+
+        webSocket.convertAndSend("/snake/chat",chatMessageDTO);
     }
 
     public boolean snakeDirection(String newDirection, int playerNr) {

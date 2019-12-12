@@ -32,9 +32,14 @@
 - ~~Farbe bei der Score anzeige~~
 - ~~Pause Button~~
 - ~~Snake Schaden durch andere Spieler und sich selbst~~
+- ~~bester Spieler hervorgehoben~~
 
 **TODO:** <br>
-- Überprüfung bei Schaden durch andere / sich selbst optimieren (Feld Array)
+- Snake Bild als Überschrift
+- Resetfunktion
+- Geschwindigkeit anpassen
+- Kollision optimieren (Feld Array)
 - Session mit Anmeldefunktion und login
+- Zeittracking
 - parallelität beim Spielstand beachten mutex
 - Bestehende Model Klassen in DTO und Model auftrennen
