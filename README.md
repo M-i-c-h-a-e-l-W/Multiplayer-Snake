@@ -37,3 +37,4 @@
 - Überprüfung bei Schaden durch andere / sich selbst optimieren (Feld Array)
 - Session mit Anmeldefunktion und login
 - parallelität beim Spielstand beachten mutex
+- Bestehende Model Klassen in DTO und Model auftrennen
