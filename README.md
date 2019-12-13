@@ -9,7 +9,9 @@
 - Kommentare werden in DB gespeichert und können durchsucht & gelöscht von jeden Nutzer
 - Nutzer & Anmeldefunktion fehlt völlig
 - ~~Opensource Snake ist eingefügt grundlegend an einige Dinge angepasst~~ <-- komplett gelöscht und selbst geschrieben
-- Snake Spiel über Websockets implementiert
+- Snake Spiel über Websockets implementiert siehe Finished TODO
+
+the following text is just for the collaborator
 
 **Finished TODO:** <br>
 - ~~Struktur schaffen~~
