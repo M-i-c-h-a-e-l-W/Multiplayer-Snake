@@ -1,0 +1,21 @@
+version: "3"
+services:
+  backend:
+    container_name: "snake_backend"
+    image: openjdk:11
+    volumes:
+      - "/Users/mweishaar/projects/Website-002/target/:/dist"
+      - "/Users/mweishaar/projects/Website-002/src/main/resources/:/res"
+    command: bash -c 'sleep 5 && ls -a && java -jar /dist/demo-0.0.1-SNAPSHOT.jar'
+    working_dir: /res
+    ports:
+      - "127.0.0.1:20085:8080"
+  database:
+    image: "postgres:12.0"
+    container_name: some-postgres2
+    environment:
+      POSTGRES_DB: 'test'
+      POSTGRES_USER: 'test'
+      POSTGRES_PASSWORD: 'test'
+#    volumes:
+#      - bucket-list-data:/var/lib/postgresql/data

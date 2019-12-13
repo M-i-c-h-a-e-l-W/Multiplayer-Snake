@@ -107,7 +107,6 @@ function getPosition() {
     i++;
 
      */
-
     document.onkeydown = function (event) {
         var keyCode, changeD = "Error";
         var sendKeyCode = false;
@@ -117,6 +116,7 @@ function getPosition() {
         } else {
             keyCode = event.keyCode;
         }
+
 
         //alert("Eingabe: " + keyCode);
         switch (keyCode) {
@@ -154,7 +154,7 @@ function getPosition() {
                 sendKeyCode = true;
                 break;
             default:
-                console.log("Fehlerhafte Eingabe: " + keyCode);
+                console.log("Fehlerhafte Eingabe Code: " + keyCode);
                 break;
         }
 
@@ -268,6 +268,7 @@ function connectWebSocketChangeDirection(succesFunction) {
 
 }
 
+// cheat/ chat box
 function newMessage() {
     let newMessage = document.querySelector("#chatWindow").value;
 
