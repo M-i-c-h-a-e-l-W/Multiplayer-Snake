@@ -19,9 +19,10 @@ public class SnakeModel {
 
     boolean gameRunning = false, playerAlife = true, bestPlayer = false;
     int posXHead, posYHead;
-    int playerNr;
+    int playerNr, playerDeaths;
 
-    String playerColor;
+
+    String playerColor, playerName;
     String direction = "r";
     UUID client;
     int posApple;

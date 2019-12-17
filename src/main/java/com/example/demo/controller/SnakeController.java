@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ChatMessageDTO;
 import com.example.demo.model.FieldData;
+import com.example.demo.model.Player;
 import com.example.demo.model.SnakeFodder;
 import com.example.demo.model.SnakeModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,8 @@ import java.util.UUID;
 public class SnakeController {
     private List<SnakeModel> snakeModels = new ArrayList<>();
     private SnakeFodder snakeFodder = new SnakeFodder();
-    private SnakeModel snakeModel = new SnakeModel();
+    private List<Player> players = new ArrayList<>();
+
     private FieldData[][] Spielfeld = new FieldData[100][60];
     private boolean[] playerAlife = new boolean[1000];
     @Autowired
@@ -28,19 +30,39 @@ public class SnakeController {
     private boolean isRunning = false;
     private int kästchenGröße = 10;
 
-    @GetMapping("/newPlayer")
-    public ResponseEntity<SnakeModel> insertPlayerIntoGame() {
-        System.out.println("New Player wanna join Game.");
-        if(anzPlayer == 0){
+    @PostMapping("/newPlayer")
+    public ResponseEntity<SnakeModel> insertPlayerIntoGame(@RequestParam String playerName) {
+        System.out.println("New Player wanna join Game: " + playerName);
+        boolean playerExists = false;
+
+        SnakeModel newSnake = new SnakeModel();
+        newSnake.setPlayerName(playerName);
+
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getName().equals(playerName)) {
+                int deaths = players.get(i).getDeaths();
+                deaths++;
+
+                players.get(i).setDeaths(deaths);
+                newSnake.setPlayerDeaths(deaths);
+                playerExists = true;
+                System.out.println("Tode " + deaths);
+            }
+        }
+        if (!playerExists) {
+            Player newPlayer = new Player();
+            newPlayer.setName(playerName);
+            newPlayer.setDeaths(0);
+            players.add(newPlayer);
+        }
+
+        if (anzPlayer == 0) {
             snakeModels = new ArrayList<>();
             snakeFodder = new SnakeFodder();
-            snakeModel = new SnakeModel();
             playerAlife = new boolean[1000];
         }
 
-        SnakeModel newPlayer = new SnakeModel();
-
-        snakeModels.add(newPlayer);
+        snakeModels.add(newSnake);
         snakeModels.get(anzPlayer).setClient(UUID.randomUUID());
         snakeModels.get(anzPlayer).setPlayerNr(anzPlayer);
 
@@ -140,7 +162,7 @@ public class SnakeController {
                 snakeModels.get(i).setBestPlayer(false);
                 if (snakeModels.get(i).getPlayerAlife()) {
                     if (snakeModels.get(i).getPosXHead() == snakeFodder.getPosX() && snakeModels.get(i).getPosYHead() == snakeFodder.getPosY()) {
-                        snakeModels.get(i).setScore( (int) (snakeModels.get(i).getScore() * 1.5f)); // neu dazugewonnene Blöcke
+                        snakeModels.get(i).setScore((int) (snakeModels.get(i).getScore() * 1.5f) + 1); // neu dazugewonnene Blöcke
                         snakeFodder.setNewPosition();
                         webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
                     }
@@ -287,7 +309,7 @@ public class SnakeController {
         if (message.equals("/restart Game")) {
             resetFunction();
             return;
-        }else if (message.contains("/get Score ")){
+        } else if (message.contains("/get Score ")) {
             String[] getScore = message.split("/get Score ");
             int raiseScore = Integer.parseInt(getScore[1]);
             snakeModels.get(playerNr).setScore(snakeModels.get(playerNr).getScore() + raiseScore);
@@ -336,7 +358,6 @@ public class SnakeController {
         snakeModels.clear();
         snakeModels = null;
         snakeFodder = null;
-        snakeModel = null;
         playerAlife = null;
         anzPlayer = 0;
         isRunning = false;
