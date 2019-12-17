@@ -35,10 +35,13 @@ the following text is just for the collaborator
 - ~~Pause Button~~
 - ~~Snake Schaden durch andere Spieler und sich selbst~~
 - ~~bester Spieler hervorgehoben~~
+- ~~Resetfunktion~~
+- ~~Tode mitlocken~~
+- ~~Name~~
+- ~~Bugg Footer aufsammeln bei geringem Score~~
 
 **TODO:** <br>
 - Snake Bild als Überschrift
-- ~~Resetfunktion~~
 - Geschwindigkeit anpassen
 - Kollision optimieren (Feld Array)
 - Session mit Anmeldefunktion und login
@@ -46,7 +49,5 @@ the following text is just for the collaborator
 - parallelität beim Spielstand beachten mutex
 - Bestehende Model Klassen in DTO und Model auftrennen
 - Bugg Richtungsumkehrung
-- Bugg Footer aufsammeln bei geringem Score
-- Name
 - Farbe
-- Tode mitlocken
+
