@@ -3,11 +3,12 @@ var canvas, ctx, playerNr = -1, maxPlayer = 0;
 var fodderX = 100, fodderY = 100;
 var pause = false;
 
+
 window.onbeforeunload = function () {
     if (playerNr === -1 || maxPlayer === 0) {
         return;
     }
-    fetch("http://localhost:8080/api/snake/playerDead?deadPlayerNr=" + playerNr, {
+    fetch("http://" + "10.62.2.194" + ":8080/api/snake/playerDead?deadPlayerNr=" + playerNr, {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {
@@ -27,7 +28,7 @@ function initialization() {
     if (canvas.getContext) {
         ctx = canvas.getContext('2d');
         connectWebSocketChangeDirection(() => {
-            fetch("http://localhost:8080/api/snake/newPlayer", {
+            fetch("http://" + "10.62.2.194" + ":8080/api/snake/newPlayer", {
                 method: 'GET',
                 headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
             }).then(function (ev) {
@@ -56,7 +57,7 @@ function initialization() {
 }
 
 function startGame() {
-    fetch("http://localhost:8080/api/snake/runGame", {
+    fetch("http://" + "10.62.2.194" + ":8080/api/snake/runGame", {
         method: 'GET',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {
@@ -121,12 +122,14 @@ function getPosition() {
         //alert("Eingabe: " + keyCode);
         switch (keyCode) {
             // left
+            case 65:
             case 37:
                 changeD = "l";
                 sendKeyCode = true;
                 // action when pressing left key
                 break;
             // up
+            case 87:
             case 38:
                 changeD = "o";
                 sendKeyCode = true;
@@ -134,12 +137,14 @@ function getPosition() {
                 break;
 
             // right
+            case 68:
             case 39:
                 changeD = "r";
                 sendKeyCode = true;
                 // action when pressing right key
                 break;
             // down
+            case 83:
             case 40:
                 changeD = "u";
                 sendKeyCode = true;
@@ -161,7 +166,7 @@ function getPosition() {
         if (sendKeyCode && changeD !== "Error") {
             changeD += ";" + playerNr.toString();
             //changeD = changeD.toString();
-            fetch("http://localhost:8080/api/snake/changeDirection?changeD=" + changeD, {
+            fetch("http://" + "10.62.2.194" + ":8080/api/snake/changeDirection?changeD=" + changeD, {
                 method: 'POST',
                 headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
             }).then(function (ev) {
@@ -183,7 +188,7 @@ function getPosition() {
 //setTimeout(getPosition, 5);
 
 function connectWebSocketChangeDirection(succesFunction) {
-    let socket = new WebSocket("ws://localhost:8080/ws");
+    let socket = new WebSocket("ws://" + "10.62.2.194" + ":8080/ws");
     let ws = Stomp.over(socket);
     let that = this;
     ws.connect({}, (frame) => {
@@ -196,7 +201,7 @@ function connectWebSocketChangeDirection(succesFunction) {
         ws.subscribe("/snake/deleted", (message) => {
             let newFodder = JSON.parse(message.body);
             if (newFodder.deletedPlayer != null && newFodder.deletedPlayer === playerNr) {
-                alert("Du bist offensichtlich weniger talentiert als dein Gegner.\nDu bist Tod!\nSeite neuladen um wiedereinzusteigen ;-)");
+                alert("Du bist offensichtlich weniger talentiert als dein Gegner.\nDu bist tot!\nSeite neuladen um wiedereinzusteigen ;-)");
                 alert("Bei \"Ok\" wird die Seite neugeladen");
                 location.reload(true);
                 socket.close();
@@ -272,7 +277,7 @@ function connectWebSocketChangeDirection(succesFunction) {
 function newMessage() {
     let newMessage = document.querySelector("#chatWindow").value;
 
-    fetch("http://localhost:8080/api/snake/chat?playerNr=" + playerNr + "&message=" + newMessage, {
+    fetch("http://" + "10.62.2.194" + ":8080/api/snake/chat?playerNr=" + playerNr + "&message=" + newMessage, {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {

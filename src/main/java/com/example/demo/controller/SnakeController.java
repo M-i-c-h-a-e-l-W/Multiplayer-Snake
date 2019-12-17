@@ -30,6 +30,7 @@ public class SnakeController {
 
     @GetMapping("/newPlayer")
     public ResponseEntity<SnakeModel> insertPlayerIntoGame() {
+        System.out.println("New Player wanna join Game.");
         if(anzPlayer == 0){
             snakeModels = new ArrayList<>();
             snakeFodder = new SnakeFodder();
@@ -139,7 +140,7 @@ public class SnakeController {
                 snakeModels.get(i).setBestPlayer(false);
                 if (snakeModels.get(i).getPlayerAlife()) {
                     if (snakeModels.get(i).getPosXHead() == snakeFodder.getPosX() && snakeModels.get(i).getPosYHead() == snakeFodder.getPosY()) {
-                        snakeModels.get(i).setScore(snakeModels.get(i).getScore() + 5); // neu dazugewonnene Blöcke
+                        snakeModels.get(i).setScore( (int) (snakeModels.get(i).getScore() * 1.5f)); // neu dazugewonnene Blöcke
                         snakeFodder.setNewPosition();
                         webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
                     }
@@ -161,7 +162,7 @@ public class SnakeController {
                                         exit = true;
                                         break;
                                     }
-                                    snakeModels.get(snakeBodyCouter).setScore(snakeModels.get(snakeBodyCouter).getScore() + 4);
+                                    snakeModels.get(snakeBodyCouter).setScore(snakeModels.get(snakeBodyCouter).getScore() + 5);
                                 }
                             }
                         } else {
@@ -208,7 +209,7 @@ public class SnakeController {
                 // game pause
             }
 
-            while (System.currentTimeMillis() <= (time + 6 * kästchenGröße)) {
+            while (System.currentTimeMillis() <= (time + 5 * kästchenGröße)) {
                 // Waiting for next Step
             }
         }

@@ -1,5 +1,7 @@
 console.log("JavaScript ist eingebunden!\n");
 var user;
+
+
 time = new Date();
 window.onload = initialice();
 
@@ -9,7 +11,7 @@ function initialice() {
 }
 
 function connectWebSocket() {
-    let socket = new WebSocket("ws://localhost:8080/ws");
+    let socket = new WebSocket("ws://" + "10.62.2.194" + ":8080/ws");
     let ws = Stomp.over(socket);
     let that = this;
     ws.connect({}, (frame) => {
@@ -43,7 +45,7 @@ function yourComment(newComment) {
     //console.log("Ausgelesener Text: " + msg);
     if (msg === "") return;
     //‚commentList.comment.getText();
-    fetch("http://localhost:8080/api/comments", {
+    fetch("http://" + "10.62.2.194" + ":8080/api/comments", {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
         body: JSON.stringify({text: msg})
@@ -58,7 +60,7 @@ function yourComment(newComment) {
 
 function generiereKommentare() {
 
-    fetch("http://localhost:8080/api/comments/generator", {
+    fetch("http://" + "10.62.2.194" + ":8080/api/comments/generator", {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
     }).then(function (ev) {
@@ -69,7 +71,7 @@ function generiereKommentare() {
 }
 
 function fethAllComments(showDeleteComments) {
-    fetch("http://localhost:8080/api/comments").then(function (ev) {
+    fetch("http://" + "10.62.2.194" + ":8080/api/comments").then(function (ev) {
         // console.clear();
         //console.log(ev);
         ev.json().then(function (commentList) {
@@ -139,7 +141,7 @@ function durchsuchKommentare() {
 
     console.log("Suchanfragen: " + suchAnfragen.toString());
 
-    fetch("http://localhost:8080/api/comments/search?suchAnfrage=" + suchAnfragen, {
+    fetch("http://" + "10.62.2.194" + ":8080/api/comments/search?suchAnfrage=" + suchAnfragen, {
         method: 'GET',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {
@@ -216,7 +218,7 @@ function loescheKommentar(commentId) {
     if (commentId === undefined) {
         msg = document.querySelector("#deleteCommentWithString").value;
         if (msg === "") return;
-        fetch("http://localhost:8080/api/comments/delete?suchAnfrage=" + msg, {
+        fetch("http://" + "10.62.2.194" + ":8080/api/comments/delete?suchAnfrage=" + msg, {
             method: 'GET',
             headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         }).then(function (ev) {
@@ -226,7 +228,7 @@ function loescheKommentar(commentId) {
             console.log("Error", error);
         }));
     } else {
-        fetch("http://localhost:8080/api/comments/deleteById/" + commentId, {
+        fetch("http://" + "10.62.2.194" + ":8080/api/comments/deleteById/" + commentId, {
             method: 'DELETE'
         }).then(function (ev) {
             console.log(ev + "\n\nDie CommentId des Kommentars welcher gelöscht wird: " + commentId);

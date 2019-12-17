@@ -87,7 +87,8 @@ public class SnakeModel {
     }
 
     public boolean reduceScore() {
-        for (int i = 0; i < 7; i++) {
+        int reducingBy = (int)(posX.size() / 1.75f) +1;
+        for (int i = 0; i < reducingBy; i++) {
             if (score - 1 > 0 && posX.size() - 1 != 0 &&
                    posY.size() - 1 != 0) {
                 posX.remove(posX.size() - (posX.size() - 1));
