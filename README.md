@@ -38,10 +38,15 @@ the following text is just for the collaborator
 
 **TODO:** <br>
 - Snake Bild als Überschrift
-- Resetfunktion
+- ~~Resetfunktion~~
 - Geschwindigkeit anpassen
 - Kollision optimieren (Feld Array)
 - Session mit Anmeldefunktion und login
 - Zeittracking
 - parallelität beim Spielstand beachten mutex
 - Bestehende Model Klassen in DTO und Model auftrennen
+- Bugg Richtungsumkehrung
+- Bugg Footer aufsammeln bei geringem Score
+- Name
+- Farbe
+- Tode mitlocken
