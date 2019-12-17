@@ -47,3 +47,6 @@ the following text is just for the collaborator
 - Bestehende Model Klassen in DTO und Model auftrennen
 - Bugg Richtungsumkehrung
 - Bugg Footer aufsammeln bei geringem Score
+- Name
+- Farbe
+- Tode mitlocken
