@@ -1,5 +1,13 @@
 # Website-Mulitplayer-Snake
 
+Hey,
+this is my Mulitplayer-Snake-Game.
+Its possible to play a normal Snake Game with Websockets in your lokal network with other friends.
+If you have any questions please contact me.
+
+
+The following Text is for the collaborators to see which Features should be add next and were added:
+
 **Ziele:** <br>
 - Es soll ein Multiplayer Snake Spiel mit Kommentarfunktion und Score Anzeige implementiert werden. 
 - Außerdem soll es eine Anmeldefunktion geben, bei welcher zwischen dem Admin und normalen Usern, welche sich registrieren können, differenziert werden soll. 
