@@ -1,19 +1,14 @@
 # Website-Mulitplayer-Snake
 
 **Ziele:** <br>
-- Es soll ein Multiplayer Snake Spiel mit Kommentarfunktion und Score Anzeige implementiert. 
+- Es soll ein Multiplayer Snake Spiel mit Kommentarfunktion und Score Anzeige implementiert werden. 
 - Außerdem soll es eine Anmeldefunktion geben, bei welcher zwischen dem Admin und normalen Usern, welche sich registrieren können, differenziert werden soll. 
 - Die Kommentare darf der Admin nach belieben löschen und durchsuchen.
 
-**Aktueller Stand:** <br>
-- Kommentare werden in DB gespeichert und können durchsucht & gelöscht von jeden Nutzer
-- Nutzer & Anmeldefunktion fehlt völlig
+**Aktueller Stand / erledigte Schritte:** <br>
+- ~~Kommentare werden in DB gespeichert und können durchsucht & gelöscht von jeden Nutzer~~
+- ~~Nutzer & Anmeldefunktion fehlt völlig~~
 - ~~Opensource Snake ist eingefügt grundlegend an einige Dinge angepasst~~ <-- komplett gelöscht und selbst geschrieben
-- Snake Spiel über Websockets implementiert siehe Finished TODO
-
-the following text is just for the collaborator
-
-**Finished TODO:** <br>
 - ~~Struktur schaffen~~
 - ~~Server/Client Kommunikation Testfunktion schreiben~~
 - ~~Server/Client Kommunikation neue Kommentare aus anderem Tab aktualisieren~~
