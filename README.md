@@ -42,6 +42,7 @@ The following Text is for the collaborators to see which Features should be add 
 - ~~Tode mitlocken~~
 - ~~Name~~
 - ~~Bugg Footer aufsammeln bei geringem Score~~
+- ~~Chatarea ändern~~
 
 **TODO:** <br>
 - Snake Bild als Überschrift
@@ -53,4 +54,5 @@ The following Text is for the collaborators to see which Features should be add 
 - Bestehende Model Klassen in DTO und Model auftrennen
 - Bugg Richtungsumkehrung
 - Farbe
+- Highscore anzeigen
 - Chatarea ändern
