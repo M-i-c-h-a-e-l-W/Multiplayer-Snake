@@ -3,9 +3,9 @@ var canvas, ctx, playerNr = -1, maxPlayer = 0;
 var fodderX = 100, fodderY = 100;
 var pause = false, check;
 
-window.onload = function(){
+window.onload = function () {
     check = prompt('Gib deinen Namen ein', '');
-    if(check === ''){
+    if (check === '') {
         check = "Inkompetente Person";
     }
     initialization();
@@ -15,7 +15,7 @@ window.onbeforeunload = function () {
     if (playerNr === -1 || maxPlayer === 0) {
         return;
     }
-    fetch("http://" + "192.168.0.87" + ":8080/api/snake/playerDead?deadPlayerNr=" + playerNr, {
+    fetch("http://" + "10.62.2.194" + ":8080/api/snake/playerDead?deadPlayerNr=" + playerNr, {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {
@@ -33,7 +33,7 @@ function initialization() {
     if (canvas.getContext) {
         ctx = canvas.getContext('2d');
         connectWebSocketChangeDirection(() => {
-            fetch("http://" + "192.168.0.87" + ":8080/api/snake/newPlayer?playerName=" + check, {
+            fetch("http://" + "10.62.2.194" + ":8080/api/snake/newPlayer?playerName=" + check, {
                 method: 'POST',
                 headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
             }).then(function (ev) {
@@ -62,7 +62,7 @@ function initialization() {
 }
 
 function startGame() {
-    fetch("http://" + "192.168.0.87" + ":8080/api/snake/runGame", {
+    fetch("http://" + "10.62.2.194" + ":8080/api/snake/runGame", {
         method: 'GET',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {
@@ -171,7 +171,7 @@ function getPosition() {
         if (sendKeyCode && changeD !== "Error") {
             changeD += ";" + playerNr.toString();
             //changeD = changeD.toString();
-            fetch("http://" + "192.168.0.87" + ":8080/api/snake/changeDirection?changeD=" + changeD, {
+            fetch("http://" + "10.62.2.194" + ":8080/api/snake/changeDirection?changeD=" + changeD, {
                 method: 'POST',
                 headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
             }).then(function (ev) {
@@ -193,7 +193,7 @@ function getPosition() {
 //setTimeout(getPosition, 5);
 
 function connectWebSocketChangeDirection(succesFunction) {
-    let socket = new WebSocket("ws://" + "192.168.0.87" + ":8080/ws");
+    let socket = new WebSocket("ws://" + "10.62.2.194" + ":8080/ws");
     let ws = Stomp.over(socket);
     let that = this;
     ws.connect({}, (frame) => {
@@ -231,7 +231,7 @@ function connectWebSocketChangeDirection(succesFunction) {
 
                 if (snakeNewData[currentPlayer].score !== null && snakeNewData[currentPlayer].score !== 0) {
 
-                    if(snakeNewData[currentPlayer].bestPlayer){
+                    if (snakeNewData[currentPlayer].bestPlayer) {
                         document.getElementById('spanId').innerHTML += "<h3><font color=\"" +
                             snakeNewData[currentPlayer].playerColor + "\">" + "Player: " +
                             currentPlayer + " " + snakeNewData[currentPlayer].playerName +
@@ -239,11 +239,11 @@ function connectWebSocketChangeDirection(succesFunction) {
                             snakeNewData[currentPlayer].score + "   and died " +
                             snakeNewData[currentPlayer].playerDeaths +
                             " times</h3>";
-                    }else{
+                    } else {
                         document.getElementById('spanId').innerHTML += "<font color=\"" +
                             snakeNewData[currentPlayer].playerColor + "\">" + "Player: " +
                             currentPlayer + " " + snakeNewData[currentPlayer].playerName +
-                             " </font>has a Score of: " +
+                            " </font>has a Score of: " +
                             snakeNewData[currentPlayer].score + "   and died " +
                             snakeNewData[currentPlayer].playerDeaths +
                             " times";
@@ -275,6 +275,14 @@ function connectWebSocketChangeDirection(succesFunction) {
             document.getElementById('messages').innerHTML += "<span style='color: #707070;'>" +
                 theNewMessage.newMessage + "</span><br>";
         });
+        ws.subscribe("/snake/newHighScore", (message) => {
+            let theNewMessage = JSON.parse(message.body);
+
+            document.getElementById('highScore').innerHTML =
+                theNewMessage.name + " reached " +
+                theNewMessage.bestScore + " points";
+
+        });
         that.webSocket = ws;
         succesFunction();
     }, function (error) {
@@ -288,7 +296,7 @@ function connectWebSocketChangeDirection(succesFunction) {
 function newMessage() {
     let newMessage = document.querySelector("#chatWindow").value;
 
-    fetch("http://" + "192.168.0.87" + ":8080/api/snake/chat?playerNr=" + playerNr + "&message=" + newMessage, {
+    fetch("http://" + "10.62.2.194" + ":8080/api/snake/chat?playerNr=" + playerNr + "&message=" + newMessage, {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {

@@ -14,6 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class Player {
     private String name;
-    private int deaths;
+    private int deaths, bestScore;
     private List<SnakeModel> snakeModels = new ArrayList<>();
 }

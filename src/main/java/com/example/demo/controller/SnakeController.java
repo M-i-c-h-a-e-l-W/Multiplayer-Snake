@@ -20,6 +20,7 @@ public class SnakeController {
     private List<SnakeModel> snakeModels = new ArrayList<>();
     private SnakeFodder snakeFodder = new SnakeFodder();
     private List<Player> players = new ArrayList<>();
+    private Player bestPlayer;
 
     private FieldData[][] Spielfeld = new FieldData[100][60];
     private boolean[] playerAlife = new boolean[1000];
@@ -28,7 +29,7 @@ public class SnakeController {
 
     private int anzPlayer = 0;
     private boolean isRunning = false;
-    private int kästchenGröße = 10;
+    private int kästchenGröße = 10, bestScoreOfAll;
 
     @PostMapping("/newPlayer")
     public ResponseEntity<SnakeModel> insertPlayerIntoGame(@RequestParam String playerName) {
@@ -213,7 +214,6 @@ public class SnakeController {
                 }
             }
 
-
             // best set Player
             int bestScore = 0, idBestplayer = -1;
             for (int i = 0; i < snakeModels.size() && i >= 0; i++) {
@@ -222,8 +222,20 @@ public class SnakeController {
                     idBestplayer = i;
                 }
             }
+            for (Player p : players) {
+                if (p.getName().equals(snakeModels.get(idBestplayer).getPlayerName())){
+                    bestPlayer = p;
+                    break;
+                }
+            }
+
+            // show the best Score with player
             if (idBestplayer != -1) {
                 snakeModels.get(idBestplayer).setBestPlayer(true);
+                if(bestPlayer.getBestScore() < snakeModels.get(idBestplayer).getScore()){
+                    bestPlayer.setBestScore(snakeModels.get(idBestplayer).getScore());
+                }
+                webSocket.convertAndSend("/snake/newHighScore", bestPlayer);
             }
 
             setFieldEmpty();
@@ -361,6 +373,7 @@ public class SnakeController {
         playerAlife = null;
         anzPlayer = 0;
         isRunning = false;
+        players = null;
 
         return true;
     }
