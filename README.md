@@ -53,4 +53,4 @@ The following Text is for the collaborators to see which Features should be add 
 - Bestehende Model Klassen in DTO und Model auftrennen
 - Bugg Richtungsumkehrung
 - Farbe
-
+- Chatarea ändern
