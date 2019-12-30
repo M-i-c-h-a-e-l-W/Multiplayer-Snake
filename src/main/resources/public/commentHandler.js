@@ -3,15 +3,18 @@ var user;
 
 
 time = new Date();
-window.onload = initialice();
+// start connection
+window.onload = initialize();
 
-function initialice() {
+// connection with backend
+function initialize() {
     fethAllComments();
     connectWebSocket();
 }
 
+// connection with other clients: get new comments and delete comments by id
 function connectWebSocket() {
-    let socket = new WebSocket("ws://" + "10.62.2.194" + ":8080/ws");
+    let socket = new WebSocket("ws://" + "localhost" + ":8080/ws");
     let ws = Stomp.over(socket);
     let that = this;
     ws.connect({}, (frame) => {
@@ -35,6 +38,7 @@ function connectWebSocket() {
     });
 }
 
+// post a comment
 function yourComment(newComment) {
     var msg;
     if (newComment === undefined) {
@@ -45,7 +49,7 @@ function yourComment(newComment) {
     //console.log("Ausgelesener Text: " + msg);
     if (msg === "") return;
     //‚commentList.comment.getText();
-    fetch("http://" + "10.62.2.194" + ":8080/api/comments", {
+    fetch("http://" + "localhost" + ":8080/api/comments", {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
         body: JSON.stringify({text: msg})
@@ -57,10 +61,10 @@ function yourComment(newComment) {
     }));
 }
 
-
+// generate comments
 function generiereKommentare() {
 
-    fetch("http://" + "10.62.2.194" + ":8080/api/comments/generator", {
+    fetch("http://" + "localhost" + ":8080/api/comments/generator", {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
     }).then(function (ev) {
@@ -70,8 +74,9 @@ function generiereKommentare() {
     }));
 }
 
+// show all comments
 function fethAllComments(showDeleteComments) {
-    fetch("http://" + "10.62.2.194" + ":8080/api/comments").then(function (ev) {
+    fetch("http://" + "localhost" + ":8080/api/comments").then(function (ev) {
         // console.clear();
         //console.log(ev);
         ev.json().then(function (commentList) {
@@ -95,6 +100,7 @@ function fethAllComments(showDeleteComments) {
     });
 }
 
+// insert commentList in span
 function getNewCommentsToInsert(ev) {
     ev.json().then(function (commentList) {
         for (var i = 0; i < commentList.length; i++) {
@@ -103,11 +109,12 @@ function getNewCommentsToInsert(ev) {
     });
 }
 
+// insert a comment in span
 function insertComment(insertThisComment) {
     document.getElementById('spanId').innerHTML += "<li>" + insertThisComment + "</li>";
 }
 
-
+// show comments and highlight a string
 function durchsuchKommentare() {
     var msg = document.querySelector("#searchStringInComment").value;
     if (msg === "/all") {
@@ -141,7 +148,7 @@ function durchsuchKommentare() {
 
     console.log("Suchanfragen: " + suchAnfragen.toString());
 
-    fetch("http://" + "10.62.2.194" + ":8080/api/comments/search?suchAnfrage=" + suchAnfragen, {
+    fetch("http://" + "localhost" + ":8080/api/comments/search?suchAnfrage=" + suchAnfragen, {
         method: 'GET',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {
@@ -213,12 +220,13 @@ function durchsuchKommentare() {
     }));
 }
 
+// delete a comment
 function loescheKommentar(commentId) {
     var msg;
     if (commentId === undefined) {
         msg = document.querySelector("#deleteCommentWithString").value;
         if (msg === "") return;
-        fetch("http://" + "10.62.2.194" + ":8080/api/comments/delete?suchAnfrage=" + msg, {
+        fetch("http://" + "localhost" + ":8080/api/comments/delete?suchAnfrage=" + msg, {
             method: 'GET',
             headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         }).then(function (ev) {
@@ -228,7 +236,7 @@ function loescheKommentar(commentId) {
             console.log("Error", error);
         }));
     } else {
-        fetch("http://" + "10.62.2.194" + ":8080/api/comments/deleteById/" + commentId, {
+        fetch("http://" + "localhost" + ":8080/api/comments/deleteById/" + commentId, {
             method: 'DELETE'
         }).then(function (ev) {
             console.log(ev + "\n\nDie CommentId des Kommentars welcher gelöscht wird: " + commentId);

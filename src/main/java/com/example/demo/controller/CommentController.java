@@ -28,16 +28,25 @@ public class CommentController {
 
     @Autowired
     private CommentService commentService;
+
     //public DemoController(CommentRepository commentRepository) {this.commentRepository=commentRepository;}
-
     // private List<Comment> commentList = new ArrayList<>();
-    private long id = -1; // :P
-
+    // private long id = -1;
     /*
     @GetMapping("/comment")
     public ResponseEntity helloWorld()
     {
         return ResponseEntity.ok(Comment.builder().id(1L).text("Kommentar").build() );
+    }*/
+    /*
+    @GetMapping("/comments/search")
+    public ResponseEntity<List<Comment>> searchComment(@RequestParam String suchAnfrage) {
+        if (StringUtils.isEmpty(StringUtils.trim(suchAnfrage))) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        String[] suche; // = new String[ suchAnfrage.split(";;").length];
+        suche = suchAnfrage.split("&");
+        return ResponseEntity.ok().body(commentService.searchComment(suche));
     }*/
 
     @PostMapping("/comments")
@@ -79,6 +88,7 @@ public class CommentController {
         }else{
             id = comments.get(comments.toArray().length-1).getId();
         }*/
+
         List<Comment> comments = commentService.generateComment();
         for (int i = 0; i < comments.size(); i++) {
             webSocket.convertAndSend("/comment/new", comments.get(i));
@@ -86,17 +96,6 @@ public class CommentController {
 
         return comments;
     }
-
-/*
-    @GetMapping("/comments/search")
-    public ResponseEntity<List<Comment>> searchComment(@RequestParam String suchAnfrage) {
-        if (StringUtils.isEmpty(StringUtils.trim(suchAnfrage))) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        String[] suche; // = new String[ suchAnfrage.split(";;").length];
-        suche = suchAnfrage.split("&");
-        return ResponseEntity.ok().body(commentService.searchComment(suche));
-    }*/
 
     @GetMapping("/comments/search")
     public ResponseEntity<CommentSearchResult> searchCommentWithArray(@RequestParam String[] suchAnfrage) {
@@ -112,7 +111,6 @@ public class CommentController {
         return ResponseEntity.ok(commentRepository.findAll());
     }
 
-
     @GetMapping("/comments/delete")
     public boolean deleteComment(@RequestParam String suchAnfrage) {
         /*
@@ -123,6 +121,7 @@ public class CommentController {
         }).collect(Collectors.toList());
         commentRepository.deleteAll(comments);
         */
+
         commentRepository.deleteAllByTextContaining(suchAnfrage);
         return true;
     }
@@ -132,6 +131,5 @@ public class CommentController {
         commentRepository.deleteById(ID);
         webSocket.convertAndSend("/comment/deleteById", "{ \"id\": " + ID + " }");
     }
-
 
 }

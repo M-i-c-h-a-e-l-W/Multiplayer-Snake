@@ -2,7 +2,6 @@ package com.example.demo.dto;
 
 import lombok.*;
 
-
 @Setter
 @Getter
 @NoArgsConstructor

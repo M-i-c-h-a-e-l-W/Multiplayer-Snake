@@ -23,5 +23,3 @@ public class Comment {
         return "Comment{" + "text='" + text + '\'' + ", id=" + id + '}';
     }
 }
-// BUGGLÖSUNG IF SUCHANFRAGE 2 immer am NEde SUCHANFRAGE 1 bzw überlappend THEN Suchanfrage 1 = Suchanfrage 1+2
-// FEHLER WENN Suchanfrage 2 nicht im Kommentar enthalten ist

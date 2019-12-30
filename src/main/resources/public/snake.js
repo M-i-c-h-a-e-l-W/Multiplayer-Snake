@@ -3,6 +3,7 @@ var canvas, ctx, playerNr = -1, maxPlayer = 0;
 var fodderX = 100, fodderY = 100;
 var pause = false, check;
 
+// load site and give own name
 window.onload = function () {
     check = prompt('Gib deinen Namen ein', '');
     if (check === '') {
@@ -11,11 +12,12 @@ window.onload = function () {
     initialization();
 };
 
+// if reload send a message to playerDead in backend
 window.onbeforeunload = function () {
     if (playerNr === -1 || maxPlayer === 0) {
         return;
     }
-    fetch("http://" + "10.62.2.194" + ":8080/api/snake/playerDead?deadPlayerNr=" + playerNr, {
+    fetch("http://" + "localhost" + ":8080/api/snake/playerDead?deadPlayerNr=" + playerNr, {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {
@@ -26,6 +28,7 @@ window.onbeforeunload = function () {
     }));
 };
 
+// connection backend & PlayerGetID from backend
 function initialization() {
     document.getElementById('messages').innerHTML = "";
 
@@ -33,7 +36,7 @@ function initialization() {
     if (canvas.getContext) {
         ctx = canvas.getContext('2d');
         connectWebSocketChangeDirection(() => {
-            fetch("http://" + "10.62.2.194" + ":8080/api/snake/newPlayer?playerName=" + check, {
+            fetch("http://" + "localhost" + ":8080/api/snake/newPlayer?playerName=" + check, {
                 method: 'POST',
                 headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
             }).then(function (ev) {
@@ -52,8 +55,6 @@ function initialization() {
             }));
 
         });
-
-        // Connection Backend & PlayerGetID from Backend
     } else {
         alert("I am sorry, but your browser is bullshit. It does not support the canvas tag.");
 
@@ -61,18 +62,19 @@ function initialization() {
 
 }
 
+// send message to the backend to start the game
 function startGame() {
-    fetch("http://" + "10.62.2.194" + ":8080/api/snake/runGame", {
+    fetch("http://" + "localhost" + ":8080/api/snake/runGame", {
         method: 'GET',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {
-
 
     }).catch((function (error) {
         console.log("Error: ", error);
     }));
 }
 
+// draw the snakes and the fodder
 function drawSnakes(color, posX, posY, partOfHead) {
     ctx.beginPath();
     //ctx.fillStyle = "rgb(250,0,0)";
@@ -80,7 +82,7 @@ function drawSnakes(color, posX, posY, partOfHead) {
     ctx.fillStyle = color;
     if (partOfHead === 0) {
         ctx.strokeStyle = "#000000";
-    } else if (partOfHead === 404) {
+    } else if (partOfHead === 4040) {
         ctx.strokeStyle = "#ff0000";
     } else {
         ctx.strokeStyle = "#ffffff";
@@ -99,20 +101,10 @@ function drawSnakes(color, posX, posY, partOfHead) {
 }
 
 var interval = setInterval(getPosition, 5);
+//setTimeout(getPosition, 5);
 
+// input "wasd" and arrow keys and send the input to the backend
 function getPosition() {
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    /*
-
-    drawSnakes("blue", i, 100);
-
-    if (i === 999) {
-        i = 0;
-    }
-    i++;
-
-     */
     document.onkeydown = function (event) {
         var keyCode, changeD = "Error";
         var sendKeyCode = false;
@@ -122,7 +114,6 @@ function getPosition() {
         } else {
             keyCode = event.keyCode;
         }
-
 
         //alert("Eingabe: " + keyCode);
         switch (keyCode) {
@@ -171,7 +162,7 @@ function getPosition() {
         if (sendKeyCode && changeD !== "Error") {
             changeD += ";" + playerNr.toString();
             //changeD = changeD.toString();
-            fetch("http://" + "10.62.2.194" + ":8080/api/snake/changeDirection?changeD=" + changeD, {
+            fetch("http://" + "localhost" + ":8080/api/snake/changeDirection?changeD=" + changeD, {
                 method: 'POST',
                 headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
             }).then(function (ev) {
@@ -189,20 +180,20 @@ function getPosition() {
     };
 }
 
-
-//setTimeout(getPosition, 5);
-
+// connection to webSockets with all other clients
 function connectWebSocketChangeDirection(succesFunction) {
-    let socket = new WebSocket("ws://" + "10.62.2.194" + ":8080/ws");
+    let socket = new WebSocket("ws://" + "localhost" + ":8080/ws");
     let ws = Stomp.over(socket);
     let that = this;
     ws.connect({}, (frame) => {
+        // get new Position of fodder
         ws.subscribe("/snake/fodderOfSnake", (message) => {
             let newFodder = JSON.parse(message.body);
             fodderX = newFodder.posX * 10;
             fodderY = newFodder.posY * 10;
             console.log("NewFodder: ", message)
         });
+        // get dead player
         ws.subscribe("/snake/deleted", (message) => {
             let newFodder = JSON.parse(message.body);
             if (newFodder.deletedPlayer != null && newFodder.deletedPlayer === playerNr) {
@@ -213,6 +204,7 @@ function connectWebSocketChangeDirection(succesFunction) {
             }
             console.log("NewFodder: ", message);
         });
+        // get new position of snakes
         ws.subscribe("/snake/changeDofP", (message) => {
             // console.log("WebSocket is Connected\nVariable Message: ", message);
             let snakeNewData = JSON.parse(message.body);
@@ -221,7 +213,7 @@ function connectWebSocketChangeDirection(succesFunction) {
             console.log("MaxPlayer: " + maxPlayer);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            drawSnakes("#FF0000", fodderX, fodderY, 404);
+            drawSnakes("#FF0000", fodderX, fodderY, 4040);
             document.getElementById('spanId').innerHTML = "";
 
             for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
@@ -262,6 +254,7 @@ function connectWebSocketChangeDirection(succesFunction) {
                 }
             }
         });
+        // get messages of chat
         ws.subscribe("/snake/chat", (message) => {
             let theNewMessage = JSON.parse(message.body);
 
@@ -275,6 +268,7 @@ function connectWebSocketChangeDirection(succesFunction) {
             document.getElementById('messages').innerHTML += "<span style='color: #707070;'>" +
                 theNewMessage.newMessage + "</span><br>";
         });
+        // get the highScore
         ws.subscribe("/snake/newHighScore", (message) => {
             let theNewMessage = JSON.parse(message.body);
 
@@ -283,6 +277,7 @@ function connectWebSocketChangeDirection(succesFunction) {
                 theNewMessage.bestScore + " points";
 
         });
+
         that.webSocket = ws;
         succesFunction();
     }, function (error) {
@@ -292,11 +287,11 @@ function connectWebSocketChangeDirection(succesFunction) {
 
 }
 
-// cheat/ chat box
+// cheat/ chat box  // to see cheat code look in the backend (chatController)
 function newMessage() {
     let newMessage = document.querySelector("#chatWindow").value;
 
-    fetch("http://" + "10.62.2.194" + ":8080/api/snake/chat?playerNr=" + playerNr + "&message=" + newMessage, {
+    fetch("http://" + "localhost" + ":8080/api/snake/chat?playerNr=" + playerNr + "&message=" + newMessage, {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {

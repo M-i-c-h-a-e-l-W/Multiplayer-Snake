@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -38,7 +37,7 @@ public class SnakeModel {
         // System.out.println("Hex Farb: " + playerColor);
     }
 
-    // TODO bei flüssiger Bewegung alle alten Snake Körper neu setzen
+    // push Snake in next box and delete the old position
     public void addPosX(int x) {
         x/= 10;
         posXHead = posX.get(posX.size() - 1) + x;
@@ -59,7 +58,6 @@ public class SnakeModel {
 
         //System.out.println("X: " + posX);
     }
-
     public void addPosY(int y) {
         y /= 10;
         posYHead = posY.get(posY.size() - 1) + y;
@@ -107,10 +105,12 @@ public class SnakeModel {
     }
 
     public void changePosX(int index, int wertX) {
+
         posX.set(index, posX.get(index) + wertX);
     }
 
     public void changePosY(int index, int wertY) {
+
         posY.set(index, posY.get(index) + wertY);
     }
 

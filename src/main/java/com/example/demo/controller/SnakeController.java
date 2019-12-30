@@ -24,12 +24,13 @@ public class SnakeController {
 
     private FieldData[][] Spielfeld = new FieldData[100][60];
     private boolean[] playerAlife = new boolean[1000];
+    private int anzPlayer = 0;
+    private boolean isRunning = false;
+    private int kästchenGröße = 10, bestScoreOfAll = 0;
+
     @Autowired
     private SimpMessagingTemplate webSocket;
 
-    private int anzPlayer = 0;
-    private boolean isRunning = false;
-    private int kästchenGröße = 10, bestScoreOfAll;
 
     @PostMapping("/newPlayer")
     public ResponseEntity<SnakeModel> insertPlayerIntoGame(@RequestParam String playerName) {
@@ -87,7 +88,6 @@ public class SnakeController {
 
         setFeldArray();
         long time;
-
 
         while (true) {
             // reset Game
@@ -163,7 +163,7 @@ public class SnakeController {
                 snakeModels.get(i).setBestPlayer(false);
                 if (snakeModels.get(i).getPlayerAlife()) {
                     if (snakeModels.get(i).getPosXHead() == snakeFodder.getPosX() && snakeModels.get(i).getPosYHead() == snakeFodder.getPosY()) {
-                        snakeModels.get(i).setScore((int) (snakeModels.get(i).getScore() * 1.5f) + 1); // neu dazugewonnene Blöcke
+                        snakeModels.get(i).setScore((int) (snakeModels.get(i).getScore() * 1.25f) + 3); // neu dazugewonnene Blöcke
                         snakeFodder.setNewPosition();
                         webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
                     }
@@ -174,7 +174,7 @@ public class SnakeController {
                                 if (snakeModels.get(i).getPosXHead() == snakeModels.get(snakeBodyCouter).getPosX().get(bodyLength) &&
                                         snakeModels.get(i).getPosYHead() == snakeModels.get(snakeBodyCouter).getPosY().get(bodyLength)) {
 
-                                    System.out.println("HITTED");
+                                    // System.out.println("HITTED");
 
                                     if (!snakeModels.get(i).reduceScore()) {
                                         //snakeModels.remove(i);
@@ -222,18 +222,20 @@ public class SnakeController {
                     idBestplayer = i;
                 }
             }
-            for (Player p : players) {
-                if (p.getName().equals(snakeModels.get(idBestplayer).getPlayerName())){
-                    bestPlayer = p;
-                    break;
-                }
-            }
+
 
             // show the best Score with player
             if (idBestplayer != -1) {
+                for (Player p : players) {
+                    if (p.getName().equals(snakeModels.get(idBestplayer).getPlayerName())){
+                        bestPlayer = p;
+                        break;
+                    }
+                }
                 snakeModels.get(idBestplayer).setBestPlayer(true);
-                if(bestPlayer.getBestScore() < snakeModels.get(idBestplayer).getScore()){
+                if(bestScoreOfAll < bestScore && bestPlayer.getBestScore() < snakeModels.get(idBestplayer).getScore()){
                     bestPlayer.setBestScore(snakeModels.get(idBestplayer).getScore());
+                    bestScoreOfAll = bestScore;
                 }
                 webSocket.convertAndSend("/snake/newHighScore", bestPlayer);
             }
@@ -245,39 +247,6 @@ public class SnakeController {
 
             while (System.currentTimeMillis() <= (time + 5 * kästchenGröße)) {
                 // Waiting for next Step
-            }
-        }
-    }
-
-    public void setFeldArray() {
-        for (int x = 0; x < 100; x++) {
-            for (int y = 0; y < 60; y++) {
-                Spielfeld[x][y] = new FieldData();
-            }
-        }
-    }
-
-    public void setSnakePositionOnField(int indexOfSnake) {
-        int indexSize;
-        if (snakeModels.get(indexOfSnake).getPosX().size() != snakeModels.get(indexOfSnake).getPosY().size()) {
-            return;
-        }
-        indexSize = snakeModels.get(indexOfSnake).getPosX().size() - 1;
-
-        int posX, posY;
-        for (int i = 0; i < indexSize; i++) {
-            posX = snakeModels.get(indexOfSnake).getPosX().get(i);
-            posY = snakeModels.get(indexOfSnake).getPosY().get(i);
-            if (posX < 100 && posY < 60) {
-                Spielfeld[posX / 10][posY / 10].getSnakeModels().add(snakeModels.get(indexOfSnake));
-            }
-        }
-    }
-
-    public void setFieldEmpty() {
-        for (int x = 0; x < 100; x++) {
-            for (int y = 0; y < 60; y++) {
-                Spielfeld[x][y].getSnakeModels().clear();
             }
         }
     }
@@ -332,6 +301,7 @@ public class SnakeController {
         webSocket.convertAndSend("/snake/chat", chatMessageDTO);
     }
 
+    // check input
     public boolean snakeDirection(String newDirection, int playerNr) {
         // Optimierung
         if (newDirection.equals(snakeModels.get(playerNr).getDirection())) {
@@ -366,6 +336,39 @@ public class SnakeController {
         return false;
     }
 
+    public void setFeldArray() {
+        for (int x = 0; x < 100; x++) {
+            for (int y = 0; y < 60; y++) {
+                Spielfeld[x][y] = new FieldData();
+            }
+        }
+    }
+
+    public void setSnakePositionOnField(int indexOfSnake) {
+        int indexSize;
+        if (snakeModels.get(indexOfSnake).getPosX().size() != snakeModels.get(indexOfSnake).getPosY().size()) {
+            return;
+        }
+        indexSize = snakeModels.get(indexOfSnake).getPosX().size() - 1;
+
+        int posX, posY;
+        for (int i = 0; i < indexSize; i++) {
+            posX = snakeModels.get(indexOfSnake).getPosX().get(i);
+            posY = snakeModels.get(indexOfSnake).getPosY().get(i);
+            if (posX < 100 && posY < 60) {
+                Spielfeld[posX / 10][posY / 10].getSnakeModels().add(snakeModels.get(indexOfSnake));
+            }
+        }
+    }
+
+    public void setFieldEmpty() {
+        for (int x = 0; x < 100; x++) {
+            for (int y = 0; y < 60; y++) {
+                Spielfeld[x][y].getSnakeModels().clear();
+            }
+        }
+    }
+
     public boolean resetFunction() {
         snakeModels.clear();
         snakeModels = null;
@@ -374,6 +377,7 @@ public class SnakeController {
         anzPlayer = 0;
         isRunning = false;
         players = null;
+        bestScoreOfAll = 0;
 
         return true;
     }
