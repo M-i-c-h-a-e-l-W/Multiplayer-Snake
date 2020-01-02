@@ -1,6 +1,6 @@
-package com.example.demo.model;
+package com.demo.model;
 
-import com.example.demo.dto.Comment;
+import com.demo.dto.Comment;
 import lombok.*;
 
 import java.util.List;

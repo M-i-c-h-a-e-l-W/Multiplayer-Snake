@@ -1,9 +1,9 @@
-package com.example.demo.controller;
+package com.demo.controller;
 
-import com.example.demo.dto.Comment;
-import com.example.demo.model.CommentSearchResult;
-import com.example.demo.repository.CommentRepository;
-import com.example.demo.service.CommentService;
+import com.demo.dto.Comment;
+import com.demo.model.CommentSearchResult;
+import com.demo.repository.CommentRepository;
+import com.demo.service.CommentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

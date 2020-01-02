@@ -1,4 +1,4 @@
-package com.example.demo.configer;
+package com.demo.configer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

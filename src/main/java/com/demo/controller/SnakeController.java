@@ -1,10 +1,10 @@
-package com.example.demo.controller;
+package com.demo.controller;
 
-import com.example.demo.dto.ChatMessageDTO;
-import com.example.demo.model.FieldData;
-import com.example.demo.model.Player;
-import com.example.demo.model.SnakeFodder;
-import com.example.demo.model.SnakeModel;
+import com.demo.model.FieldData;
+import com.demo.model.Player;
+import com.demo.model.SnakeFodder;
+import com.demo.dto.ChatMessageDTO;
+import com.demo.model.SnakeModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

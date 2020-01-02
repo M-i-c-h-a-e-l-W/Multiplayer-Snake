@@ -1,6 +1,6 @@
-package com.example.demo.repository;
+package com.demo.repository;
 
-import com.example.demo.dto.Comment;
+import com.demo.dto.Comment;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

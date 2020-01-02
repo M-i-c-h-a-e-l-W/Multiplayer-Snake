@@ -1,8 +1,8 @@
-package com.example.demo.service;
+package com.demo.service;
 
-import com.example.demo.dto.Comment;
-import com.example.demo.model.CommentSearchResult;
-import com.example.demo.repository.CommentRepository;
+import com.demo.dto.Comment;
+import com.demo.model.CommentSearchResult;
+import com.demo.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

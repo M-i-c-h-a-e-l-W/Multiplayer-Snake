@@ -1,6 +1,5 @@
-package com.example.demo.model;
+package com.demo.model;
 
-import com.example.demo.model.SnakeModel;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.ArrayList;
