@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +29,6 @@ public class SnakeController {
 
     @Autowired
     private SimpMessagingTemplate webSocket;
-
 
     @PostMapping("/newPlayer")
     public ResponseEntity<SnakeModel> insertPlayerIntoGame(@RequestParam String playerName) {
@@ -162,6 +160,8 @@ public class SnakeController {
             for (int i = 0; i < snakeModels.size() && i >= 0; i++) {
                 snakeModels.get(i).setBestPlayer(false);
                 if (snakeModels.get(i).getPlayerAlife()) {
+                    snakeModels.get(i).setPlayedTime(50);
+
                     if (snakeModels.get(i).getPosXHead() == snakeFodder.getPosX() && snakeModels.get(i).getPosYHead() == snakeFodder.getPosY()) {
                         snakeModels.get(i).setScore((int) (snakeModels.get(i).getScore() * 1.25f) + 3); // neu dazugewonnene Blöcke
                         snakeFodder.setNewPosition();
@@ -263,6 +263,8 @@ public class SnakeController {
         }
         if (snakeDirection(snakeModelData[0], Integer.parseInt(snakeModelData[1]))) {
             // System.out.println("Correct: true");
+            long wait = System.currentTimeMillis();
+            while(wait + 40 >= System.currentTimeMillis());
             snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
 
             /// Klasse SnakeModel des Spielers mit der Richtungsänderung wird an alle Clients versendet

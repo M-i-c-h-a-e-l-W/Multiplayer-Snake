@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import lombok.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -19,7 +20,7 @@ public class SnakeModel {
     boolean gameRunning = false, playerAlife = true, bestPlayer = false;
     int posXHead, posYHead;
     int playerNr, playerDeaths;
-
+    long playTime;
 
     String playerColor, playerName;
     String direction = "r";
@@ -27,8 +28,8 @@ public class SnakeModel {
     int posApple;
 
     public void newSnake(int x, int y) {
-        posX.add(x/10);
-        posY.add(y/10);
+        posX.add(x / 10);
+        posY.add(y / 10);
 
         Random obj = new Random();
         int rand_num = obj.nextInt(0xffffff + 1);
@@ -39,7 +40,7 @@ public class SnakeModel {
 
     // push Snake in next box and delete the old position
     public void addPosX(int x) {
-        x/= 10;
+        x /= 10;
         posXHead = posX.get(posX.size() - 1) + x;
 
         for (int i = 1; i < posX.size(); i++) {
@@ -58,6 +59,7 @@ public class SnakeModel {
 
         //System.out.println("X: " + posX);
     }
+
     public void addPosY(int y) {
         y /= 10;
         posYHead = posY.get(posY.size() - 1) + y;
@@ -86,10 +88,10 @@ public class SnakeModel {
     }
 
     public boolean reduceScore() {
-        int reducingBy = (int)(posX.size() / 1.75f) +1;
+        int reducingBy = (int) (posX.size() / 1.75f) + 1;
         for (int i = 0; i < reducingBy; i++) {
             if (score - 1 > 0 && posX.size() - 1 != 0 &&
-                   posY.size() - 1 != 0) {
+                    posY.size() - 1 != 0) {
                 posX.remove(posX.size() - (posX.size() - 1));
                 posY.remove(posY.size() - (posY.size() - 1));
                 score--;
@@ -116,5 +118,12 @@ public class SnakeModel {
 
     public boolean getPlayerAlife() {
         return playerAlife;
+    }
+
+    public void setPlayedTime(long newTime) {
+        playTime += newTime;
+        if(playTime % 500 == 0){
+            System.out.println("Gespielte Zeit: " + playTime/1000 + "," + playTime%1000/100 + " Sekunden");
+        }
     }
 }

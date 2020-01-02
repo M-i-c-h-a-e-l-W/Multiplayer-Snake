@@ -88,7 +88,6 @@ function drawSnakes(color, posX, posY, partOfHead) {
         ctx.strokeStyle = "#ffffff";
     }
 
-
     var width = 10;
     var height = 10;
 
@@ -122,14 +121,12 @@ function getPosition() {
             case 37:
                 changeD = "l";
                 sendKeyCode = true;
-                // action when pressing left key
                 break;
             // up
             case 87:
             case 38:
                 changeD = "o";
                 sendKeyCode = true;
-                // action when pressing up key
                 break;
 
             // right
@@ -137,18 +134,12 @@ function getPosition() {
             case 39:
                 changeD = "r";
                 sendKeyCode = true;
-                // action when pressing right key
                 break;
             // down
             case 83:
             case 40:
                 changeD = "u";
                 sendKeyCode = true;
-                // action when pressing down key
-                break;
-            case 8:
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                // action when pressing down key
                 break;
             case 32:
                 changeD = "pause";
@@ -219,26 +210,32 @@ function connectWebSocketChangeDirection(succesFunction) {
             for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
 
                 console.log("Player: " + currentPlayer + " has a Score of:" +
-                    snakeNewData[currentPlayer].score);
+                    snakeNewData[currentPlayer].score + "| is " +
+                    snakeNewData[currentPlayer].playTime + " Sekunden am Leben |");
 
                 if (snakeNewData[currentPlayer].score !== null && snakeNewData[currentPlayer].score !== 0) {
+                    var playedTime = Math.round(snakeNewData[currentPlayer].playTime / 100);
 
+                    playedTime /= 10;
+                    if(playedTime % 1 === 0){
+                        playedTime += ".0";
+                    }
                     if (snakeNewData[currentPlayer].bestPlayer) {
                         document.getElementById('spanId').innerHTML += "<h3><font color=\"" +
                             snakeNewData[currentPlayer].playerColor + "\">" + "Player: " +
                             currentPlayer + " " + snakeNewData[currentPlayer].playerName +
                             " </font>has a Score of: " +
-                            snakeNewData[currentPlayer].score + "   and died " +
-                            snakeNewData[currentPlayer].playerDeaths +
-                            " times</h3>";
+                            snakeNewData[currentPlayer].score +
+                            " | is " + playedTime + "\t Sekunden am Leben |" +
+                            " and died " + snakeNewData[currentPlayer].playerDeaths + " times</h3>";
                     } else {
                         document.getElementById('spanId').innerHTML += "<font color=\"" +
                             snakeNewData[currentPlayer].playerColor + "\">" + "Player: " +
                             currentPlayer + " " + snakeNewData[currentPlayer].playerName +
                             " </font>has a Score of: " +
-                            snakeNewData[currentPlayer].score + "   and died " +
-                            snakeNewData[currentPlayer].playerDeaths +
-                            " times";
+                            snakeNewData[currentPlayer].score +
+                            " | is " + playedTime + "\t Sekunden am Leben |" +
+                            "   and died " + snakeNewData[currentPlayer].playerDeaths + " times";
                     }
                     document.getElementById('spanId').innerHTML += "<br>";
                 }
@@ -247,9 +244,11 @@ function connectWebSocketChangeDirection(succesFunction) {
 
                 } else if (snakeNewData[currentPlayer].posX.length === snakeNewData[currentPlayer].posY.length) {
                     for (var i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
+
                         drawSnakes(snakeNewData[currentPlayer].playerColor,
                             snakeNewData[currentPlayer].posX[i] * 10, snakeNewData[currentPlayer].posY[i] * 10,
                             snakeNewData[currentPlayer].posX.length - (i + 1));
+
                     }
                 }
             }
