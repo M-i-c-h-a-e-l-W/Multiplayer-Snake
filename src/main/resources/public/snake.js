@@ -9,7 +9,7 @@ window.onload = function () {
     if (check === '') {
         check = "Inkompetente Person";
     }
-    check = check.replace("#","xHashTagx");
+    check = check.replace("#", "xHashTagx");
     initialization();
 };
 
@@ -178,6 +178,7 @@ function connectWebSocketChangeDirection(succesFunction) {
     let ws = Stomp.over(socket);
     let that = this;
     ws.connect({}, (frame) => {
+
         // get new Position of fodder
         ws.subscribe("/snake/fodderOfSnake", (message) => {
             let newFodder = JSON.parse(message.body);
@@ -202,7 +203,7 @@ function connectWebSocketChangeDirection(succesFunction) {
             let snakeNewData = JSON.parse(message.body);
 
             maxPlayer = snakeNewData.length;
-            console.log("MaxPlayer: " + maxPlayer);
+            // console.log("MaxPlayer: " + maxPlayer);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             drawSnakes("#FF0000", fodderX, fodderY, 4040);
@@ -210,15 +211,13 @@ function connectWebSocketChangeDirection(succesFunction) {
 
             for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
 
-                console.log("Player: " + currentPlayer + " has a Score of:" +
-                    snakeNewData[currentPlayer].score + "| is " +
-                    snakeNewData[currentPlayer].playTime + " seconds alive |");
+                // console.log("Player: " + currentPlayer + " has a Score of:" +snakeNewData[currentPlayer].score + "| is " + snakeNewData[currentPlayer].playTime + " seconds alive |");
 
                 if (snakeNewData[currentPlayer].score !== null && snakeNewData[currentPlayer].score !== 0) {
                     var playedTime = Math.round(snakeNewData[currentPlayer].playTime / 100);
 
                     playedTime /= 10;
-                    if(playedTime % 1 === 0){
+                    if (playedTime % 1 === 0) {
                         playedTime += ".0";
                     }
                     if (snakeNewData[currentPlayer].bestPlayer) {
@@ -277,6 +276,8 @@ function connectWebSocketChangeDirection(succesFunction) {
                 theNewMessage.bestScore + " points";
 
         });
+
+        // ws.send("/snake/newD", "", "String");
 
         that.webSocket = ws;
         succesFunction();

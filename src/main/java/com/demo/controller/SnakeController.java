@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -35,16 +36,22 @@ public class SnakeController {
     public ResponseEntity<SnakeModel> insertPlayerIntoGame(@RequestParam String playerName) {
 
         playerName = playerName.replace("xHashTagx", "#");
-        String []splitString = playerName.split("#");
+        String[] splitString = playerName.split("#");
 
         String playerColor = "notSet";
-        if(splitString.length > 1){
+        if (splitString.length > 1) {
             playerName = splitString[0];
             playerColor = "#" + splitString[1];
         }
 
         System.out.println("New Player wanna join Game: " + playerName);
         System.out.println("Color of this Player: " + playerColor);
+        if (anzPlayer == 0) {
+            snakeModels = new ArrayList<>();
+            snakeFodder = new SnakeFodder();
+            players = new ArrayList<>();
+            playerAlife = new boolean[1000];
+        }
 
         boolean playerExists = false;
 
@@ -67,12 +74,6 @@ public class SnakeController {
             newPlayer.setName(playerName);
             newPlayer.setDeaths(0);
             players.add(newPlayer);
-        }
-
-        if (anzPlayer == 0) {
-            snakeModels = new ArrayList<>();
-            snakeFodder = new SnakeFodder();
-            playerAlife = new boolean[1000];
         }
 
         snakeModels.add(newSnake);
@@ -239,13 +240,13 @@ public class SnakeController {
             // show the best Score with player
             if (idBestplayer != -1) {
                 for (Player p : players) {
-                    if (p.getName().equals(snakeModels.get(idBestplayer).getPlayerName())){
+                    if (p.getName().equals(snakeModels.get(idBestplayer).getPlayerName())) {
                         bestPlayer = p;
                         break;
                     }
                 }
                 snakeModels.get(idBestplayer).setBestPlayer(true);
-                if(bestScoreOfAll < bestScore && bestPlayer.getBestScore() < snakeModels.get(idBestplayer).getScore()){
+                if (bestScoreOfAll < bestScore && bestPlayer.getBestScore() < snakeModels.get(idBestplayer).getScore()) {
                     bestPlayer.setBestScore(snakeModels.get(idBestplayer).getScore());
                     bestScoreOfAll = bestScore;
                 }
@@ -253,8 +254,12 @@ public class SnakeController {
             }
 
             setFieldEmpty();
-            while (snakeFodder.isPause()) {
+            while (snakeFodder != null && snakeFodder.isPause()) {
                 // game pause
+            }
+
+            if(snakeModels == null){
+                return;
             }
 
             while (System.currentTimeMillis() <= (time + 5 * kästchenGröße)) {
@@ -276,7 +281,7 @@ public class SnakeController {
         if (snakeDirection(snakeModelData[0], Integer.parseInt(snakeModelData[1]))) {
             // System.out.println("Correct: true");
             long wait = System.currentTimeMillis();
-            while(wait + 40 >= System.currentTimeMillis());
+            while (wait + 40 >= System.currentTimeMillis()) ;
             snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
 
             /// Klasse SnakeModel des Spielers mit der Richtungsänderung wird an alle Clients versendet

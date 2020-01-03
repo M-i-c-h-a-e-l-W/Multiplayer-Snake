@@ -31,7 +31,7 @@ public class SnakeModel {
         posX.add(x / 10);
         posY.add(y / 10);
 
-        if(color != "notSet" && color != null){
+        if (color != "notSet" && color != null) {
             playerColor = color;
             return;
         }
@@ -126,8 +126,9 @@ public class SnakeModel {
 
     public void setPlayedTime(long newTime) {
         playTime += newTime;
-        if(playTime % 500 == 0){
-            System.out.println("Gespielte Zeit: " + playTime/1000 + "," + playTime%1000/100 + " Sekunden");
-        }
+
+        // if (playTime % 500 == 0) {
+        //     System.out.println("Gespielte Zeit: " + playTime / 1000 + "," + playTime % 1000 / 100 + " Sekunden");
+        // }
     }
 }
