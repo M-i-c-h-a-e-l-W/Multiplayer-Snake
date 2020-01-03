@@ -46,6 +46,7 @@ The following Text is for the collaborators to see which Features should be add 
 - ~~Highscore anzeigen~~
 - ~~Farbe selber bestimmen~~
 - ~~Zeittracking~~
+- ~~Highscore Bugg beheben~~ 
 
 **TODO:** <br>
 - Snake Bild als Überschrift
@@ -54,4 +55,4 @@ The following Text is for the collaborators to see which Features should be add 
 - Session mit Anmeldefunktion und login
 - parallelität beim Spielstand beachten mutex
 - Bestehende Model Klassen in DTO und Model auftrennen
-- Bugg Richtungsumkehrung
+- Bugg Richtungsumkehrung que 
