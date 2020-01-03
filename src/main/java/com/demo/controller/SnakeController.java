@@ -26,6 +26,7 @@ public class SnakeController {
     private int anzPlayer = 0;
     private boolean isRunning = false;
     private int kästchenGröße = 10, bestScoreOfAll = 0;
+    private int bestScore = 0, idBestplayer = -1;
 
     @Autowired
     private SimpMessagingTemplate webSocket;
@@ -227,7 +228,6 @@ public class SnakeController {
             }
 
             // best set Player
-            int bestScore = 0, idBestplayer = -1;
             for (int i = 0; i < snakeModels.size() && i >= 0; i++) {
                 if (snakeModels.get(i).getScore() > bestScore) {
                     bestScore = snakeModels.get(i).getScore();
