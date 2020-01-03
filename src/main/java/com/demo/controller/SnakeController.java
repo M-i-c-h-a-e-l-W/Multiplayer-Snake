@@ -32,7 +32,19 @@ public class SnakeController {
 
     @PostMapping("/newPlayer")
     public ResponseEntity<SnakeModel> insertPlayerIntoGame(@RequestParam String playerName) {
+
+        playerName = playerName.replace("xHashTagx", "#");
+        String []splitString = playerName.split("#");
+
+        String playerColor = "notSet";
+        if(splitString.length > 1){
+            playerName = splitString[0];
+            playerColor = "#" + splitString[1];
+        }
+
         System.out.println("New Player wanna join Game: " + playerName);
+        System.out.println("Color of this Player: " + playerColor);
+
         boolean playerExists = false;
 
         SnakeModel newSnake = new SnakeModel();
@@ -67,7 +79,7 @@ public class SnakeController {
         snakeModels.get(anzPlayer).setPlayerNr(anzPlayer);
 
         playerAlife[anzPlayer] = true;
-        snakeModels.get(anzPlayer).newSnake(0, anzPlayer * 10 % 600);
+        snakeModels.get(anzPlayer).newSnake(0, anzPlayer * 10 % 600, playerColor);
         if (anzPlayer != 0) {
             webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
         }

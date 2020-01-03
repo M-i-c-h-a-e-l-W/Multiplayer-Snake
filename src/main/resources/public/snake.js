@@ -5,10 +5,11 @@ var pause = false, check;
 
 // load site and give own name
 window.onload = function () {
-    check = prompt('Gib deinen Namen ein', '');
+    check = prompt('Gib deinen Namen ein, sowie deine Farbe ( "Name#HexCode" ) ', '');
     if (check === '') {
         check = "Inkompetente Person";
     }
+    check = check.replace("#","xHashTagx");
     initialization();
 };
 
@@ -211,7 +212,7 @@ function connectWebSocketChangeDirection(succesFunction) {
 
                 console.log("Player: " + currentPlayer + " has a Score of:" +
                     snakeNewData[currentPlayer].score + "| is " +
-                    snakeNewData[currentPlayer].playTime + " Sekunden am Leben |");
+                    snakeNewData[currentPlayer].playTime + " seconds alive |");
 
                 if (snakeNewData[currentPlayer].score !== null && snakeNewData[currentPlayer].score !== 0) {
                     var playedTime = Math.round(snakeNewData[currentPlayer].playTime / 100);

@@ -27,10 +27,14 @@ public class SnakeModel {
     UUID client;
     int posApple;
 
-    public void newSnake(int x, int y) {
+    public void newSnake(int x, int y, String color) {
         posX.add(x / 10);
         posY.add(y / 10);
 
+        if(color != "notSet" && color != null){
+            playerColor = color;
+            return;
+        }
         Random obj = new Random();
         int rand_num = obj.nextInt(0xffffff + 1);
         playerColor = String.format("#%06x", rand_num);
