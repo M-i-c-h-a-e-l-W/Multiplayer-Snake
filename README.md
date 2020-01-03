@@ -44,15 +44,14 @@ The following Text is for the collaborators to see which Features should be add 
 - ~~Bugg Footer aufsammeln bei geringem Score~~
 - ~~Chatarea ändern~~
 - ~~Highscore anzeigen~~
+- ~~Farbe selber bestimmen~~
+- ~~Zeittracking~~
 
 **TODO:** <br>
 - Snake Bild als Überschrift
 - Geschwindigkeit anpassen
 - Kollision optimieren (Feld Array)
 - Session mit Anmeldefunktion und login
-- Zeittracking
 - parallelität beim Spielstand beachten mutex
 - Bestehende Model Klassen in DTO und Model auftrennen
 - Bugg Richtungsumkehrung
-- Farbe
-
