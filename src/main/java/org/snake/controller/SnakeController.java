@@ -20,14 +20,14 @@ public class SnakeController {
     private List<SnakeModel> snakeModels = new ArrayList<>();
     private SnakeFodder snakeFodder = new SnakeFodder();
     private List<Player> players = new ArrayList<>();
-    private Player bestPlayer;
+    Player bestPlayer;
 
     private FieldData[][] Spielfeld = new FieldData[100][60];
     private boolean[] playerAlife = new boolean[1000];
     private int anzPlayer = 0;
     private boolean isRunning = false;
     private int kästchenGröße = 10, bestScoreOfAll = 0;
-    private int bestScore = 0, idBestplayer = -1;
+    private int bestScore = 0, idBestPlayer;
 
     @Autowired
     private SimpMessagingTemplate webSocket;
@@ -74,7 +74,7 @@ public class SnakeController {
         if (anzPlayer == 0) {
             // If firstPlayer Variables initialize
             createFields();
-        }else{
+        } else {
             // Message to all clients of position of fodder
             webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
         }
@@ -177,7 +177,7 @@ public class SnakeController {
             // collision with snake body
             // && i >= 0 überflüssig
             // feach oder  for (Player p : snakeModels) 
-            for (int i = 0; i < snakeModels.size() && i >= 0; i++) {
+            for (int i = 0; i < snakeModels.size(); i++) {
                 snakeModels.get(i).setBestPlayer(false);
                 // Besser: 
                 // if (!snakeModels.get(i).getPlayerAlife()) {
@@ -236,38 +236,15 @@ public class SnakeController {
                 }
             }
 
-            // best set Player
-            for (int i = 0; i < snakeModels.size() && i >= 0; i++) {
-                if (snakeModels.get(i).getScore() > bestScore) {
-                    bestScore = snakeModels.get(i).getScore();
-                    idBestplayer = i;
-                }
-            }
-
-
-            // show the best Score with player
-            if (idBestplayer != -1) {
-                for (Player p : players) {
-                    if (p.getName().equals(snakeModels.get(idBestplayer).getPlayerName())) {
-                        bestPlayer = p;
-                        break;
-                    }
-                }
-                snakeModels.get(idBestplayer).setBestPlayer(true);
-                if (bestScoreOfAll < bestScore && bestPlayer.getBestScore() < snakeModels.get(idBestplayer).getScore()) {
-                    bestPlayer.setBestScore(snakeModels.get(idBestplayer).getScore());
-                    bestScoreOfAll = bestScore;
-                }
-                webSocket.convertAndSend("/snake/newHighScore", bestPlayer);
-            }
-
-            setFieldEmpty();
-            while (snakeFodder != null && snakeFodder.isPause()) {
-                // game pause
-            }
+            // send the bestPlayer to all clients
+            webSocket.convertAndSend("/snake/newHighScore", determineBestPlayer());
 
             if (snakeModels == null) {
                 return;
+            }
+
+            while (snakeFodder != null && snakeFodder.isPause()) {
+                // game pause
             }
 
             while (System.currentTimeMillis() <= (time + 5 * kästchenGröße)) {
@@ -276,9 +253,35 @@ public class SnakeController {
         }
     }
 
+    private Player determineBestPlayer(){
+        // best set Player
+        for (int i = 0; i < snakeModels.size(); i++) {
+            if (snakeModels.get(i).getScore() > bestScore) {
+                bestScore = snakeModels.get(i).getScore();
+
+                idBestPlayer = i;
+            }
+        }
+
+        // show the best score associated with player
+        for (Player p : players) {
+            if (p.getName().equals(snakeModels.get(idBestPlayer).getPlayerName())) {
+                bestPlayer = p;
+                break;
+            }
+        }
+
+        snakeModels.get(idBestPlayer).setBestPlayer(true);
+
+        if (bestScoreOfAll < bestScore && bestPlayer.getBestScore() < snakeModels.get(idBestPlayer).getScore()) {
+            bestPlayer.setBestScore(snakeModels.get(idBestPlayer).getScore());
+            bestScoreOfAll = bestScore;
+        }
+        return bestPlayer;
+    }
+
     @PostMapping("/changeDirection")
     public void snakeChangeDirection(@RequestParam String changeD) {
-
         String[] snakeModelData = changeD.split(";");
         // snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
         if (snakeModelData[0].equals("pause")) {
@@ -302,62 +305,52 @@ public class SnakeController {
         }
     }
 
+    // delete the snake of dead player
     @PostMapping("/playerDead")
     public void snakePlayerDead(@RequestParam int deadPlayerNr) {
         if (snakeModels == null || snakeModels.size() <= deadPlayerNr) {
             return;
         }
+        // reduce score until it´s zero
         while (snakeModels.get(deadPlayerNr).getScore() != 0) {
             snakeModels.get(deadPlayerNr).reduceScore();
         }
     }
 
+    // receive messages of clients and catch orders
     @PostMapping("/chat")
     public void chatController(@RequestParam int playerNr, @RequestParam String message) {
-
+        // reset all variables
         if (message.equals("/restart Game")) {
             resetFunction();
             return;
-        } else if (message.contains("/get Score ")) {
+        }
+
+        // raise score of the player which gave the order
+        if (message.contains("/get Score ")) {
             String[] getScore = message.split("/get Score ");
-            int raiseScore = Integer.parseInt(getScore[1]);
-            snakeModels.get(playerNr).setScore(snakeModels.get(playerNr).getScore() + raiseScore);
+            snakeModels.get(playerNr).setScore(snakeModels.get(playerNr).getScore() + Integer.parseInt(getScore[1]));
             return;
         }
 
-        ChatMessageDTO chatMessageDTO = new ChatMessageDTO(message, playerNr, snakeModels.get(playerNr).getPlayerColor());
-        webSocket.convertAndSend("/snake/chat", chatMessageDTO);
+        // send the message to all clients
+        webSocket.convertAndSend("/snake/chat",
+                new ChatMessageDTO(message, playerNr, snakeModels.get(playerNr).getPlayerColor()));
     }
 
-    // check input
+    // check input of direction
     public boolean snakeDirection(String newDirection, int playerNr) {
-        // Optimierung
+        // direction logic: same direction as before and opposite direction return false
         if (newDirection.equals(snakeModels.get(playerNr).getDirection())) {
             return false;
         } else if (newDirection.equals("o")) {
-            if (snakeModels.get(playerNr).getDirection().equals("u")) {
-                return false;
-            } else {
-                return true;
-            }
+            return !snakeModels.get(playerNr).getDirection().equals("u");
         } else if (newDirection.equals("u")) {
-            if (snakeModels.get(playerNr).getDirection().equals("o")) {
-                return false;
-            } else {
-                return true;
-            }
+            return !snakeModels.get(playerNr).getDirection().equals("o");
         } else if (newDirection.equals("r")) {
-            if (snakeModels.get(playerNr).getDirection().equals("l")) {
-                return false;
-            } else {
-                return true;
-            }
+            return !snakeModels.get(playerNr).getDirection().equals("l");
         } else if (newDirection.equals("l")) {
-            if (snakeModels.get(playerNr).getDirection().equals("r")) {
-                return false;
-            } else {
-                return true;
-            }
+            return !snakeModels.get(playerNr).getDirection().equals("r");
         }
 
         System.out.println("Fatal Error in snakeDirection");
