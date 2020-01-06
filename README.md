@@ -3,6 +3,7 @@
 Hey, <br>
 this is my Mulitplayer-Snake-Game.
 Its possible to play a normal Snake Game with Websockets in your lokal network with other friends.
+If you want to  start the programm on you computer you have to add the package in IntelliJ or an other IDEA and start the DemoApplikation class.
 If you have any questions please contact me.
 
 
@@ -46,6 +47,7 @@ The following Text is for the collaborators to see which Features should be add 
 - ~~Highscore anzeigen~~
 - ~~Farbe selber bestimmen~~
 - ~~Zeittracking~~
+- ~~Highscore Bugg beheben~~ 
 
 **TODO:** <br>
 - Snake Bild als Überschrift
@@ -54,4 +56,4 @@ The following Text is for the collaborators to see which Features should be add 
 - Session mit Anmeldefunktion und login
 - parallelität beim Spielstand beachten mutex
 - Bestehende Model Klassen in DTO und Model auftrennen
-- Bugg Richtungsumkehrung
+- Bugg Richtungsumkehrung que 
