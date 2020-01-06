@@ -25,21 +25,24 @@ public class SnakeModel {
     String playerColor, playerName;
     String direction = "r";
     UUID client;
-    int posApple;
-// TODO direction List
+
+    // TODO direction List
     public void newSnake(int x, int y, String color) {
         posX.add(x / 10);
         posY.add(y / 10);
 
-        if (color != "notSet" && color != null) {
+        if (color != null && !color.equals("notSet")) {
+            // player chose a colour
             playerColor = color;
-            return;
+        } else {
+            // setting a random colour
+            Random obj = new Random();
+            int rand_num = obj.nextInt(0xffffff + 1);
+            playerColor = String.format("#%06x", rand_num);
         }
-        Random obj = new Random();
-        int rand_num = obj.nextInt(0xffffff + 1);
-        playerColor = String.format("#%06x", rand_num);
+        System.out.println("New Snake | Of PlayerNr: " + playerNr + " | Hex Farb: " + playerColor);
+        System.out.println("------------------------------------------------------");
 
-        // System.out.println("Hex Farb: " + playerColor);
     }
 
     // push Snake in next box and delete the old position
@@ -110,25 +113,12 @@ public class SnakeModel {
         return true;
     }
 
-    public void changePosX(int index, int wertX) {
-
-        posX.set(index, posX.get(index) + wertX);
-    }
-
-    public void changePosY(int index, int wertY) {
-
-        posY.set(index, posY.get(index) + wertY);
-    }
-
     public boolean getPlayerAlife() {
         return playerAlife;
     }
 
+    // add every Tick the played Time of a Snake
     public void setPlayedTime(long newTime) {
         playTime += newTime;
-
-        // if (playTime % 500 == 0) {
-        //     System.out.println("Gespielte Zeit: " + playTime / 1000 + "," + playTime % 1000 / 100 + " Sekunden");
-        // }
     }
 }

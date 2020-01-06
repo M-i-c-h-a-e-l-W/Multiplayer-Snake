@@ -32,6 +32,31 @@ public class SnakeController {
     @Autowired
     private SimpMessagingTemplate webSocket;
 
+    private void createFields() {
+        snakeModels = new ArrayList<>();
+        snakeFodder = new SnakeFodder();
+        players = new ArrayList<>();
+        playerAlife = new boolean[1000];
+    }
+
+    private void deathCounter(String playerName, SnakeModel newSnake) {
+        for (Player p : players) {
+            if (p.getName().equals(playerName)) {
+                p.setDeaths(p.getDeaths() + 1);
+                newSnake.setPlayerDeaths(p.getDeaths());
+
+                System.out.println("Tode " + p.getDeaths());
+                return;
+            }
+        }
+
+        // Player doesn´t exists in the list --> newPlayer
+        Player newPlayer = new Player();
+        newPlayer.setName(playerName);
+        newPlayer.setDeaths(0);
+        players.add(newPlayer);
+    }
+
     @PostMapping("/newPlayer")
     public ResponseEntity<SnakeModel> insertPlayerIntoGame(@RequestParam String playerName) {
 
@@ -44,53 +69,32 @@ public class SnakeController {
             playerColor = "#" + splitString[1];
         }
 
-        System.out.println("New Player wanna join Game: " + playerName);
-        System.out.println("Color of this Player: " + playerColor);
-        if (anzPlayer == 0) {
-            snakeModels = new ArrayList<>();
-            snakeFodder = new SnakeFodder();
-            players = new ArrayList<>();
-            playerAlife = new boolean[1000];
-        }
+        System.out.println("New Player joined Game: " + playerName);
 
-        boolean playerExists = false;
+        if (anzPlayer == 0) {
+            // If firstPlayer Variables initialize
+            createFields();
+        }else{
+            // Message to all clients of position of fodder
+            webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
+        }
 
         SnakeModel newSnake = new SnakeModel();
         newSnake.setPlayerName(playerName);
 
-        for (int i = 0; i < players.size(); i++) {
-            if (players.get(i).getName().equals(playerName)) {
-                int deaths = players.get(i).getDeaths();
-                deaths++;
-
-                players.get(i).setDeaths(deaths);
-                newSnake.setPlayerDeaths(deaths);
-                playerExists = true;
-                System.out.println("Tode " + deaths);
-            }
-        }
-        if (!playerExists) {
-            Player newPlayer = new Player();
-            newPlayer.setName(playerName);
-            newPlayer.setDeaths(0);
-            players.add(newPlayer);
-        }
-
         snakeModels.add(newSnake);
         snakeModels.get(anzPlayer).setClient(UUID.randomUUID());
         snakeModels.get(anzPlayer).setPlayerNr(anzPlayer);
+        deathCounter(playerName, newSnake);
 
         playerAlife[anzPlayer] = true;
         snakeModels.get(anzPlayer).newSnake(0, anzPlayer * 10 % 600, playerColor);
-        if (anzPlayer != 0) {
-            webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
-        }
 
         return ResponseEntity.ok(snakeModels.get(anzPlayer++));
     }
 
     @GetMapping("/runGame")
-    public void runGame() throws InterruptedException {
+    public void runGame() {
         if (isRunning) {
             return;
         }
@@ -194,8 +198,6 @@ public class SnakeController {
                                 if (snakeModels.get(i).getPosXHead() == snakeModels.get(snakeBodyCouter).getPosX().get(bodyLength) &&
                                         snakeModels.get(i).getPosYHead() == snakeModels.get(snakeBodyCouter).getPosY().get(bodyLength)) {
 
-                                    // System.out.println("HITTED");
-
                                     if (!snakeModels.get(i).reduceScore()) {
                                         //snakeModels.remove(i);
                                         snakeModels.get(i).setPlayerAlife(false);
@@ -213,7 +215,7 @@ public class SnakeController {
                                 if (snakeModels.get(i).getPosXHead() == snakeModels.get(snakeBodyCouter).getPosX().get(bodyLength) &&
                                         snakeModels.get(i).getPosYHead() == snakeModels.get(snakeBodyCouter).getPosY().get(bodyLength)) {
 
-                                    System.out.println("HITTED");
+                                    System.out.println("Someone HITTED");
 
                                     if (!snakeModels.get(i).reduceScore()) {
                                         //snakeModels.remove(i);
@@ -264,7 +266,7 @@ public class SnakeController {
                 // game pause
             }
 
-            if(snakeModels == null){
+            if (snakeModels == null) {
                 return;
             }
 
@@ -302,7 +304,7 @@ public class SnakeController {
 
     @PostMapping("/playerDead")
     public void snakePlayerDead(@RequestParam int deadPlayerNr) {
-        if (snakeModels == null || snakeModels.size() == 0) {
+        if (snakeModels == null || snakeModels.size() <= deadPlayerNr) {
             return;
         }
         while (snakeModels.get(deadPlayerNr).getScore() != 0) {
