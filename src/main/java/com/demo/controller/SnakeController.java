@@ -170,8 +170,14 @@ public class SnakeController {
                     */
 
             // collision with snake body
+            // && i >= 0 überflüssig
+            // feach oder  for (Player p : snakeModels) 
             for (int i = 0; i < snakeModels.size() && i >= 0; i++) {
                 snakeModels.get(i).setBestPlayer(false);
+                // Besser: 
+                // if (!snakeModels.get(i).getPlayerAlife()) {
+                //    continue;
+                // }
                 if (snakeModels.get(i).getPlayerAlife()) {
                     snakeModels.get(i).setPlayedTime(50);
 
