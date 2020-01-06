@@ -1,6 +1,6 @@
-package com.demo.repository;
+package org.snake.repository;
 
-import com.demo.dto.Comment;
+import org.snake.dto.Comment;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

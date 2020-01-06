@@ -1,6 +1,6 @@
-package com.demo.model;
+package org.snake.model;
 
-import com.demo.dto.Comment;
+import org.snake.dto.Comment;
 import lombok.*;
 
 import java.util.List;

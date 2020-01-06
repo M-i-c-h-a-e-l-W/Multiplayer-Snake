@@ -1,8 +1,8 @@
-package com.demo.service;
+package org.snake.service;
 
-import com.demo.dto.Comment;
-import com.demo.model.CommentSearchResult;
-import com.demo.repository.CommentRepository;
+import org.snake.dto.Comment;
+import org.snake.model.CommentSearchResult;
+import org.snake.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

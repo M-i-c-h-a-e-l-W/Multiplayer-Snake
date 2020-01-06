@@ -1,4 +1,4 @@
-package com.demo;
+package org.snake;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

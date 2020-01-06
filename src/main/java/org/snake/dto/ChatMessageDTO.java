@@ -1,4 +1,4 @@
-package com.demo.dto;
+package org.snake.dto;
 
 import lombok.*;
 

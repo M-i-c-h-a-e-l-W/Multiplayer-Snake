@@ -1,4 +1,4 @@
-package com.demo.configer;
+package org.snake.configer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

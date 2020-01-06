@@ -1,4 +1,4 @@
-package com.demo.model;
+package org.snake.model;
 
 import lombok.*;
 
