@@ -26,7 +26,7 @@ public class SnakeModel {
     String direction = "r";
     UUID client;
     int posApple;
-
+// TODO direction List
     public void newSnake(int x, int y, String color) {
         posX.add(x / 10);
         posY.add(y / 10);

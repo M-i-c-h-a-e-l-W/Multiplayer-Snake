@@ -282,8 +282,9 @@ public class SnakeController {
             // System.out.println("Correct: true");
             long wait = System.currentTimeMillis();
             while (wait + 40 >= System.currentTimeMillis()) ;
-            snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
 
+            snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
+// TODO direction List
             /// Klasse SnakeModel des Spielers mit der Richtungsänderung wird an alle Clients versendet
             //webSocket.convertAndSend("/snake/changeDofP", snakeModels.get(Integer.parseInt(snakeModelData[1])));
             webSocket.convertAndSend("/snake/changeDofP", snakeModels);

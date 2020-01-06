@@ -150,6 +150,7 @@ function getPosition() {
                 console.log("Fehlerhafte Eingabe Code: " + keyCode);
                 break;
         }
+        console.log("Eingabe: " + changeD);
 
         if (sendKeyCode && changeD !== "Error") {
             changeD += ";" + playerNr.toString();
