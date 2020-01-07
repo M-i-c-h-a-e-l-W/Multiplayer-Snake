@@ -21,43 +21,25 @@ public class SnakeController {
     private List<SnakeModel> snakeModels = new ArrayList<>();
     private SnakeFodder snakeFodder = new SnakeFodder();
     private List<Player> players = new ArrayList<>();
-    Player bestPlayer;
+    private Player bestPlayer;
 
-    private FieldData[][] Spielfeld = new FieldData[100][60];
-    private boolean[] playerAlife = new boolean[1000];
+    private FieldData[][] fieldOfGame = new FieldData[100][60];
     private int anzPlayer = 0;
     private boolean isRunning = false;
-    private int kästchenGröße = 10, bestScoreOfAll = 0;
+    private int sizeOfBox = 10, bestScoreOfAll = 0;
     private int bestScore = 0, idBestPlayer;
 
     @Autowired
     private SimpMessagingTemplate webSocket;
 
+    // initialize arrays
     private void createFields() {
         snakeModels = new ArrayList<>();
         snakeFodder = new SnakeFodder();
         players = new ArrayList<>();
-        playerAlife = new boolean[1000];
     }
 
-    private void deathCounter(String playerName, SnakeModel newSnake) {
-        for (Player p : players) {
-            if (p.getName().equals(playerName)) {
-                p.setDeaths(p.getDeaths() + 1);
-                newSnake.setPlayerDeaths(p.getDeaths());
-
-                System.out.println("Tode " + p.getDeaths());
-                return;
-            }
-        }
-
-        // Player doesn´t exists in the list --> newPlayer
-        Player newPlayer = new Player();
-        newPlayer.setName(playerName);
-        newPlayer.setDeaths(0);
-        players.add(newPlayer);
-    }
-
+    // initialize new Player
     @PostMapping("/newPlayer")
     public ResponseEntity<SnakeModel> insertPlayerIntoGame(@RequestParam String playerName) {
 
@@ -88,12 +70,31 @@ public class SnakeController {
         snakeModels.get(anzPlayer).setPlayerNr(anzPlayer);
         deathCounter(playerName, newSnake);
 
-        playerAlife[anzPlayer] = true;
         snakeModels.get(anzPlayer).newSnake(0, anzPlayer * 10 % 600, playerColor);
 
         return ResponseEntity.ok(snakeModels.get(anzPlayer++));
     }
 
+    // count deaths by name
+    private void deathCounter(String playerName, SnakeModel newSnake) {
+        for (Player p : players) {
+            if (p.getName().equals(playerName)) {
+                p.setDeaths(p.getDeaths() + 1);
+                newSnake.setPlayerDeaths(p.getDeaths());
+
+                System.out.println("Tode " + p.getDeaths());
+                return;
+            }
+        }
+
+        // Player doesn´t exists in the list --> newPlayer
+        Player newPlayer = new Player();
+        newPlayer.setName(playerName);
+        newPlayer.setDeaths(0);
+        players.add(newPlayer);
+    }
+
+    // game loop function
     @GetMapping("/runGame")
     public void runGame() {
         // only 1 Player activate the Game-Loop
@@ -103,10 +104,9 @@ public class SnakeController {
         isRunning = true;
         snakeFodder.setNewPosition();
         webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
-
-        setFeldArray();
         long time;
 
+        // game loop
         while (true) {
             // reset Game
             if (!isRunning) {
@@ -135,11 +135,13 @@ public class SnakeController {
                 // game pause
             }
 
-            while (System.currentTimeMillis() <= (time + 5 * kästchenGröße)) {
+            while (System.currentTimeMillis() <= (time + 5 * sizeOfBox)) {
                 // Waiting for next Step
             }
         }
     }
+
+    // check collision | take and give score-Points
     private void checkCollision(){
         for (SnakeModel snake : snakeModels) {
             boolean exit = false;
@@ -147,7 +149,7 @@ public class SnakeController {
             snake.setBestPlayer(false);
 
             // if dead snake continue
-            if (!snake.getPlayerAlife()) {
+            if (snake.isPlayerDead()) {
                 continue;
             }
 
@@ -193,26 +195,27 @@ public class SnakeController {
 
     }
 
+    // moving snakes in the direction
     private void movingSnakes() {
         for (int i = 0; i < anzPlayer; i++) {
-            if (!snakeModels.get(i).getPlayerAlife()) {
+            if (snakeModels.get(i).isPlayerDead()) {
                 continue;
             }
 
             if (snakeModels.get(i).getDirection().get(0).equals("u")) {
-                snakeModels.get(i).addPosY(kästchenGröße);
+                snakeModels.get(i).addPosY(sizeOfBox);
                 snakeModels.get(i).addPosX(0);
 
             } else if (snakeModels.get(i).getDirection().get(0).equals("o")) {
-                snakeModels.get(i).addPosY(-kästchenGröße);
+                snakeModels.get(i).addPosY(-sizeOfBox);
                 snakeModels.get(i).addPosX(0);
 
             } else if (snakeModels.get(i).getDirection().get(0).equals("l")) {
-                snakeModels.get(i).addPosX(-kästchenGröße);
+                snakeModels.get(i).addPosX(-sizeOfBox);
                 snakeModels.get(i).addPosY(0);
 
             } else if (snakeModels.get(i).getDirection().get(0).equals("r")) {
-                snakeModels.get(i).addPosX(kästchenGröße);
+                snakeModels.get(i).addPosX(sizeOfBox);
                 snakeModels.get(i).addPosY(0);
             }
 
@@ -223,6 +226,7 @@ public class SnakeController {
         }
     }
 
+    // return the player with the best score
     private Player determineBestPlayer() {
         // best set Player
         for (int i = 0; i < snakeModels.size(); i++) {
@@ -252,22 +256,38 @@ public class SnakeController {
     @PostMapping("/changeDirection")
     public void snakeChangeDirection(@RequestParam String changeD) {
         String[] snakeModelData = changeD.split(";");
-        // snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
+
         if (snakeModelData[0].equals("pause")) {
             snakeFodder.togglePause();
             webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
             return;
         }
+        
         if (snakeDirection(snakeModelData[0], Integer.parseInt(snakeModelData[1]))) {
             snakeModels.get(Integer.parseInt(snakeModelData[1])).getDirection().add(snakeModelData[0]);
-// TODO direction List
-            /// Klasse SnakeModel des Spielers mit der Richtungsänderung wird an alle Clients versendet
-            //webSocket.convertAndSend("/snake/changeDofP", snakeModels.get(Integer.parseInt(snakeModelData[1])));
             webSocket.convertAndSend("/snake/changeDofP", snakeModels);
-
         } else {
             // System.out.println("Correct: false");
         }
+    }
+
+    // check input of direction
+    public boolean snakeDirection(String newDirection, int playerNr) {
+        // direction logic: same direction as before and opposite direction return false
+        if (newDirection.equals(snakeModels.get(playerNr).getDirection())) {
+            return false;
+        } else if (newDirection.equals("o")) {
+            return !snakeModels.get(playerNr).getDirection().get(0).equals("u");
+        } else if (newDirection.equals("u")) {
+            return !snakeModels.get(playerNr).getDirection().get(0).equals("o");
+        } else if (newDirection.equals("r")) {
+            return !snakeModels.get(playerNr).getDirection().get(0).equals("l");
+        } else if (newDirection.equals("l")) {
+            return !snakeModels.get(playerNr).getDirection().get(0).equals("r");
+        }
+
+        System.out.println("Fatal Error in snakeDirection");
+        return false;
     }
 
     // delete the snake of dead player
@@ -303,29 +323,23 @@ public class SnakeController {
                 new ChatMessageDTO(message, playerNr, snakeModels.get(playerNr).getPlayerColor()));
     }
 
-    // check input of direction
-    public boolean snakeDirection(String newDirection, int playerNr) {
-        // direction logic: same direction as before and opposite direction return false
-        if (newDirection.equals(snakeModels.get(playerNr).getDirection())) {
-            return false;
-        } else if (newDirection.equals("o")) {
-            return !snakeModels.get(playerNr).getDirection().get(0).equals("u");
-        } else if (newDirection.equals("u")) {
-            return !snakeModels.get(playerNr).getDirection().get(0).equals("o");
-        } else if (newDirection.equals("r")) {
-            return !snakeModels.get(playerNr).getDirection().get(0).equals("l");
-        } else if (newDirection.equals("l")) {
-            return !snakeModels.get(playerNr).getDirection().get(0).equals("r");
-        }
+    // reset all variables if there is a bug
+    public boolean resetFunction() {
+        snakeModels.clear();
+        snakeModels = null;
+        snakeFodder = null;
+        anzPlayer = 0;
+        isRunning = false;
+        players = null;
+        bestScoreOfAll = 0;
 
-        System.out.println("Fatal Error in snakeDirection");
-        return false;
+        return true;
     }
-
-    public void setFeldArray() {
+    
+    public void setFieldArray() {
         for (int x = 0; x < 100; x++) {
             for (int y = 0; y < 60; y++) {
-                Spielfeld[x][y] = new FieldData();
+                fieldOfGame[x][y] = new FieldData();
             }
         }
     }
@@ -342,7 +356,7 @@ public class SnakeController {
             posX = snakeModels.get(indexOfSnake).getPosX().get(i);
             posY = snakeModels.get(indexOfSnake).getPosY().get(i);
             if (posX < 100 && posY < 60) {
-                Spielfeld[posX / 10][posY / 10].getSnakeModels().add(snakeModels.get(indexOfSnake));
+                fieldOfGame[posX / 10][posY / 10].getSnakeModels().add(snakeModels.get(indexOfSnake));
             }
         }
     }
@@ -350,21 +364,8 @@ public class SnakeController {
     public void setFieldEmpty() {
         for (int x = 0; x < 100; x++) {
             for (int y = 0; y < 60; y++) {
-                Spielfeld[x][y].getSnakeModels().clear();
+                fieldOfGame[x][y].getSnakeModels().clear();
             }
         }
-    }
-
-    public boolean resetFunction() {
-        snakeModels.clear();
-        snakeModels = null;
-        snakeFodder = null;
-        playerAlife = null;
-        anzPlayer = 0;
-        isRunning = false;
-        players = null;
-        bestScoreOfAll = 0;
-
-        return true;
     }
 }

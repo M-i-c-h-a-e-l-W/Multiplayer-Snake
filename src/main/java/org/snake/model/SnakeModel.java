@@ -12,7 +12,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SnakeModel {
-    int score = 15;
     // x Max = 100 & y Max = 60
     List<Integer> posX = new ArrayList<Integer>();
     List<Integer> posY = new ArrayList<Integer>();
@@ -20,15 +19,16 @@ public class SnakeModel {
 
     boolean gameRunning = false, playerAlife = true, bestPlayer = false;
     int posXHead, posYHead;
-    int playerNr, playerDeaths;
+    int playerNr, playerDeaths, score;
     long playTime;
 
     String playerColor, playerName;
     UUID client;
 
-    // TODO direction List
+    // initialize snake
     public void newSnake(int x, int y, String color) {
         direction.add(0,"r");
+        score = 15;
 
         posX.add(x / 10);
         posY.add(y / 10);
@@ -68,6 +68,7 @@ public class SnakeModel {
         //System.out.println("X: " + posX);
     }
 
+    // push Snake in next box and delete the old position
     public void addPosY(int y) {
         y /= 10;
         posYHead = posY.get(posY.size() - 1) + y;
@@ -89,12 +90,14 @@ public class SnakeModel {
         //System.out.println("Y: " + posY);
     }
 
+    // get Snake length
     public int getLengthOfBody() {
         if (posX.size() != posY.size()) {
             return -1;
         } else return posX.size();
     }
 
+    // delete body boxes
     public boolean reduceScore() {
         int reducingBy = (int) (posX.size() / 1.75f) + 1;
         for (int i = 0; i < reducingBy; i++) {
@@ -114,8 +117,9 @@ public class SnakeModel {
         return true;
     }
 
-    public boolean getPlayerAlife() {
-        return playerAlife;
+    // return if player dead
+    public boolean isPlayerDead() {
+        return !playerAlife;
     }
 
     // add every Tick the played Time of a Snake
