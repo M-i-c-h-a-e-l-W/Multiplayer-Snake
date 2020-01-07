@@ -1,5 +1,6 @@
 package org.snake.controller;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.snake.model.FieldData;
 import org.snake.model.Player;
 import org.snake.model.SnakeFodder;
@@ -95,6 +96,7 @@ public class SnakeController {
 
     @GetMapping("/runGame")
     public void runGame() {
+        // only 1 Player activate the Game-Loop
         if (isRunning) {
             return;
         }
@@ -113,12 +115,11 @@ public class SnakeController {
 
             time = System.currentTimeMillis();
 
-            // TODO Steps flüssige Bewegung
+
             webSocket.convertAndSend("/snake/changeDofP", snakeModels);
 
-            boolean exit = false;
+            // move snakes in the direction they pointing
             for (int i = 0; i < anzPlayer; i++) {
-
                 if (!snakeModels.get(i).getPlayerAlife()) {
                     // is Dead
                 } else if (snakeModels.get(i).getDirection().equals("u")) {
@@ -137,109 +138,65 @@ public class SnakeController {
                     snakeModels.get(i).addPosX(kästchenGröße);
                     snakeModels.get(i).addPosY(0);
                 }
-                setSnakePositionOnField(i);
             }
 
-  /*
-            for (int i = 0; i < snakeModels.size() && i >= 0; i++) {
-                if (snakeModels.get(i).getPlayerAlife()) {
-                    for (int xy = 0; xy < snakeModels.get(i).getPosX().size() &&
-                            snakeModels.get(i).getPosX().size() == snakeModels.get(i).getPosY().size(); xy++) {
-                        if (Spielfeld[snakeModels.get(i).getPosX().get(xy)/100][snakeModels.get(i).getPosY().get(xy)/100].getSnakeModels().size() > 1) {
+            // collision of head with snake body or fodder
+            for (SnakeModel snake : snakeModels) {
+                boolean exit = false;
 
-                            if (!snakeModels.get(i).reduceScore()) {
-                                //snakeModels.remove(i);
-                                snakeModels.get(i).setPlayerAlife(false);
-                                //anzPlayer--;
-                                webSocket.convertAndSend("/snake/deleted",
-                                        "{\"" + "deletedPlayer\": " + i + "}");
-                                break;
-                            }
+                snake.setBestPlayer(false);
 
-                            snakeModels.get(
-                                    Spielfeld[snakeModels.get(i).getPosX().get(xy)]
-                                            [snakeModels.get(i).getPosY().get(xy)].
-                                            getSnakeModels().get(0).getPlayerNr()).setScore(snakeModels.get(
-                                    Spielfeld[snakeModels.get(i).getPosX().get(xy)]
-                                            [snakeModels.get(i).getPosY().get(xy)].
-                                            getSnakeModels().get(0).getPlayerNr()).getScore() + 4);
-
-
-
-                        }
-                    }
-
+                // if dead snake continue
+                if (!snake.getPlayerAlife()) {
+                    continue;
                 }
 
-            }
-                    */
+                snake.setPlayedTime(50);
 
-            // collision with snake body
-            // && i >= 0 überflüssig
-            // feach oder  for (Player p : snakeModels) 
-            for (int i = 0; i < snakeModels.size(); i++) {
-                snakeModels.get(i).setBestPlayer(false);
-                // Besser: 
-                // if (!snakeModels.get(i).getPlayerAlife()) {
-                //    continue;
-                // }
-                if (snakeModels.get(i).getPlayerAlife()) {
-                    snakeModels.get(i).setPlayedTime(50);
+                // new body-blocks fodder caused
+                if (snake.getPosXHead() == snakeFodder.getPosX() && snake.getPosYHead() == snakeFodder.getPosY()) {
+                    snake.setScore((int) (snake.getScore() * 1.25f) + 3);
+                    snakeFodder.setNewPosition();
+                    webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
+                }
 
-                    if (snakeModels.get(i).getPosXHead() == snakeFodder.getPosX() && snakeModels.get(i).getPosYHead() == snakeFodder.getPosY()) {
-                        snakeModels.get(i).setScore((int) (snakeModels.get(i).getScore() * 1.25f) + 3); // neu dazugewonnene Blöcke
-                        snakeFodder.setNewPosition();
-                        webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
-                    }
 
-                    for (int snakeBodyCouter = 0; snakeBodyCouter < snakeModels.size() && !exit; snakeBodyCouter++) {
-                        if (snakeBodyCouter != i) {
-                            for (int bodyLength = 0; bodyLength < snakeModels.get(snakeBodyCouter).getLengthOfBody(); bodyLength++) {
-                                if (snakeModels.get(i).getPosXHead() == snakeModels.get(snakeBodyCouter).getPosX().get(bodyLength) &&
-                                        snakeModels.get(i).getPosYHead() == snakeModels.get(snakeBodyCouter).getPosY().get(bodyLength)) {
+                for (SnakeModel snakeToCheck : snakeModels) {
 
-                                    if (!snakeModels.get(i).reduceScore()) {
-                                        //snakeModels.remove(i);
-                                        snakeModels.get(i).setPlayerAlife(false);
-                                        //anzPlayer--;
-                                        webSocket.convertAndSend("/snake/deleted",
-                                                "{\"" + "deletedPlayer\": " + i + "}");
-                                        exit = true;
-                                        break;
-                                    }
-                                    snakeModels.get(snakeBodyCouter).setScore(snakeModels.get(snakeBodyCouter).getScore() + 5);
-                                }
-                            }
-                        } else {
-                            for (int bodyLength = 0; bodyLength < snakeModels.get(snakeBodyCouter).getLengthOfBody() - 1; bodyLength++) {
-                                if (snakeModels.get(i).getPosXHead() == snakeModels.get(snakeBodyCouter).getPosX().get(bodyLength) &&
-                                        snakeModels.get(i).getPosYHead() == snakeModels.get(snakeBodyCouter).getPosY().get(bodyLength)) {
+                    // check if the snake´s head touches a part of a body apart from his own head
+                    for (int bodyLength = 0; bodyLength < snakeToCheck.getLengthOfBody() - BooleanUtils.toInteger(snakeToCheck == snake); bodyLength++) {
 
-                                    System.out.println("Someone HITTED");
+                        if (snake.getPosXHead() == snakeToCheck.getPosX().get(bodyLength) &&
+                                snake.getPosYHead() == snakeToCheck.getPosY().get(bodyLength)) {
 
-                                    if (!snakeModels.get(i).reduceScore()) {
-                                        //snakeModels.remove(i);
-                                        snakeModels.get(i).setPlayerAlife(false);
-                                        //anzPlayer--;
-                                        webSocket.convertAndSend("/snake/deleted",
-                                                "{\"" + "deletedPlayer\": " + i + "}");
-                                        exit = true;
-                                        break;
-                                    }
-                                }
+                            // the winner get 5 points apart from a snake which hit itself
+                            if (snakeToCheck != snake) {
+                                snakeToCheck.setScore(snakeToCheck.getScore() + 5);
                             }
 
+                            // if someone died
+                            if (!snake.reduceScore()) {
+                                snake.setPlayerAlife(false);
+                                webSocket.convertAndSend("/snake/deleted",
+                                        "{\"" + "deletedPlayer\": " + snake.getPlayerNr() + "}");
+
+                                exit = true;
+                                break;
+                            }
                         }
-
                     }
-                    exit = false;
+                    if (exit) {
+                        break;
+                    }
                 }
             }
 
             // send the bestPlayer to all clients
             webSocket.convertAndSend("/snake/newHighScore", determineBestPlayer());
 
+            // end game if no snakes exists
             if (snakeModels == null) {
+                System.out.println("Error: Snake-List is empty");
                 return;
             }
 
@@ -253,7 +210,7 @@ public class SnakeController {
         }
     }
 
-    private Player determineBestPlayer(){
+    private Player determineBestPlayer() {
         // best set Player
         for (int i = 0; i < snakeModels.size(); i++) {
             if (snakeModels.get(i).getScore() > bestScore) {
@@ -262,7 +219,6 @@ public class SnakeController {
                 idBestPlayer = i;
             }
         }
-
         // show the best score associated with player
         for (Player p : players) {
             if (p.getName().equals(snakeModels.get(idBestPlayer).getPlayerName())) {
