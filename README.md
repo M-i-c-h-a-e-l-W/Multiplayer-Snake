@@ -30,7 +30,7 @@ The following Text is for the collaborators to see which Features should be add 
 - ~~currentMilis anstatt Sleep()~~
 - ~~Snake Score einfügen~~
 - ~~Snake Multiplayerfähig~~
-- ~~Snake Bugg "Länge der Schlange" beheben~~
+- ~~Snake Bug "Länge der Schlange" beheben~~
 - ~~Snake Head farblich erkennbar~~
 - ~~Snake in anderer Snake gespawnt Execption gelöst bei Tod~~
 - ~~bei Disconnected Dead~~
@@ -42,12 +42,12 @@ The following Text is for the collaborators to see which Features should be add 
 - ~~Resetfunktion~~
 - ~~Tode mitlocken~~
 - ~~Name~~
-- ~~Bugg Footer aufsammeln bei geringem Score~~
+- ~~Bug Footer aufsammeln bei geringem Score~~
 - ~~Chatarea ändern~~
 - ~~Highscore anzeigen~~
 - ~~Farbe selber bestimmen~~
 - ~~Zeittracking~~
-- ~~Highscore Bugg beheben~~ 
+- ~~Highscore Bug beheben~~ 
 
 **TODO:** <br>
 - Snake Bild als Überschrift
@@ -56,4 +56,4 @@ The following Text is for the collaborators to see which Features should be add 
 - Session mit Anmeldefunktion und login
 - parallelität beim Spielstand beachten mutex
 - Bestehende Model Klassen in DTO und Model auftrennen
-- Bugg Richtungsumkehrung que 
+- Bug Richtungsumkehrung que 

@@ -114,89 +114,13 @@ public class SnakeController {
             }
 
             time = System.currentTimeMillis();
-
-
             webSocket.convertAndSend("/snake/changeDofP", snakeModels);
 
             // move snakes in the direction they pointing
-            for (int i = 0; i < anzPlayer; i++) {
-                if (!snakeModels.get(i).getPlayerAlife()) {
-                    continue;
-                }
-
-                if (snakeModels.get(i).getDirection().get(0).equals("u")) {
-                    snakeModels.get(i).addPosY(kästchenGröße);
-                    snakeModels.get(i).addPosX(0);
-
-                } else if (snakeModels.get(i).getDirection().get(0).equals("o")) {
-                    snakeModels.get(i).addPosY(-kästchenGröße);
-                    snakeModels.get(i).addPosX(0);
-
-                } else if (snakeModels.get(i).getDirection().get(0).equals("l")) {
-                    snakeModels.get(i).addPosX(-kästchenGröße);
-                    snakeModels.get(i).addPosY(0);
-
-                } else if (snakeModels.get(i).getDirection().get(0).equals("r")) {
-                    snakeModels.get(i).addPosX(kästchenGröße);
-                    snakeModels.get(i).addPosY(0);
-                }
-
-                // remove old direction order
-                if(snakeModels.get(i).getDirection().size() > 1){
-                    snakeModels.get(i).getDirection().remove(0);
-                }
-            }
+            movingSnakes();
 
             // collision of head with snake body or fodder
-            for (SnakeModel snake : snakeModels) {
-                boolean exit = false;
-
-                snake.setBestPlayer(false);
-
-                // if dead snake continue
-                if (!snake.getPlayerAlife()) {
-                    continue;
-                }
-
-                snake.setPlayedTime(50);
-
-                // new body-blocks fodder caused
-                if (snake.getPosXHead() == snakeFodder.getPosX() && snake.getPosYHead() == snakeFodder.getPosY()) {
-                    snake.setScore((int) (snake.getScore() * 1.25f) + 3);
-                    snakeFodder.setNewPosition();
-                    webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
-                }
-
-
-                for (SnakeModel snakeToCheck : snakeModels) {
-
-                    // check if the snake´s head touches a part of a body apart from his own head
-                    for (int bodyLength = 0; bodyLength < snakeToCheck.getLengthOfBody() - BooleanUtils.toInteger(snakeToCheck == snake); bodyLength++) {
-
-                        if (snake.getPosXHead() == snakeToCheck.getPosX().get(bodyLength) &&
-                                snake.getPosYHead() == snakeToCheck.getPosY().get(bodyLength)) {
-
-                            // the winner get 5 points apart from a snake which hit itself
-                            if (snakeToCheck != snake) {
-                                snakeToCheck.setScore(snakeToCheck.getScore() + 5);
-                            }
-
-                            // if someone died
-                            if (!snake.reduceScore()) {
-                                snake.setPlayerAlife(false);
-                                webSocket.convertAndSend("/snake/deleted",
-                                        "{\"" + "deletedPlayer\": " + snake.getPlayerNr() + "}");
-
-                                exit = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (exit) {
-                        break;
-                    }
-                }
-            }
+            checkCollision();
 
             // send the bestPlayer to all clients
             webSocket.convertAndSend("/snake/newHighScore", determineBestPlayer());
@@ -213,6 +137,88 @@ public class SnakeController {
 
             while (System.currentTimeMillis() <= (time + 5 * kästchenGröße)) {
                 // Waiting for next Step
+            }
+        }
+    }
+    private void checkCollision(){
+        for (SnakeModel snake : snakeModels) {
+            boolean exit = false;
+
+            snake.setBestPlayer(false);
+
+            // if dead snake continue
+            if (!snake.getPlayerAlife()) {
+                continue;
+            }
+
+            snake.setPlayedTime(50);
+
+            // new body-blocks fodder caused
+            if (snake.getPosXHead() == snakeFodder.getPosX() && snake.getPosYHead() == snakeFodder.getPosY()) {
+                snake.setScore((int) (snake.getScore() * 1.25f) + 3);
+                snakeFodder.setNewPosition();
+                webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
+            }
+
+
+            for (SnakeModel snakeToCheck : snakeModels) {
+
+                // check if the snake´s head touches a part of a body apart from his own head
+                for (int bodyLength = 0; bodyLength < snakeToCheck.getLengthOfBody() - BooleanUtils.toInteger(snakeToCheck == snake); bodyLength++) {
+
+                    if (snake.getPosXHead() == snakeToCheck.getPosX().get(bodyLength) &&
+                            snake.getPosYHead() == snakeToCheck.getPosY().get(bodyLength)) {
+
+                        // the winner get 5 points apart from a snake which hit itself
+                        if (snakeToCheck != snake) {
+                            snakeToCheck.setScore(snakeToCheck.getScore() + 5);
+                        }
+
+                        // if someone died
+                        if (!snake.reduceScore()) {
+                            snake.setPlayerAlife(false);
+                            webSocket.convertAndSend("/snake/deleted",
+                                    "{\"" + "deletedPlayer\": " + snake.getPlayerNr() + "}");
+
+                            exit = true;
+                            break;
+                        }
+                    }
+                }
+                if (exit) {
+                    break;
+                }
+            }
+        }
+
+    }
+
+    private void movingSnakes() {
+        for (int i = 0; i < anzPlayer; i++) {
+            if (!snakeModels.get(i).getPlayerAlife()) {
+                continue;
+            }
+
+            if (snakeModels.get(i).getDirection().get(0).equals("u")) {
+                snakeModels.get(i).addPosY(kästchenGröße);
+                snakeModels.get(i).addPosX(0);
+
+            } else if (snakeModels.get(i).getDirection().get(0).equals("o")) {
+                snakeModels.get(i).addPosY(-kästchenGröße);
+                snakeModels.get(i).addPosX(0);
+
+            } else if (snakeModels.get(i).getDirection().get(0).equals("l")) {
+                snakeModels.get(i).addPosX(-kästchenGröße);
+                snakeModels.get(i).addPosY(0);
+
+            } else if (snakeModels.get(i).getDirection().get(0).equals("r")) {
+                snakeModels.get(i).addPosX(kästchenGröße);
+                snakeModels.get(i).addPosY(0);
+            }
+
+            // remove old direction order
+            if (snakeModels.get(i).getDirection().size() > 1) {
+                snakeModels.get(i).getDirection().remove(0);
             }
         }
     }

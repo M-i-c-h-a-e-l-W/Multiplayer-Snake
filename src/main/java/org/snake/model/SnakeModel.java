@@ -16,6 +16,7 @@ public class SnakeModel {
     // x Max = 100 & y Max = 60
     List<Integer> posX = new ArrayList<Integer>();
     List<Integer> posY = new ArrayList<Integer>();
+    List<String> direction = new ArrayList<>();
 
     boolean gameRunning = false, playerAlife = true, bestPlayer = false;
     int posXHead, posYHead;
@@ -23,7 +24,6 @@ public class SnakeModel {
     long playTime;
 
     String playerColor, playerName;
-    List<String> direction = new ArrayList<>();
     UUID client;
 
     // TODO direction List
@@ -44,7 +44,6 @@ public class SnakeModel {
         }
         System.out.println("New Snake | Of PlayerNr: " + playerNr + " | Hex Farb: " + playerColor);
         System.out.println("------------------------------------------------------");
-
     }
 
     // push Snake in next box and delete the old position

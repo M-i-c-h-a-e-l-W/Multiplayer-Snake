@@ -56,7 +56,7 @@ public class CommentController {
         }
         commentService.saveComment(comment);
 
-        System.out.println("\nDebuggAusgabe: ");
+        System.out.println("\nDeBugAusgabe: ");
         for (int i = 0; i < commentRepository.findAll().size(); i++) {
             System.out.println("Kommentar Nr: " + i);
             System.out.println(commentRepository.findAll().get(i));
