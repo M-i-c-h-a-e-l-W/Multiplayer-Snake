@@ -227,7 +227,7 @@ function connectWebSocketChangeDirection(succesFunction) {
                             currentPlayer + " " + snakeNewData[currentPlayer].playerName +
                             " </font>has a Score of: " +
                             snakeNewData[currentPlayer].score +
-                            " | is " + playedTime + "\t Sekunden am Leben |" +
+                            " | is " + playedTime + "\t seconds alife |" +
                             " and died " + snakeNewData[currentPlayer].playerDeaths + " times</h3>";
                     } else {
                         document.getElementById('spanId').innerHTML += "<font color=\"" +
@@ -235,7 +235,7 @@ function connectWebSocketChangeDirection(succesFunction) {
                             currentPlayer + " " + snakeNewData[currentPlayer].playerName +
                             " </font>has a Score of: " +
                             snakeNewData[currentPlayer].score +
-                            " | is " + playedTime + "\t Sekunden am Leben |" +
+                            " | is " + playedTime + "\t seconds alife |" +
                             "   and died " + snakeNewData[currentPlayer].playerDeaths + " times";
                     }
                     document.getElementById('spanId').innerHTML += "<br>";

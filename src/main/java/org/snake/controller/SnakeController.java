@@ -121,22 +121,29 @@ public class SnakeController {
             // move snakes in the direction they pointing
             for (int i = 0; i < anzPlayer; i++) {
                 if (!snakeModels.get(i).getPlayerAlife()) {
-                    // is Dead
-                } else if (snakeModels.get(i).getDirection().equals("u")) {
+                    continue;
+                }
+
+                if (snakeModels.get(i).getDirection().get(0).equals("u")) {
                     snakeModels.get(i).addPosY(kästchenGröße);
                     snakeModels.get(i).addPosX(0);
 
-                } else if (snakeModels.get(i).getDirection().equals("o")) {
+                } else if (snakeModels.get(i).getDirection().get(0).equals("o")) {
                     snakeModels.get(i).addPosY(-kästchenGröße);
                     snakeModels.get(i).addPosX(0);
 
-                } else if (snakeModels.get(i).getDirection().equals("l")) {
+                } else if (snakeModels.get(i).getDirection().get(0).equals("l")) {
                     snakeModels.get(i).addPosX(-kästchenGröße);
                     snakeModels.get(i).addPosY(0);
 
-                } else if (snakeModels.get(i).getDirection().equals("r")) {
+                } else if (snakeModels.get(i).getDirection().get(0).equals("r")) {
                     snakeModels.get(i).addPosX(kästchenGröße);
                     snakeModels.get(i).addPosY(0);
+                }
+
+                // remove old direction order
+                if(snakeModels.get(i).getDirection().size() > 1){
+                    snakeModels.get(i).getDirection().remove(0);
                 }
             }
 
@@ -246,11 +253,7 @@ public class SnakeController {
             return;
         }
         if (snakeDirection(snakeModelData[0], Integer.parseInt(snakeModelData[1]))) {
-            // System.out.println("Correct: true");
-            long wait = System.currentTimeMillis();
-            while (wait + 40 >= System.currentTimeMillis()) ;
-
-            snakeModels.get(Integer.parseInt(snakeModelData[1])).setDirection(snakeModelData[0]);
+            snakeModels.get(Integer.parseInt(snakeModelData[1])).getDirection().add(snakeModelData[0]);
 // TODO direction List
             /// Klasse SnakeModel des Spielers mit der Richtungsänderung wird an alle Clients versendet
             //webSocket.convertAndSend("/snake/changeDofP", snakeModels.get(Integer.parseInt(snakeModelData[1])));
@@ -300,13 +303,13 @@ public class SnakeController {
         if (newDirection.equals(snakeModels.get(playerNr).getDirection())) {
             return false;
         } else if (newDirection.equals("o")) {
-            return !snakeModels.get(playerNr).getDirection().equals("u");
+            return !snakeModels.get(playerNr).getDirection().get(0).equals("u");
         } else if (newDirection.equals("u")) {
-            return !snakeModels.get(playerNr).getDirection().equals("o");
+            return !snakeModels.get(playerNr).getDirection().get(0).equals("o");
         } else if (newDirection.equals("r")) {
-            return !snakeModels.get(playerNr).getDirection().equals("l");
+            return !snakeModels.get(playerNr).getDirection().get(0).equals("l");
         } else if (newDirection.equals("l")) {
-            return !snakeModels.get(playerNr).getDirection().equals("r");
+            return !snakeModels.get(playerNr).getDirection().get(0).equals("r");
         }
 
         System.out.println("Fatal Error in snakeDirection");

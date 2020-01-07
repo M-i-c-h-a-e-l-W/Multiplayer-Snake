@@ -23,11 +23,13 @@ public class SnakeModel {
     long playTime;
 
     String playerColor, playerName;
-    String direction = "r";
+    List<String> direction = new ArrayList<>();
     UUID client;
 
     // TODO direction List
     public void newSnake(int x, int y, String color) {
+        direction.add(0,"r");
+
         posX.add(x / 10);
         posY.add(y / 10);
 
