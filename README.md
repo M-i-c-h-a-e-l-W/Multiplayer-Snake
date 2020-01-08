@@ -8,12 +8,12 @@ If you have any questions please contact me.
 
 
 **Aim:** <br>
-- playing a snake which can eat fodder
-- snake should get some more points by eating or hitting other players
-- player can play against each other on a server with a login
-- difference between normaluser and admin
-- it should be possible to comment the site and communicate with a chatbox 
-- player choose their name and colour 
+- [x] playing a snake which can eat fodder
+- [x] snake should get some more points by eating or hitting other players
+- [ ] player can play against each other on a server with a login (server and login issues)
+- [ ] difference between normaluser and admin
+- [x] it should be possible to comment the site and communicate with a chatbox 
+- [x] player choose their name and colour 
 
 <br> ignore this: <br>
 **Possible TODO´s :** <br>
