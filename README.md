@@ -7,7 +7,7 @@ If you want to  start the programm on you computer you have to add the package i
 If you have any questions please contact me.
 
 
-**Aim:** :heavy_check_mark:<br>
+**Aim:**<br>
 - [x] playing a snake which can eat fodder
 - [x] snake should get some more points by eating or hitting other players
 - [ ] player can play against each other on a server with a login (server and login issues)
