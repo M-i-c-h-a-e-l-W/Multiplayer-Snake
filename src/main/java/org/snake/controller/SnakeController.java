@@ -142,10 +142,9 @@ public class SnakeController {
     }
 
     // check collision | take and give score-Points
-    private void checkCollision(){
+    private void checkCollision() {
         for (SnakeModel snake : snakeModels) {
             boolean exit = false;
-
             snake.setBestPlayer(false);
 
             // if dead snake continue
@@ -162,9 +161,7 @@ public class SnakeController {
                 webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
             }
 
-
             for (SnakeModel snakeToCheck : snakeModels) {
-
                 // check if the snake´s head touches a part of a body apart from his own head
                 for (int bodyLength = 0; bodyLength < snakeToCheck.getLengthOfBody() - BooleanUtils.toInteger(snakeToCheck == snake); bodyLength++) {
 
@@ -192,7 +189,6 @@ public class SnakeController {
                 }
             }
         }
-
     }
 
     // moving snakes in the direction
@@ -262,7 +258,7 @@ public class SnakeController {
             webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
             return;
         }
-        
+
         if (snakeDirection(snakeModelData[0], Integer.parseInt(snakeModelData[1]))) {
             snakeModels.get(Integer.parseInt(snakeModelData[1])).getDirection().add(snakeModelData[0]);
             webSocket.convertAndSend("/snake/changeDofP", snakeModels);
@@ -335,7 +331,7 @@ public class SnakeController {
 
         return true;
     }
-    
+
     public void setFieldArray() {
         for (int x = 0; x < 100; x++) {
             for (int y = 0; y < 60; y++) {
