@@ -1,59 +1,23 @@
-# Website-Mulitplayer-Snake
+# Website-Multiplayer-Snake
 
 Hey, <br>
-this is my Mulitplayer-Snake-Game.
+this is my Mulitplayer-Snake game.
 Its possible to play a normal Snake Game with Websockets in your lokal network with other friends.
 If you want to  start the programm on you computer you have to add the package in IntelliJ or an other IDEA and start the DemoApplikation class.
 If you have any questions please contact me.
 
 
-The following Text is for the collaborators to see which Features should be add next and were added:
+**Aim:** <br>
+- playing a snake which can eat fodder
+- snake should get some more points by eating or hitting other players
+- player can play against each other on a server with a login
+- difference between normaluser and admin
+- it should be possible to comment the site and communicate with a chatbox 
+- player choose their name and colour 
 
-**Ziele:** <br>
-- Es soll ein Multiplayer Snake Spiel mit Kommentarfunktion und Score Anzeige implementiert werden. 
-- Außerdem soll es eine Anmeldefunktion geben, bei welcher zwischen dem Admin und normalen Usern, welche sich registrieren können, differenziert werden soll. 
-- Die Kommentare darf der Admin nach belieben löschen und durchsuchen.
-
-**Aktueller Stand / erledigte Schritte:** <br>
-- ~~Kommentare werden in DB gespeichert und können durchsucht & gelöscht von jeden Nutzer~~
-- ~~Nutzer & Anmeldefunktion fehlt völlig~~
-- ~~Opensource Snake ist eingefügt grundlegend an einige Dinge angepasst~~ <-- komplett gelöscht und selbst geschrieben
-- ~~Struktur schaffen~~
-- ~~Server/Client Kommunikation Testfunktion schreiben~~
-- ~~Server/Client Kommunikation neue Kommentare aus anderem Tab aktualisieren~~
-- ~~gelöschte Kommentare aktualisieren~~
-- ~~generierte Kommentare aktualisieren~~
-- ~~Unnötige Console.log entfernen~~ dauerhaft Relevant
-- ~~Snake Server/Clients Kommunikation erschaffen~~
-- ~~Snake Oberflächen Layout erschaffen (Feld + Snake´s)~~
-- ~~unterschiedliche Random Snake Farben einfügen~~
-- ~~currentMilis anstatt Sleep()~~
-- ~~Snake Score einfügen~~
-- ~~Snake Multiplayerfähig~~
-- ~~Snake Bug "Länge der Schlange" beheben~~
-- ~~Snake Head farblich erkennbar~~
-- ~~Snake in anderer Snake gespawnt Execption gelöst bei Tod~~
-- ~~bei Disconnected Dead~~
-- ~~Score anzeigen~~
-- ~~Farbe bei der Score anzeige~~
-- ~~Pause Button~~
-- ~~Snake Schaden durch andere Spieler und sich selbst~~
-- ~~bester Spieler hervorgehoben~~
-- ~~Resetfunktion~~
-- ~~Tode mitlocken~~
-- ~~Name~~
-- ~~Bug Footer aufsammeln bei geringem Score~~
-- ~~Chatarea ändern~~
-- ~~Highscore anzeigen~~
-- ~~Farbe selber bestimmen~~
-- ~~Zeittracking~~
-- ~~Highscore Bug beheben~~ 
-
-**TODO:** <br>
+<br> ignore this: <br>
+**Possible TODO´s :** <br>
 - Snake Bild als Überschrift
-- Geschwindigkeit anpassen
 - Kollision optimieren (Feld Array)
 - Session mit Anmeldefunktion und login
 - parallelität beim Spielstand beachten mutex
-- Bestehende Model Klassen in DTO und Model auftrennen
-- Bug Richtungsumkehrung que 
