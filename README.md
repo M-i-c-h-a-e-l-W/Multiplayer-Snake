@@ -21,3 +21,8 @@ If you have any questions please contact me.
 - Kollision optimieren (Feld Array)
 - Session mit Anmeldefunktion und login
 - parallelität beim Spielstand beachten mutex
+
+
+sources <br>
+Snake Icon: <br>
+https://www.pinterest.de/pin/709387378780504867/
