@@ -5,9 +5,9 @@ var pause = false, check; // oldDirection = "r";
 
 // load site and give own name
 window.onload = function () {
-    check = prompt('Gib deinen Namen ein, sowie deine Farbe ( "Name#HexCode" ) ', '');
-    if (check === '') {
-        check = "Inkompetente Person";
+
+    while (check === '' || check == null) {
+        check = prompt('Please set your name, and do not forget your colour ( "Name#HexCode" ) ', '');
     }
     check = check.replace("#", "xHashTagx");
     initialization();
@@ -58,7 +58,6 @@ function initialization() {
         });
     } else {
         alert("I am sorry, but your browser is bullshit. It does not support the canvas tag.");
-
     }
 
 }

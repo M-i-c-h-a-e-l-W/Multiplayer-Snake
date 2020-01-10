@@ -17,5 +17,6 @@ services:
       POSTGRES_DB: 'test'
       POSTGRES_USER: 'test'
       POSTGRES_PASSWORD: 'test'
+
 #    volumes:
 #      - bucket-list-data:/var/lib/postgresql/data
