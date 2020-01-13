@@ -9,9 +9,6 @@ let ip = "localhost", ipSecure = "", protocol = "";
 // load site and give own name
 window.onload = function () {
 
-    alert("Hostname: " + window.location.hostname);
-    alert("Host: " + window.location.host);
-
     while (check === '' || check == null) {
         check = prompt('Please set your name, and do not forget your colour ( "Name#HexCode" ) ', '');
     }
