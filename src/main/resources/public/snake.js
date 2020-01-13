@@ -16,7 +16,7 @@ window.onload = function () {
 
     ip = window.location.origin;
     protocol = window.location.protocol;
-    if(protocol === "https:"){
+    if (protocol === "https:") {
         ipSecure = "s";
     }
     initialization();
@@ -184,7 +184,7 @@ function getPosition() {
 
 // connection to webSockets with all other clients
 function connectWebSocketChangeDirection(succesFunction) {
-    let socket = new WebSocket("ws"+ ipSecure + "://" + window.location.host + "/ws");
+    let socket = new WebSocket("ws" + ipSecure + "://" + window.location.host + "/ws");
     let ws = Stomp.over(socket);
     let that = this;
     ws.connect({}, (frame) => {

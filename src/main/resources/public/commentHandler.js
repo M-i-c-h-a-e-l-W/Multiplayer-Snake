@@ -7,7 +7,7 @@ time = new Date();
 window.onload = function () {
     ip = window.location.origin;
     protocol = window.location.protocol;
-    if(protocol === "https:"){
+    if (protocol === "https:") {
         ipSecure = "s";
     }
 
@@ -17,7 +17,7 @@ window.onload = function () {
 
 // connection with other clients: get new comments and delete comments by id
 function connectWebSocket() {
-    let socket = new WebSocket("ws"+ ipSecure + "://" + window.location.host + "/ws");
+    let socket = new WebSocket("ws" + ipSecure + "://" + window.location.host + "/ws");
     let ws = Stomp.over(socket);
     let that = this;
     ws.connect({}, (frame) => {
@@ -264,4 +264,12 @@ function loescheKommentar(commentId) {
             console.log("Error", error);
         }));
     }
+}
+
+function translator() {
+    var url;
+    url = document.querySelector("#leoOrg").value;
+    url = "https://dict.leo.org/englisch-deutsch/" + url;
+
+    window.open(url, "Translator");
 }
