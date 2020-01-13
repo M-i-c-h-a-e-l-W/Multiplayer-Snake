@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="optic.css">
+  <script src="stomp.js"></script>
+  <title>Snake Game of MW</title>
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      background: grey;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<main>
+
+  <h3>Highscore:
+    <span id="highScore"> ERROR nothing Avaible</span>
+  </h3>
+
+  <h1>Scores:</h1>
+  <ol>
+    <span id="spanId"> ERROR nothing Avaible</span>
+  </ol>
+
+  <div class="screen">
+    <canvas width="1000" height="600" id="canvas" style="border:5px solid #000000;"></canvas>
+  </div>
+
+  <br>
+  <h2>
+    Chat zum mobben:
+  </h2>
+  <div style="background-color: lightgray;">
+    <!-- <textarea name="chat" id="chatWindow" data-adaptheight rows="3" cols="40"
+    placeholder="deine diskriminierende Nachricht..." style="padding: 16px;
+    line-height: 1.5; width: 50%; " autofocus></textarea> -->
+
+    <form onsubmit="newMessage(); return false;">
+      <input placeholder="deine diskriminierende Nachricht..."
+             style="width: 50%;"
+             type="text" name="" id="chatWindow">
+    </form>
+    <br>
+
+    <span id="messages"> keine Nachrichten</span>
+  </div>
+
+  <div class="footer" ; style="text-align: right">
+    <a href="index.html"> Kommentarseite</a>
+    <br>
+  </div>
+</main>
+
+<script src="snake.js" type="application/javascript"></script>
+</body>
+</html>

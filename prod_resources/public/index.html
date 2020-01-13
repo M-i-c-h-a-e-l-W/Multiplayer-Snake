@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="optic.css">
+
+  <script src="stomp.js"></script>
+  <script src="commentHandler.js"></script>
+  <meta charset="UTF-8">
+  <title>FirstSPRINGWebsite</title>
+
+</head>
+
+<div class="container">
+  <body>
+
+  <br>Username: <input type="text" name="" id="text0">
+  <input type="button" value="Login">
+
+  <br><br> <h4>Tasks:</h4><br>
+  <br>Anmeldefunktion & Usertracking für Admin
+  <br>Admin soll einzelne Kommentare löschen können sobald Datenbank eingebunden
+  <br>Zeittracking
+  <br>
+  <a href="snake.html"> Snake</a>
+  <br>
+  Schreibe einen netten Kommentar:
+  <br>
+  <textarea name="justtext" id="commentInput" data-adaptheight rows="3" cols="40" placeholder="dein Kommentar"
+            style="padding: 16px; line-height: 1.5;" autofocus></textarea>
+  <script>(function () {
+      function adjustHeight(el, minHeight) {
+          var outerHeight = parseInt(window.getComputedStyle(el).height, 10);
+          var diff = outerHeight - el.clientHeight;
+          el.style.height = 0;
+          el.style.height = Math.max(minHeight, el.scrollHeight + diff) + 'px';
+      }
+
+      var textAreas = [].slice.call(document.querySelectorAll('textarea[data-adaptheight]'));
+
+      textAreas.forEach(function (el) {
+          el.style.boxSizing = el.style.mozBoxSizing = 'border-box';
+          el.style.overflowY = 'hidden';
+          var minHeight = el.scrollHeight;
+          el.addEventListener('input', function () {
+              adjustHeight(el, minHeight);
+          });
+
+          window.addEventListener('resize', function () {
+              adjustHeight(el, minHeight);
+          });
+          adjustHeight(el, minHeight);
+      });
+  }());
+  </script>
+  <br>
+
+  <p>
+    <input type="button" value="Senden" onClick="yourComment()"/>
+    <input type="button" value="Aktualisieren" onClick="fethAllComments()">
+    <input type="button" value="generiere Kommentare" onClick="generiereKommentare()">
+    <br><br>
+
+  <form onsubmit="durchsuchKommentare(); return false;">
+    Suche Kommentare die folgenden String enthalten:
+    <input type="text" name="" id="searchStringInComment">
+    <input type="submit" value="Durchsuchen"/>
+  </form>
+
+  <form onsubmit="loescheKommentar(); return false;">
+    <br> <br> Lösche alle Kommentare die Folgenden String enthalten:
+    <input type="text" name="" id="deleteCommentWithString">
+    <input type="submit" value="Löschen"/>
+  </form>
+
+  </p>
+
+  <div class="comments">
+    <h3>Kommentare:</h3>
+    <span id="header"></span>
+    <ol>
+      <span id="spanId"> keine Einträge</span>
+    </ol>
+  </div>
+  <br><br>
+
+  <!--
+
+  <div class="game">
+    <h5>Versuche gegen den Computer zu gewinnen ;-
+      <r>)</r>
+    </h5>
+    <br>
+    <button onClick="choose(1)">Schere</button>
+    <br>
+    <button onClick="choose(2)">Stein</button>
+    <br>
+    <button onClick="choose(3)">Papier</button>
+    <br>
+    <button onClick="choose(4)">Brunnen</button>
+    &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160
+    <button onClick="stp(user)">Ergebnis</button>
+  </div>
+
+  <br><br>
+  <form name="form1">
+    <input type="text" name="bgfarbe" size="10">
+    <input type="button" value="Farbe beige" onClick="farbegreen()">
+  </form>
+  <form name="form2">
+    <input type="text" name="farbfeld" size="10">
+    <input type="button" value="Hexwert eingeben" onClick="eingabefarbe()">
+  </form>
+
+
+  <div onmouseover="mOver(this)" onmouseout="mOut(this)"
+       style="background-color:#00ff00;width:360px;height:140px;padding:40px;">
+    Mouse Over Me
+  </div>
+
+  -->
+  </body>
+</div>
+
+</html>

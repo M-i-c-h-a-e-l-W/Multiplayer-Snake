@@ -4,12 +4,15 @@ services:
     container_name: "snake_backend"
     image: openjdk:11
     volumes:
-      - "/Users/mweishaar/projects/Website-002/target/:/dist"
-      - "/Users/mweishaar/projects/Website-002/src/main/resources/:/res"
+      - "../target/:/dist"
+      - "../prod_resources/:/res"
     command: bash -c 'sleep 5 && ls -a && java -jar /dist/demo-0.0.1-SNAPSHOT.jar'
     working_dir: /res
     ports:
-      - "127.0.0.1:20085:8080"
+      - "127.0.0.1:20086:8080"
+    networks:
+      snake-net:
+        ipv4_address: 10.5.8.5
   database:
     image: "postgres:12.0"
     container_name: some-postgres2
@@ -19,3 +22,14 @@ services:
       POSTGRES_PASSWORD: 'test'
 #    volumes:
 #      - bucket-list-data:/var/lib/postgresql/data
+    networks:
+      snake-net:
+        ipv4_address: 10.5.8.6
+networks:
+ snake-net:
+  ipam:
+   driver: default
+   config:
+   - subnet: 10.5.8.0/24
+  driver_opts:
+   com.docker.network.bridge.name: br-snake
