@@ -14,7 +14,7 @@ If you have any questions please contact me.
 - [ ] difference between user and admin
 - [x] it should be possible to comment the site and communicate with a chatbox 
 - [x] player choose their name and colour
-- [x] on a server / playing via internet 
+- [ ] on a server / playing via internet 
 
 <br> ignore this: <br>
 **Possible TODO´s :** <br>
