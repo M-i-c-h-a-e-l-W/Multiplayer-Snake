@@ -2,14 +2,23 @@
 var canvas, ctx, playerNr = -1, maxPlayer = 0;
 var fodderX = 100, fodderY = 100;
 var pause = false, check; // oldDirection = "r";
+let ip = "localhost", ipSecure = "", protocol = "";
+
+// https wss
 
 // load site and give own name
 window.onload = function () {
-    check = prompt('Gib deinen Namen ein, sowie deine Farbe ( "Name#HexCode" ) ', '');
-    if (check === '') {
-        check = "Inkompetente Person";
+
+    while (check === '' || check == null) {
+        check = prompt('Please set your name, and do not forget your colour ( "Name#HexCode" ) ', '');
     }
     check = check.replace("#", "xHashTagx");
+
+    ip = window.location.origin;
+    protocol = window.location.protocol;
+    if(protocol === "https:"){
+        ipSecure = "s";
+    }
     initialization();
 };
 
@@ -18,7 +27,7 @@ window.onbeforeunload = function () {
     if (playerNr === -1 || maxPlayer === 0) {
         return;
     }
-    fetch("http://" + "localhost" + ":8080/api/snake/playerDead?deadPlayerNr=" + playerNr, {
+    fetch(ip + "/api/snake/playerDead?deadPlayerNr=" + playerNr, {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {
@@ -37,7 +46,7 @@ function initialization() {
     if (canvas.getContext) {
         ctx = canvas.getContext('2d');
         connectWebSocketChangeDirection(() => {
-            fetch("http://" + "localhost" + ":8080/api/snake/newPlayer?playerName=" + check, {
+            fetch(ip + "/api/snake/newPlayer?playerName=" + check, {
                 method: 'POST',
                 headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
             }).then(function (ev) {
@@ -58,14 +67,13 @@ function initialization() {
         });
     } else {
         alert("I am sorry, but your browser is bullshit. It does not support the canvas tag.");
-
     }
 
 }
 
 // send message to the backend to start the game
 function startGame() {
-    fetch("http://" + "localhost" + ":8080/api/snake/runGame", {
+    fetch(ip + "/api/snake/runGame", {
         method: 'GET',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {
@@ -156,7 +164,7 @@ function getPosition() {
             // oldDirection = changeD;  && changeD !== oldDirection
             changeD += ";" + playerNr.toString();
             //changeD = changeD.toString();
-            fetch("http://" + "localhost" + ":8080/api/snake/changeDirection?changeD=" + changeD, {
+            fetch(ip + "/api/snake/changeDirection?changeD=" + changeD, {
                 method: 'POST',
                 headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
             }).then(function (ev) {
@@ -176,7 +184,7 @@ function getPosition() {
 
 // connection to webSockets with all other clients
 function connectWebSocketChangeDirection(succesFunction) {
-    let socket = new WebSocket("ws://" + "localhost" + ":8080/ws");
+    let socket = new WebSocket("ws"+ ipSecure + "://" + window.location.host + "/ws");
     let ws = Stomp.over(socket);
     let that = this;
     ws.connect({}, (frame) => {
@@ -294,7 +302,7 @@ function connectWebSocketChangeDirection(succesFunction) {
 function newMessage() {
     let newMessage = document.querySelector("#chatWindow").value;
 
-    fetch("http://" + "localhost" + ":8080/api/snake/chat?playerNr=" + playerNr + "&message=" + newMessage, {
+    fetch(ip + "/api/snake/chat?playerNr=" + playerNr + "&message=" + newMessage, {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {
