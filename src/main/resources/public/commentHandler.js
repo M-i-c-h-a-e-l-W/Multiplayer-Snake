@@ -52,7 +52,7 @@ function yourComment(newComment) {
     //console.log("Ausgelesener Text: " + msg);
     if (msg === "") return;
     //‚commentList.comment.getText();
-    fetch(ip + ":8080/api/comments", {
+    fetch(ip + "/api/comments", {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
         body: JSON.stringify({text: msg})
