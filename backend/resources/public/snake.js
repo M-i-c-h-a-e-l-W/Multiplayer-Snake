@@ -3,11 +3,12 @@ var canvas, ctx, playerNr = -1, maxPlayer = 0;
 var fodderX = 100, fodderY = 100;
 var pause = false, check; // oldDirection = "r";
 let ip = "localhost", ipSecure = "", protocol = "";
-
+let field;
 // https wss
 
 // load site and give own name
 window.onload = function () {
+    field = new Array(6600);
 
     while (check === '' || check == null) {
         check = prompt('Please set your name, and do not forget your colour ( "Name#HexCode" ) ', '');
@@ -150,6 +151,7 @@ function getPosition() {
                 changeD = "u";
                 sendKeyCode = true;
                 break;
+            case 189:
             case 32:
                 changeD = "pause";
                 sendKeyCode = true;
@@ -210,6 +212,8 @@ function connectWebSocketChangeDirection(succesFunction) {
         // get new position of snakes
         ws.subscribe("/snake/changeDofP", (message) => {
             // console.log("WebSocket is Connected\nVariable Message: ", message);
+            clearFieldArray();
+
             let snakeNewData = JSON.parse(message.body);
 
             maxPlayer = snakeNewData.length;
@@ -251,14 +255,14 @@ function connectWebSocketChangeDirection(succesFunction) {
                 }
                 if (snakeNewData[currentPlayer].posX === null || snakeNewData[currentPlayer].posY === null
                     && snakeNewData[currentPlayer].posX.length === 0) {
-
+                    console.log("Array Error L256");
                 } else if (snakeNewData[currentPlayer].posX.length === snakeNewData[currentPlayer].posY.length) {
-                    for (var i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
+                    fillFieldArray(snakeNewData[currentPlayer].posX, snakeNewData[currentPlayer].posY);
 
+                    for (var i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
                         drawSnakes(snakeNewData[currentPlayer].playerColor,
                             snakeNewData[currentPlayer].posX[i] * 10, snakeNewData[currentPlayer].posY[i] * 10,
                             snakeNewData[currentPlayer].posX.length - (i + 1));
-
                     }
                 }
             }
@@ -296,6 +300,22 @@ function connectWebSocketChangeDirection(succesFunction) {
         //that.webSocket = null;
     });
 
+}
+
+function fillFieldArray(x, y) {
+    for (var index = 0; index < x.length; index++) {
+        field[x[index] + y[index] * 100] = true;
+
+    }
+}
+
+function clearFieldArray() {
+    if (field === null) {
+        field = new Array(6600);
+    }
+    for (var index = 0; index < 6600; index++) {
+        field[index] = false;
+    }
 }
 
 // cheat/ chat box  // to see cheat code look in the backend (chatController)
