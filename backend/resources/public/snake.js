@@ -215,6 +215,7 @@ function connectWebSocketChangeDirection(succesFunction) {
             // console.log("WebSocket is Connected\nVariable Message: ", message);
             clearFieldArray();
             createTable();
+            document.getElementById('spanId').innerHTML = "";
 
             let snakeNewData = JSON.parse(message.body);
 
@@ -223,7 +224,13 @@ function connectWebSocketChangeDirection(succesFunction) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             drawSnakes("#FF0000", fodderX, fodderY, 4040);
-            document.getElementById('spanId').innerHTML = "";
+
+            let actualBest = 0, actBest = false;
+            for (var index = 0; index < maxPlayer; index++) {
+                if(snakeNewData[index].score > actualBest){
+                    actualBest = snakeNewData[index].score;
+                }
+            }
 
             for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
 
@@ -236,38 +243,13 @@ function connectWebSocketChangeDirection(succesFunction) {
                     if (playedTime % 1 === 0) {
                         playedTime += ".0";
                     }
-                    if (snakeNewData[currentPlayer].bestPlayer) {
-
-
-                       addPlayerToTable(currentPlayer, snakeNewData[currentPlayer].playerName, snakeNewData[currentPlayer].score,
-                            playedTime, snakeNewData[currentPlayer].playerDeaths, snakeNewData[currentPlayer].playerColor);
-                        /*
-                        document.getElementById('spanId').innerHTML += "<h3><font color=\"" +
-                            snakeNewData[currentPlayer].playerColor + "\">" + "Player: " +
-                            currentPlayer + " " + snakeNewData[currentPlayer].playerName +
-                            " </font>has a Score of: " +
-                            snakeNewData[currentPlayer].score +
-                            " | is " + playedTime + "\t seconds alife |" +
-                            " and died " + snakeNewData[currentPlayer].playerDeaths + " times</h3>";
-
-                         */
-                    } else {
-                        addPlayerToTable(currentPlayer, snakeNewData[currentPlayer].playerName, snakeNewData[currentPlayer].score,
-                            playedTime, snakeNewData[currentPlayer].playerDeaths, snakeNewData[currentPlayer].playerColor);
-
-
-                        /*
-                          document.getElementById('spanId').innerHTML += "<font color=\"" +
-                              snakeNewData[currentPlayer].playerColor + "\">" + "Player: " +
-                              currentPlayer + " " + snakeNewData[currentPlayer].playerName +
-                              " </font>has a Score of: " +
-                              snakeNewData[currentPlayer].score +
-                              " | is " + playedTime + "\t seconds alife |" +
-                              "   and died " + snakeNewData[currentPlayer].playerDeaths + " times";
-
-                         */
+                    if(actualBest === snakeNewData[currentPlayer].score){
+                        actBest = true;
                     }
-                    document.getElementById('spanId').innerHTML += "<br>";
+                    addPlayerToTable(currentPlayer, snakeNewData[currentPlayer].playerName, snakeNewData[currentPlayer].score,
+                        playedTime, snakeNewData[currentPlayer].playerDeaths, snakeNewData[currentPlayer].playerColor, actBest);
+                    actBest = false;
+
                 }
                 if (snakeNewData[currentPlayer].posX === null || snakeNewData[currentPlayer].posY === null
                     && snakeNewData[currentPlayer].posX.length === 0) {
@@ -282,7 +264,7 @@ function connectWebSocketChangeDirection(succesFunction) {
                     }
                 }
             }
-            document.getElementById('spanId').innerHTML +=  table + "</table>";
+            document.getElementById('spanId').innerHTML += table + "</table>";
 
         });
         // get messages of chat
@@ -320,18 +302,28 @@ function connectWebSocketChangeDirection(succesFunction) {
 
 }
 
-
 function createTable() {
-    table = "<table style=\"width:100%\"><tr><th>Player ID</th><th>Name</th><th>Score</th><th>Seconds alive</th><th>Deaths</th></tr>";
+    table = "<table style=\"width:100%\">" +
+        "<tr>" +
+        "<th>Player ID</th>" +
+        "<th>Name</th>" +
+        "<th>Score</th>" +
+        "<th>Seconds alive</th>" +
+        "<th>Deaths</th>" +
+        "</tr>";
 
     return table;
 }
 
-function addPlayerToTable(id, name, score, time, deaths, color) {
+function addPlayerToTable(id, name, score, time, deaths, color, isBest) {
+    if (isBest === true) {
+        // console.log(name + " is the best. Score: " + score);
+        score = "<font color=\"red\">" + score + "</font>";
+    }
     table += "<tr>"
-        + "<td>" + id  +"</td>"
+        + "<td>" + id + "</td>"
         + "<td><font color=\"" + color + "\">" + name + "</font></td>"
-        + "<td>" + score  +"</td>"
+        + "<td>" + score + "</td>"
         + "<td>" + time + "</td>"
         + "<td>" + deaths + "</td>"
         + "</tr>";
@@ -341,7 +333,6 @@ function addPlayerToTable(id, name, score, time, deaths, color) {
 function fillFieldArray(x, y) {
     for (var index = 0; index < x.length; index++) {
         field[x[index] + y[index] * 100] = true;
-
     }
 }
 
