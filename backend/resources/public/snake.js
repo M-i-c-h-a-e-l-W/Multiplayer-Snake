@@ -4,6 +4,7 @@ var fodderX = 100, fodderY = 100;
 var pause = false, check; // oldDirection = "r";
 let ip = "localhost", ipSecure = "", protocol = "";
 let field;
+let table = "";
 // https wss
 
 // load site and give own name
@@ -213,6 +214,7 @@ function connectWebSocketChangeDirection(succesFunction) {
         ws.subscribe("/snake/changeDofP", (message) => {
             // console.log("WebSocket is Connected\nVariable Message: ", message);
             clearFieldArray();
+            createTable();
 
             let snakeNewData = JSON.parse(message.body);
 
@@ -235,6 +237,11 @@ function connectWebSocketChangeDirection(succesFunction) {
                         playedTime += ".0";
                     }
                     if (snakeNewData[currentPlayer].bestPlayer) {
+
+
+                       addPlayerToTable(currentPlayer, snakeNewData[currentPlayer].playerName, snakeNewData[currentPlayer].score,
+                            playedTime, snakeNewData[currentPlayer].playerDeaths, snakeNewData[currentPlayer].playerColor);
+                        /*
                         document.getElementById('spanId').innerHTML += "<h3><font color=\"" +
                             snakeNewData[currentPlayer].playerColor + "\">" + "Player: " +
                             currentPlayer + " " + snakeNewData[currentPlayer].playerName +
@@ -242,14 +249,23 @@ function connectWebSocketChangeDirection(succesFunction) {
                             snakeNewData[currentPlayer].score +
                             " | is " + playedTime + "\t seconds alife |" +
                             " and died " + snakeNewData[currentPlayer].playerDeaths + " times</h3>";
+
+                         */
                     } else {
-                        document.getElementById('spanId').innerHTML += "<font color=\"" +
-                            snakeNewData[currentPlayer].playerColor + "\">" + "Player: " +
-                            currentPlayer + " " + snakeNewData[currentPlayer].playerName +
-                            " </font>has a Score of: " +
-                            snakeNewData[currentPlayer].score +
-                            " | is " + playedTime + "\t seconds alife |" +
-                            "   and died " + snakeNewData[currentPlayer].playerDeaths + " times";
+                        addPlayerToTable(currentPlayer, snakeNewData[currentPlayer].playerName, snakeNewData[currentPlayer].score,
+                            playedTime, snakeNewData[currentPlayer].playerDeaths, snakeNewData[currentPlayer].playerColor);
+
+
+                        /*
+                          document.getElementById('spanId').innerHTML += "<font color=\"" +
+                              snakeNewData[currentPlayer].playerColor + "\">" + "Player: " +
+                              currentPlayer + " " + snakeNewData[currentPlayer].playerName +
+                              " </font>has a Score of: " +
+                              snakeNewData[currentPlayer].score +
+                              " | is " + playedTime + "\t seconds alife |" +
+                              "   and died " + snakeNewData[currentPlayer].playerDeaths + " times";
+
+                         */
                     }
                     document.getElementById('spanId').innerHTML += "<br>";
                 }
@@ -266,6 +282,8 @@ function connectWebSocketChangeDirection(succesFunction) {
                     }
                 }
             }
+            document.getElementById('spanId').innerHTML +=  table + "</table>";
+
         });
         // get messages of chat
         ws.subscribe("/snake/chat", (message) => {
@@ -300,6 +318,24 @@ function connectWebSocketChangeDirection(succesFunction) {
         //that.webSocket = null;
     });
 
+}
+
+
+function createTable() {
+    table = "<table style=\"width:100%\"><tr><th>Player ID</th><th>Name</th><th>Score</th><th>Seconds alive</th><th>Deaths</th></tr>";
+
+    return table;
+}
+
+function addPlayerToTable(id, name, score, time, deaths, color) {
+    table += "<tr>"
+        + "<td>" + id  +"</td>"
+        + "<td><font color=\"" + color + "\">" + name + "</font></td>"
+        + "<td>" + score  +"</td>"
+        + "<td>" + time + "</td>"
+        + "<td>" + deaths + "</td>"
+        + "</tr>";
+    return table;
 }
 
 function fillFieldArray(x, y) {

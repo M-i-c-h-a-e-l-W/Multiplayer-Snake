@@ -46,6 +46,14 @@ h4 {
     width: 19px;
 }
 
+canvas, table{
+    background-color: lightgray;
+}
+
 .btn:hover {
     background-color: Red;
+}
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
 }

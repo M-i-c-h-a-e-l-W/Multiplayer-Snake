@@ -268,7 +268,7 @@ public class SnakeController {
     }
 
     // check input of direction
-    public boolean snakeDirection(String newDirection, int playerNr) {
+    private boolean snakeDirection(String newDirection, int playerNr) {
         // direction logic: same direction as before and opposite direction return false
         if (newDirection.equals(snakeModels.get(playerNr).getDirection())) {
             return false;

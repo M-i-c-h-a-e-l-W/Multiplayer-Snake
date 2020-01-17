@@ -13,6 +13,7 @@ function App() {
                 <p>
                     Register is way faster than unregister
                 </p>
+
                 <a
                     className="App-link"
                     href="https://reactjs.org"
@@ -24,6 +25,10 @@ function App() {
             </header>
         </div>
     );
+}
+
+function firstFunction() {
+    return "<h1>Function</h1>";
 }
 
 export default App;
