@@ -319,6 +319,7 @@ function addPlayerToTable(id, name, score, time, deaths, color, isBest) {
     if (isBest === true) {
         // console.log(name + " is the best. Score: " + score);
         score = "<font color=\"red\">" + score + "</font>";
+        name = "<img src=\"krone.png\" width=\"30\" height=\"30\" alt=\"Krone\">\n" + name;
     }
     table += "<tr>"
         + "<td>" + id + "</td>"
