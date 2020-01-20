@@ -27,3 +27,5 @@ If you have any questions please contact me.
 **Sources** <br>
 Snake Icon: <br>
 http://www.iconarchive.com/show/noto-emoji-animals-nature-icons-by-google/22285-snake-icon.html
+Crone png: <br>
+https://dlpng.com/png/502383
