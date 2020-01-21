@@ -29,3 +29,5 @@ Snake Icon: <br>
 http://www.iconarchive.com/show/noto-emoji-animals-nature-icons-by-google/22285-snake-icon.html <br>
 Crone png: <br>
 https://dlpng.com/png/502383 <br>
+Apple png: <br>
+https://pngriver.com/download-apple-fruit-png-image-72131/ <br>
