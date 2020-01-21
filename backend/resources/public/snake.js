@@ -95,13 +95,20 @@ function drawSnakes(color, posX, posY, partOfHead) {
     if (partOfHead === 0) {
         ctx.strokeStyle = "#000000";
     } else if (partOfHead === 4040) {
-        ctx.strokeStyle = "#ff0000";
+        let img = new Image();
+
+        img.src = "snake-fodder.png";
+        ctx.drawImage(img, posX-5, posY-5, 20 , 20);
+
+        //<img src="snake-fodder.png" alt="Selfhtml">
+        return;
+       // ctx.strokeStyle = "#ff0000";
     } else {
         ctx.strokeStyle = "#ffffff";
     }
 
-    var width = 10;
-    var height = 10;
+    let width = 10;
+    let height = 10;
 
     ctx.lineWidth = 1.5;
     ctx.fillRect(posX, posY, width, height);
