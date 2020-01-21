@@ -24,42 +24,47 @@
 
 <body>
 <main>
+  <div class="leftSide">
 
-  <h3>Highscore:
-    <span id="highScore"> ERROR nothing Avaible</span>
-  </h3>
 
-  <h1>Scores:</h1>
-
-  <span id="spanId"> ERROR nothing Avaible</span>
-  <br>
-
-  <div class="screen">
-    <canvas width="1000" height="600" id="canvas" style="border:5px solid #000000;"></canvas>
   </div>
+  <div class="mainGame">
+    <h3>Highscore:
+      <span id="highScore"> ERROR nothing Avaible</span>
+    </h3>
 
-  <br>
-  <h2>
-    Chat bzw. Console:
-  </h2>
-  <div style="background-color: lightgray;">
-    <!-- <textarea name="chat" id="chatWindow" data-adaptheight rows="3" cols="40"
-    placeholder="deine diskriminierende Nachricht..." style="padding: 16px;
-    line-height: 1.5; width: 50%; " autofocus></textarea> -->
+    <h1>Scores:</h1>
 
-    <form onsubmit="newMessage(); return false;">
-      <input placeholder="be nice to each other..."
-             style="width: 50%;"
-             type="text" name="" id="chatWindow">
-    </form>
+    <span id="spanId"> ERROR nothing Avaible</span>
     <br>
 
-    <span id="messages"> keine Nachrichten</span>
-  </div>
+    <div class="screen">
+      <canvas width="1000" height="600" id="canvas" style="border:5px solid #000000;"></canvas>
+    </div>
 
-  <div class="footer" ; style="text-align: right">
-    <a href="index.html"> Kommentarseite</a>
     <br>
+    <h2>
+      Chat bzw. Console:
+    </h2>
+    <div style="background-color: lightgray;">
+      <!-- <textarea name="chat" id="chatWindow" data-adaptheight rows="3" cols="40"
+      placeholder="deine diskriminierende Nachricht..." style="padding: 16px;
+      line-height: 1.5; width: 50%; " autofocus></textarea> -->
+
+      <form onsubmit="newMessage(); return false;">
+        <input placeholder="be nice to each other..."
+               style="width: 50%;"
+               type="text" name="" id="chatWindow">
+      </form>
+      <br>
+
+      <span id="messages"> keine Nachrichten</span>
+    </div>
+
+    <div class="footer" ; style="text-align: right">
+      <a href="index.html"> Kommentarseite</a>
+      <br>
+    </div>
   </div>
 </main>
 

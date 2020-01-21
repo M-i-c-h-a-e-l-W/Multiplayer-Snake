@@ -29,6 +29,7 @@ window.onbeforeunload = function () {
     if (playerNr === -1 || maxPlayer === 0) {
         return;
     }
+
     fetch(ip + "/api/snake/playerDead?deadPlayerNr=" + playerNr, {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
@@ -68,7 +69,7 @@ function initialization() {
 
         });
     } else {
-        alert("I am sorry, but your browser is bullshit. It does not support the canvas tag.");
+        alert("I am sorry, but your browser is *****. It does not support the canvas tag.");
     }
 
 }
@@ -110,22 +111,21 @@ function drawSnakes(color, posX, posY, partOfHead) {
     ctx.closePath();
 }
 
-var interval = setInterval(getPosition, 5);
+let interval = setInterval(getPosition, 5);
 //setTimeout(getPosition, 5);
 
 // input "wasd" and arrow keys and send the input to the backend
 function getPosition() {
     document.onkeydown = function (event) {
-        var keyCode, changeD = "Error";
-        var sendKeyCode = false;
+        let keyCode, changeD = "Error";
+        let sendKeyCode = false;
 
-        if (event == null) {
-            keyCode = window.event.keyCode;
-        } else {
+        if (event) {
             keyCode = event.keyCode;
+        } else {
+            keyCode = window.event.keyCode;
         }
 
-        //alert("Eingabe: " + keyCode);
         switch (keyCode) {
             // left
             case 65:
@@ -139,7 +139,6 @@ function getPosition() {
                 changeD = "o";
                 sendKeyCode = true;
                 break;
-
             // right
             case 68:
             case 39:
@@ -161,6 +160,7 @@ function getPosition() {
                 console.log("Fehlerhafte Eingabe Code: " + keyCode);
                 break;
         }
+
         console.log("Eingabe: " + changeD);
 
         if (changeD === "pause" || sendKeyCode && changeD !== "Error") {
@@ -227,7 +227,7 @@ function connectWebSocketChangeDirection(succesFunction) {
 
             let actualBest = 0, actBest = false;
             for (var index = 0; index < maxPlayer; index++) {
-                if(snakeNewData[index].score > actualBest){
+                if (snakeNewData[index].score > actualBest) {
                     actualBest = snakeNewData[index].score;
                 }
             }
@@ -243,7 +243,7 @@ function connectWebSocketChangeDirection(succesFunction) {
                     if (playedTime % 1 === 0) {
                         playedTime += ".0";
                     }
-                    if(actualBest === snakeNewData[currentPlayer].score){
+                    if (actualBest === snakeNewData[currentPlayer].score) {
                         actBest = true;
                     }
                     addPlayerToTable(currentPlayer, snakeNewData[currentPlayer].playerName, snakeNewData[currentPlayer].score,
@@ -359,3 +359,4 @@ function newMessage() {
         console.log("Error: ", error);
     }));
 }
+

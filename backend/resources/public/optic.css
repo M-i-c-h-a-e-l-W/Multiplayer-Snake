@@ -53,6 +53,7 @@ canvas, table{
 .btn:hover {
     background-color: Red;
 }
+
 table, th, td {
     border: 1px solid black;
     text-align: center;
