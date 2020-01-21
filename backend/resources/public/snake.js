@@ -46,32 +46,31 @@ function initialization() {
     document.getElementById('messages').innerHTML = "";
 
     canvas = document.getElementById("canvas");
-    if (canvas.getContext) {
-        ctx = canvas.getContext('2d');
-        connectWebSocketChangeDirection(() => {
-            fetch(ip + "/api/snake/newPlayer?playerName=" + check, {
-                method: 'POST',
-                headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
-            }).then(function (ev) {
-                if (ev.status !== 200) {
-                    console.log("Error: not 200");
-                    return;
-                }
-                console.log("Erzeugte Snake Klasse ohne JSON:\n\n" + ev.toString());
-                ev.json().then(function (snakeClass) {
-                    console.log("Erzeugte Snake Klasse:\n\n" + snakeClass.playerNr);
-                    playerNr = snakeClass.playerNr;
-                });
-                startGame();
-            }).catch((function (error) {
-                console.log("Error: ", error);
-            }));
-
-        });
-    } else {
-        alert("I am sorry, but your browser is *****. It does not support the canvas tag.");
+    if (!canvas.getContext) {
+        alert("Failed to initialize: no canvas context \n It does not support the canvas tag.");
+        return;
     }
+    ctx = canvas.getContext('2d');
 
+    connectWebSocketChangeDirection(() => {
+        fetch(ip + "/api/snake/newPlayer?playerName=" + check, {
+            method: 'POST',
+            headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+        }).then(function (ev) {
+            if (ev.status !== 200) {
+                console.log("Error: not 200");
+                return;
+            }
+            console.log("Erzeugte Snake Klasse ohne JSON:\n\n" + ev.toString());
+            ev.json().then(function (snakeClass) {
+                console.log("Erzeugte Snake Klasse:\n\n" + snakeClass.playerNr);
+                playerNr = snakeClass.playerNr;
+            });
+            startGame();
+        }).catch((function (error) {
+            console.log("Error: ", error);
+        }));
+    });
 }
 
 // send message to the backend to start the game
@@ -87,22 +86,28 @@ function startGame() {
 }
 
 // draw the snakes and the fodder
-function drawSnakes(color, posX, posY, partOfHead) {
+function drawSnakes(color, posX, posY, partOfHead, actBest) {
     ctx.beginPath();
     //ctx.fillStyle = "rgb(250,0,0)";
 
     ctx.fillStyle = color;
-    if (partOfHead === 0) {
+    if (actBest && partOfHead === 0) {
+        let img = new Image();
+        img.src = "krone.png";
+        ctx.drawImage(img, posX - 5, posY - 15, 20, 20);
+
+        ctx.strokeStyle = "#000000";
+    } else if (partOfHead === 0) {
         ctx.strokeStyle = "#000000";
     } else if (partOfHead === 4040) {
+
         let img = new Image();
-
         img.src = "snake-fodder.png";
-        ctx.drawImage(img, posX-5, posY-5, 20 , 20);
+        // without red Point use this
+        // ctx.drawImage(img, posX-5, posY-5, 20 , 20); return;
 
-        //<img src="snake-fodder.png" alt="Selfhtml">
-        return;
-       // ctx.strokeStyle = "#ff0000";
+        ctx.drawImage(img, posX - 7, posY - 9, 25, 25);
+        ctx.strokeStyle = "#ff0000";
     } else {
         ctx.strokeStyle = "#ffffff";
     }
@@ -230,7 +235,7 @@ function connectWebSocketChangeDirection(succesFunction) {
             // console.log("MaxPlayer: " + maxPlayer);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            drawSnakes("#FF0000", fodderX, fodderY, 4040);
+            drawSnakes("#770000", fodderX, fodderY, 4040);
 
             let actualBest = 0, actBest = false;
             for (var index = 0; index < maxPlayer; index++) {
@@ -255,9 +260,8 @@ function connectWebSocketChangeDirection(succesFunction) {
                     }
                     addPlayerToTable(currentPlayer, snakeNewData[currentPlayer].playerName, snakeNewData[currentPlayer].score,
                         playedTime, snakeNewData[currentPlayer].playerDeaths, snakeNewData[currentPlayer].playerColor, actBest);
-                    actBest = false;
-
                 }
+
                 if (snakeNewData[currentPlayer].posX === null || snakeNewData[currentPlayer].posY === null
                     && snakeNewData[currentPlayer].posX.length === 0) {
                     console.log("Array Error L256");
@@ -267,9 +271,10 @@ function connectWebSocketChangeDirection(succesFunction) {
                     for (var i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
                         drawSnakes(snakeNewData[currentPlayer].playerColor,
                             snakeNewData[currentPlayer].posX[i] * 10, snakeNewData[currentPlayer].posY[i] * 10,
-                            snakeNewData[currentPlayer].posX.length - (i + 1));
+                            snakeNewData[currentPlayer].posX.length - (i + 1), actBest);
                     }
                 }
+                actBest = false;
             }
             document.getElementById('spanId').innerHTML += table + "</table>";
 
@@ -326,7 +331,7 @@ function addPlayerToTable(id, name, score, time, deaths, color, isBest) {
     if (isBest === true) {
         // console.log(name + " is the best. Score: " + score);
         score = "<font color=\"red\">" + score + "</font>";
-        name = "<img src=\"krone.png\" width=\"30\" height=\"30\" alt=\"Krone\">\n" + name;
+        // name = "<img src=\"krone.png\" width=\"30\" height=\"30\" alt=\"Krone\">\n" + name;
     }
     table += "<tr>"
         + "<td>" + id + "</td>"
