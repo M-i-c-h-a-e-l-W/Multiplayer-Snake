@@ -21,6 +21,7 @@ window.onload = function () {
     if (protocol === "https:") {
         ipSecure = "s";
     }
+
     initialization();
 };
 
@@ -61,12 +62,15 @@ function initialization() {
                 console.log("Error: not 200");
                 return;
             }
+
             console.log("Erzeugte Snake Klasse ohne JSON:\n\n" + ev.toString());
+
             ev.json().then(function (snakeClass) {
                 console.log("Erzeugte Snake Klasse:\n\n" + snakeClass.playerNr);
                 playerNr = snakeClass.playerNr;
             });
             startGame();
+
         }).catch((function (error) {
             console.log("Error: ", error);
         }));
@@ -100,7 +104,6 @@ function drawSnakes(color, posX, posY, partOfHead, actBest) {
     } else if (partOfHead === 0) {
         ctx.strokeStyle = "#000000";
     } else if (partOfHead === 4040) {
-
         let img = new Image();
         img.src = "snake-fodder.png";
         // without red Point use this
@@ -211,6 +214,7 @@ function connectWebSocketChangeDirection(succesFunction) {
             fodderY = newFodder.posY * 10;
             console.log("NewFodder: ", message)
         });
+
         // get dead player
         ws.subscribe("/snake/deleted", (message) => {
             let newFodder = JSON.parse(message.body);
@@ -222,6 +226,7 @@ function connectWebSocketChangeDirection(succesFunction) {
             }
             console.log("NewFodder: ", message);
         });
+
         // get new position of snakes
         ws.subscribe("/snake/changeDofP", (message) => {
             // console.log("WebSocket is Connected\nVariable Message: ", message);
@@ -244,9 +249,10 @@ function connectWebSocketChangeDirection(succesFunction) {
                 }
             }
 
-            for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
 
-                // console.log("Player: " + currentPlayer + " has a Score of:" +snakeNewData[currentPlayer].score + "| is " + snakeNewData[currentPlayer].playTime + " seconds alive |");
+            for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
+                // console.log("Player: " + currentPlayer + " has a Score of:"
+                // +snakeNewData[currentPlayer].score + "| is " + snakeNewData[currentPlayer].playTime + " seconds alive |");
 
                 if (snakeNewData[currentPlayer].score !== null && snakeNewData[currentPlayer].score !== 0) {
                     var playedTime = Math.round(snakeNewData[currentPlayer].playTime / 100);
@@ -270,7 +276,8 @@ function connectWebSocketChangeDirection(succesFunction) {
 
                     for (var i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
                         drawSnakes(snakeNewData[currentPlayer].playerColor,
-                            snakeNewData[currentPlayer].posX[i] * 10, snakeNewData[currentPlayer].posY[i] * 10,
+                            snakeNewData[currentPlayer].posX[i] * 10,
+                            snakeNewData[currentPlayer].posY[i] * 10,
                             snakeNewData[currentPlayer].posX.length - (i + 1), actBest);
                     }
                 }
@@ -279,6 +286,7 @@ function connectWebSocketChangeDirection(succesFunction) {
             document.getElementById('spanId').innerHTML += table + "</table>";
 
         });
+
         // get messages of chat
         ws.subscribe("/snake/chat", (message) => {
             let theNewMessage = JSON.parse(message.body);
@@ -293,6 +301,7 @@ function connectWebSocketChangeDirection(succesFunction) {
             document.getElementById('messages').innerHTML += "<span style='color: #707070;'>" +
                 theNewMessage.newMessage + "</span><br>";
         });
+
         // get the highScore
         ws.subscribe("/snake/newHighScore", (message) => {
             let theNewMessage = JSON.parse(message.body);
@@ -314,6 +323,7 @@ function connectWebSocketChangeDirection(succesFunction) {
 
 }
 
+// return string of the table´s header
 function createTable() {
     table = "<table style=\"width:100%\">" +
         "<tr>" +
@@ -327,12 +337,14 @@ function createTable() {
     return table;
 }
 
+// return string of all score data
 function addPlayerToTable(id, name, score, time, deaths, color, isBest) {
     if (isBest === true) {
         // console.log(name + " is the best. Score: " + score);
         score = "<font color=\"red\">" + score + "</font>";
         // name = "<img src=\"krone.png\" width=\"30\" height=\"30\" alt=\"Krone\">\n" + name;
     }
+
     table += "<tr>"
         + "<td>" + id + "</td>"
         + "<td><font color=\"" + color + "\">" + name + "</font></td>"
@@ -343,12 +355,14 @@ function addPlayerToTable(id, name, score, time, deaths, color, isBest) {
     return table;
 }
 
+// set Data to field array
 function fillFieldArray(x, y) {
     for (var index = 0; index < x.length; index++) {
         field[x[index] + y[index] * 100] = true;
     }
 }
 
+// field get cleared
 function clearFieldArray() {
     if (field === null) {
         field = new Array(6600);
