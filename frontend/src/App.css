@@ -47,3 +47,7 @@
     transform: rotate(360deg);
   }
 }
+
+canvas{
+  background-color: lightgray;
+}

@@ -1,4 +1,6 @@
+
 // 192.168.0.x87 +:8080/snake.html
+
 var canvas, ctx, playerNr = -1, maxPlayer = 0;
 var fodderX = 100, fodderY = 100;
 var pause = false, check; // oldDirection = "r";

@@ -84,7 +84,7 @@ function fethAllComments(showDeleteComments) {
         //console.log(ev);
         ev.json().then(function (commentList) {
             //console.log(commentList);
-            document.getElementById('spanId').innerHTML = "<br>";
+            document.getElementById('spanId').innerHTML = "<br/>";
 
             for (var i = 0; i < commentList.length; i++) {
                 if (showDeleteComments) {
@@ -96,8 +96,8 @@ function fethAllComments(showDeleteComments) {
                     document.getElementById('spanId').innerHTML += "<li id=\"comment_" + commentList[i].id + "\">" + commentList[i].text + "</li>";
                 }
             }
-            if (document.getElementById('spanId').innerHTML === "" || document.getElementById('spanId').innerHTML === "<br>") {
-                document.getElementById('spanId').innerHTML = "<br>Keine Einträge";
+            if (document.getElementById('spanId').innerHTML === "" || document.getElementById('spanId').innerHTML === "<br/>") {
+                document.getElementById('spanId').innerHTML = "<br/>Keine Einträge";
             }
         })
     });
@@ -213,7 +213,7 @@ function durchsuchKommentare() {
             }
 
             if (document.getElementById('spanId').innerHTML === "" || document.getElementById('spanId').innerHTML === "") {
-                document.getElementById('spanId').innerHTML = "<br>Keine Einträge";
+                document.getElementById('spanId').innerHTML = "<br/>Keine Einträge";
             }
         });
 
