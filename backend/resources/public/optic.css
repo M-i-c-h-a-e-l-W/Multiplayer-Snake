@@ -8,6 +8,7 @@ body * {
 
 main {
     display: flex;
+    font-size: 2vmin;
 }
 
 red {
