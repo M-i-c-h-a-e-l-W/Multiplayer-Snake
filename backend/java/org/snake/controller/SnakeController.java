@@ -52,7 +52,7 @@ public class SnakeController {
             playerColor = "#" + splitString[1];
         }
 
-        System.out.println("New Player joined Game: " + playerName);
+        System.out.println(playerName + " joined Game: ");
 
         if (anzPlayer == 0) {
             // If firstPlayer Variables initialize
@@ -365,3 +365,5 @@ public class SnakeController {
         }
     }
 }
+
+

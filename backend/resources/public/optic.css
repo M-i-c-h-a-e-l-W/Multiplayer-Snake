@@ -2,6 +2,14 @@ body {
     background-color: grey;
 }
 
+body * {
+    box-sizing: border-box;
+}
+
+main {
+    display: flex;
+}
+
 red {
     color: red;
 }
@@ -22,17 +30,13 @@ blue {
     color: blue;
 }
 
-white{
+white {
     color: white;
     background-color: blue;
 }
 
 small {
     font-size: x-small;
-}
-
-h4 {
-    float: left;
 }
 
 .game {
@@ -46,7 +50,7 @@ h4 {
     width: 19px;
 }
 
-canvas, table{
+canvas, table {
     background-color: lightgray;
 }
 
@@ -58,3 +62,27 @@ table, th, td {
     border: 1px solid black;
     text-align: center;
 }
+
+.mainGame {
+    display: block;
+}
+
+.chat {
+    margin-top: 20px;
+    margin-right: 20px;
+    border: 5px solid black;
+    max-height: 95vh;
+    overflow-y: auto;
+    width: 20vw;
+}
+
+.chatHeader {
+    font-size: 3vmin;
+}
+
+.score {
+    max-height: 225px;
+    overflow-y: auto;
+    width: 100%;
+}
+

@@ -167,7 +167,6 @@ function getPosition() {
                 sendKeyCode = true;
                 break;
             case 189:
-            case 32:
                 changeD = "pause";
                 sendKeyCode = true;
                 break;
@@ -293,13 +292,13 @@ function connectWebSocketChangeDirection(succesFunction) {
 
             console.log(theNewMessage.playerNr + " Message: " + theNewMessage.newMessage);
 
-            document.getElementById('messages').innerHTML +=
-                "<span style='color:" + theNewMessage.playerColor + ";'> " +
-                "Spielernummer " + theNewMessage.playerNr +
-                "</span>" + " schrieb folgendes: ";
-
-            document.getElementById('messages').innerHTML += "<span style='color: #707070;'>" +
+            let newM = "<span style='color:" + theNewMessage.playerColor + ";'> " +
+                "ID " + theNewMessage.playerNr +
+                "</span>" + " : " +
+                "<span style='color: #000000;'>" +
                 theNewMessage.newMessage + "</span><br/>";
+
+            document.getElementById('messages').innerHTML += newM;
         });
 
         // get the highScore

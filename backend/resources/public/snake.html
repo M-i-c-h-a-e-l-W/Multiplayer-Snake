@@ -5,63 +5,49 @@
   <link rel="stylesheet" href="optic.css">
   <script src="stomp.js"></script>
   <title>Snake Game of MW</title>
-
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-    }
-
-    body {
-      background: grey;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-  </style>
 </head>
 
 <body>
 <main>
-  <div class="leftSide">
+  <div class="chat">
+    <h2>
+      <div class="chatHeader">
+        Chat bzw. Console:
+      </div>
 
+    </h2>
+
+    <!-- <textarea name="chat" id="chatWindow" data-adaptheight rows="3" cols="40"
+    placeholder="deine diskriminierende Nachricht..." style="padding: 16px;
+    line-height: 1.5; width: 50%; " autofocus></textarea> -->
+
+    <span id="messages"> keine Nachrichten</span>
+    <form onsubmit="newMessage(); return false;">
+      <input placeholder="be nice to each other..."
+             style="width: 98%;"
+             type="text" name="" id="chatWindow">
+    </form>
 
   </div>
+
+
   <div class="mainGame">
-    <h3>Highscore:
-      <span id="highScore"> ERROR nothing Avaible</span>
-    </h3>
 
-    <h1>Scores:</h1>
-
-    <span id="spanId"> ERROR nothing Avaible</span>
-    <br/>
-
-    <div class="screen">
-      <canvas width="1000" height="600" id="canvas" style="border:5px solid #000000;"></canvas>
+    <div class="score">
+      <h1>Scores:</h1>
+      <span id="spanId"> ERROR nothing Avaible</span>
     </div>
 
     <br/>
-    <h2>
-      Chat bzw. Console:
-    </h2>
-    <div style="background-color: lightgray;">
-      <!-- <textarea name="chat" id="chatWindow" data-adaptheight rows="3" cols="40"
-      placeholder="deine diskriminierende Nachricht..." style="padding: 16px;
-      line-height: 1.5; width: 50%; " autofocus></textarea> -->
 
-      <form onsubmit="newMessage(); return false;">
-        <input placeholder="be nice to each other..."
-               style="width: 50%;"
-               type="text" name="" id="chatWindow">
-      </form>
-      <br/>
+    <canvas width="1000" height="600" id="canvas" style="border:5px solid #000000; width: 100%;"></canvas>
 
-      <span id="messages"> keine Nachrichten</span>
-    </div>
+    <br/>
 
     <div class="footer" ; style="text-align: right">
+      Highscore:
+      <span id="highScore"> ERROR nothing Avaible</span> <br>
+
       <a href="index.html"> Kommentarseite</a>
       <br/>
     </div>
