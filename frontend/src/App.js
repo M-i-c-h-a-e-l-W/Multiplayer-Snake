@@ -34,17 +34,50 @@ function App() {
         <div className="App">
             <header className="App-header">
                 <script src="stomp.js"></script>
-                <script src="snake.js"></script>
-                <h3>Highscore: <br/>
-                    <span id="highScore"> ERROR nothing Avaible</span>
-                </h3>
-                Snake with React
-                <span id="spanId"> ERROR nothing Avaible</span> <br/>
-                <canvas width="1000" height="600" id="canvas"></canvas>
-
             </header>
+            <body>
+            <main>
+                <div class="chat">
+                    <h2>
+                        <div class="chatHeader">
+                            Chat bzw. Console:
+                        </div>
+                    </h2>
+
+                    <span id="messages"> keine Nachrichten</span>
+                    <form onsubmit="newMessage(); return false;">
+                        <input placeholder="be nice to each other..."
+                               type="text" name="" id="chatWindow"></input>
+                    </form>
+
+                </div>
+
+
+                <div class="mainGame">
+
+                    <div class="score">
+                        <h1>Scores:</h1>
+                        <span id="spanId"> ERROR nothing Avaible</span>
+                    </div>
+
+                    <br/>
+
+                    <canvas width="1000" height="600" id="canvas"></canvas>
+                    <br/>
+
+                    <div class="footer">
+                        Highscore:
+                        <span id="highScore"> ERROR nothing Avaible</span>
+                        <br></br>
+
+                        <a href="index.html"> Kommentarseite</a>
+
+                    </div>
+                </div>
+            </main>
+            </body>
         </div>
-    );
+);
 }
 
 export default App;

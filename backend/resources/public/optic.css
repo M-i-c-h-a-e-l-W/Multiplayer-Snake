@@ -8,7 +8,11 @@ body * {
 
 main {
     display: flex;
-    font-size: 2vmin;
+    font-size: 1.5vmin;
+}
+
+.btn:hover {
+    background-color: Red;
 }
 
 red {
@@ -40,6 +44,18 @@ small {
     font-size: x-small;
 }
 
+canvas {
+    border: 5px solid #000000;
+    width: 100%;
+    background-color: lightgray;
+}
+
+table, th, td {
+    background-color: lightgray;
+    border: 1px solid black;
+    text-align: center;
+}
+
 .game {
     background-color: #545454;
 }
@@ -51,22 +67,10 @@ small {
     width: 19px;
 }
 
-canvas, table {
-    background-color: lightgray;
-}
-
-.btn:hover {
-    background-color: Red;
-}
-
-table, th, td {
-    border: 1px solid black;
-    text-align: center;
-}
-
 .mainGame {
     display: block;
 }
+
 
 .chat {
     margin-top: 20px;
@@ -85,5 +89,9 @@ table, th, td {
     max-height: 225px;
     overflow-y: auto;
     width: 100%;
+}
+
+.footer{
+    text-align: right;
 }
 
