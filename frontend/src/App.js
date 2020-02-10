@@ -87,7 +87,7 @@ function App() {
             </body>
         </div>
     );
-}^
+}
 
 
 window.onload = function () {
