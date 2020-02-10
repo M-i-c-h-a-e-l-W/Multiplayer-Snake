@@ -6,6 +6,8 @@ time = new Date();
 // start connection with backend
 window.onload = function () {
     ip = window.location.origin;
+   /// ip = "http://10.62.2.194:8080";
+
     protocol = window.location.protocol;
     if (protocol === "https:") {
         ipSecure = "s";

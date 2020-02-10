@@ -1,6 +1,9 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Stomp from 'stompjs'
+import './krone.png'
+import './snake-fodder.png'
 
 var canvas, ctx, playerNr = -1, maxPlayer = 0;
 var fodderX = 100, fodderY = 100;
@@ -47,7 +50,7 @@ function App() {
                 <div className="chat">
                     <h2>
                         <div className="chatHeader">
-                            Chat bzw. Console:
+                            Chat:
                         </div>
                     </h2>
 
@@ -84,7 +87,7 @@ function App() {
             </body>
         </div>
     );
-}
+}^
 
 
 window.onload = function () {
@@ -96,6 +99,7 @@ window.onload = function () {
     check = check.replace("#", "xHashTagx");
 
     ip = window.location.origin;
+    ip = "http://localhost:8080";
     protocol = window.location.protocol;
     if (protocol === "https:") {
         ipSecure = "s";
@@ -176,7 +180,7 @@ function drawSnakes(color, posX, posY, partOfHead, actBest) {
     ctx.fillStyle = color;
     if (actBest && partOfHead === 0) {
         let img = new Image();
-        img.src = "krone.png";
+        img.src = "./krone.png";
         ctx.drawImage(img, posX - 5, posY - 15, 20, 20);
 
         ctx.strokeStyle = "#000000";
@@ -184,7 +188,7 @@ function drawSnakes(color, posX, posY, partOfHead, actBest) {
         ctx.strokeStyle = "#000000";
     } else if (partOfHead === 4040) {
         let img = new Image();
-        img.src = "snake-fodder.png";
+        img.src = "./snake-fodder.png";
         // without red Point use this
         // ctx.drawImage(img, posX-5, posY-5, 20 , 20); return;
 
@@ -280,126 +284,125 @@ function getPosition() {
 
 // connection to webSockets with all other clients
 function connectWebSocketChangeDirection(succesFunction) {
-    //let socket = new WebSocket("ws" + ipSecure + "://" + window.location.host + "/ws");
-    /*
-      let ws = Stomp.over(socket);
-      let that = this;
-      ws.connect({}, (frame) => {
+    let socket = new WebSocket("ws" + ipSecure + "://localhost:8080" + "/ws");
+    let ws = Stomp.over(socket);
+    let that = this;
+    ws.connect({}, (frame) => {
 
-          // get new Position of fodder
-          ws.subscribe("/snake/fodderOfSnake", (message) => {
-              let newFodder = JSON.parse(message.body);
-              fodderX = newFodder.posX * 10;
-              fodderY = newFodder.posY * 10;
-              console.log("NewFodder: ", message)
-          });
+        // get new Position of fodder
+        ws.subscribe("/snake/fodderOfSnake", (message) => {
+            let newFodder = JSON.parse(message.body);
+            fodderX = newFodder.posX * 10;
+            fodderY = newFodder.posY * 10;
+            console.log("NewFodder: ", message)
+        });
 
-          // get dead player
-          ws.subscribe("/snake/deleted", (message) => {
-              let newFodder = JSON.parse(message.body);
-              if (newFodder.deletedPlayer != null && newFodder.deletedPlayer === playerNr) {
-                  alert("Du bist offensichtlich weniger talentiert als dein Gegner.\nDu bist tot!\nSeite neuladen um wiedereinzusteigen ;-)");
-                  alert("Bei \"Ok\" wird die Seite neugeladen");
-                  location.reload(true);
-                  socket.close();
-              }
-              console.log("NewFodder: ", message);
-          });
+        // get dead player
+        ws.subscribe("/snake/deleted", (message) => {
+            let newFodder = JSON.parse(message.body);
+            if (newFodder.deletedPlayer != null && newFodder.deletedPlayer === playerNr) {
+                alert("Du bist offensichtlich weniger talentiert als dein Gegner.\nDu bist tot!\nSeite neuladen um wiedereinzusteigen ;-)");
+                alert("Bei \"Ok\" wird die Seite neugeladen");
+               // location.reload(true);
+                socket.close();
+            }
+            console.log("NewFodder: ", message);
+        });
 
-          // get new position of snakes
-          ws.subscribe("/snake/changeDofP", (message) => {
-              // console.log("WebSocket is Connected\nVariable Message: ", message);
-              clearFieldArray();
-              createTable();
-              document.getElementById('spanId').innerHTML = "";
+        // get new position of snakes
+        ws.subscribe("/snake/changeDofP", (message) => {
+            // console.log("WebSocket is Connected\nVariable Message: ", message);
+            clearFieldArray();
+            createTable();
+            document.getElementById('spanId').innerHTML = "";
 
-              let snakeNewData = JSON.parse(message.body);
+            let snakeNewData = JSON.parse(message.body);
 
-              maxPlayer = snakeNewData.length;
-              // console.log("MaxPlayer: " + maxPlayer);
-              ctx.clearRect(0, 0, canvas.width, canvas.height);
+            maxPlayer = snakeNewData.length;
+            // console.log("MaxPlayer: " + maxPlayer);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-              drawSnakes("#770000", fodderX, fodderY, 4040);
+            drawSnakes("#770000", fodderX, fodderY, 4040);
 
-              let actualBest = 0, actBest = false;
-              for (var index = 0; index < maxPlayer; index++) {
-                  if (snakeNewData[index].score > actualBest) {
-                      actualBest = snakeNewData[index].score;
-                  }
-              }
+            let actualBest = 0, actBest = false;
+            for (var index = 0; index < maxPlayer; index++) {
+                if (snakeNewData[index].score > actualBest) {
+                    actualBest = snakeNewData[index].score;
+                }
+            }
 
 
-              for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
-                  // console.log("Player: " + currentPlayer + " has a Score of:"
-                  // +snakeNewData[currentPlayer].score + "| is " + snakeNewData[currentPlayer].playTime + " seconds alive |");
+            for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
+                // console.log("Player: " + currentPlayer + " has a Score of:"
+                // +snakeNewData[currentPlayer].score + "| is " + snakeNewData[currentPlayer].playTime + " seconds alive |");
 
-                  if (snakeNewData[currentPlayer].score !== null && snakeNewData[currentPlayer].score !== 0) {
-                      var playedTime = Math.round(snakeNewData[currentPlayer].playTime / 100);
+                if (snakeNewData[currentPlayer].score !== null && snakeNewData[currentPlayer].score !== 0) {
+                    var playedTime = Math.round(snakeNewData[currentPlayer].playTime / 100);
 
-                      playedTime /= 10;
-                      if (playedTime % 1 === 0) {
-                          playedTime += ".0";
-                      }
-                      if (actualBest === snakeNewData[currentPlayer].score) {
-                          actBest = true;
-                      }
-                      addPlayerToTable(currentPlayer, snakeNewData[currentPlayer].playerName, snakeNewData[currentPlayer].score,
-                          playedTime, snakeNewData[currentPlayer].playerDeaths, snakeNewData[currentPlayer].playerColor, actBest);
-                  }
+                    playedTime /= 10;
+                    if (playedTime % 1 === 0) {
+                        playedTime += ".0";
+                    }
+                    if (actualBest === snakeNewData[currentPlayer].score) {
+                        actBest = true;
+                    }
+                    addPlayerToTable(currentPlayer, snakeNewData[currentPlayer].playerName, snakeNewData[currentPlayer].score,
+                        playedTime, snakeNewData[currentPlayer].playerDeaths, snakeNewData[currentPlayer].playerColor, actBest);
+                }
 
-                  if (snakeNewData[currentPlayer].posX === null || snakeNewData[currentPlayer].posY === null
-                      && snakeNewData[currentPlayer].posX.length === 0) {
-                      console.log("Array Error L256");
-                  } else if (snakeNewData[currentPlayer].posX.length === snakeNewData[currentPlayer].posY.length) {
-                      fillFieldArray(snakeNewData[currentPlayer].posX, snakeNewData[currentPlayer].posY);
+                if (snakeNewData[currentPlayer].posX === null || snakeNewData[currentPlayer].posY === null
+                    && snakeNewData[currentPlayer].posX.length === 0) {
+                    console.log("Array Error L256");
+                } else if (snakeNewData[currentPlayer].posX.length === snakeNewData[currentPlayer].posY.length) {
+                    fillFieldArray(snakeNewData[currentPlayer].posX, snakeNewData[currentPlayer].posY);
 
-                      for (var i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
-                          drawSnakes(snakeNewData[currentPlayer].playerColor,
-                              snakeNewData[currentPlayer].posX[i] * 10,
-                              snakeNewData[currentPlayer].posY[i] * 10,
-                              snakeNewData[currentPlayer].posX.length - (i + 1), actBest);
-                      }
-                  }
-                  actBest = false;
-              }
-              document.getElementById('spanId').innerHTML += table + "</table>";
+                    for (var i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
+                        drawSnakes(snakeNewData[currentPlayer].playerColor,
+                            snakeNewData[currentPlayer].posX[i] * 10,
+                            snakeNewData[currentPlayer].posY[i] * 10,
+                            snakeNewData[currentPlayer].posX.length - (i + 1), actBest);
+                    }
+                }
+                actBest = false;
+            }
+            document.getElementById('spanId').innerHTML += table + "</table>";
 
-          });
+        });
 
-          // get messages of chat
-          ws.subscribe("/snake/chat", (message) => {
-              let theNewMessage = JSON.parse(message.body);
+        // get messages of chat
+        ws.subscribe("/snake/chat", (message) => {
+            let theNewMessage = JSON.parse(message.body);
 
-              console.log(theNewMessage.playerNr + " Message: " + theNewMessage.newMessage);
+            console.log(theNewMessage.playerNr + " Message: " + theNewMessage.newMessage);
 
-              let newM = "<span style='color:" + theNewMessage.playerColor + ";'> " +
-                  "ID " + theNewMessage.playerNr +
-                  "</span>" + " : " +
-                  "<span style='color: #000000;'>" +
-                  theNewMessage.newMessage + "</span><br/>";
+            let newM = "<span style='color:" + theNewMessage.playerColor + ";'> " +
+                "ID " + theNewMessage.playerNr +
+                "</span>" + " : " +
+                "<span style='color: #000000;'>" +
+                theNewMessage.newMessage + "</span><br/>";
 
-              document.getElementById('messages').innerHTML += newM;
-          });
+            document.getElementById('messages').innerHTML += newM;
+        });
 
-          // get the highScore
-          ws.subscribe("/snake/newHighScore", (message) => {
-              let theNewMessage = JSON.parse(message.body);
+        // get the highScore
+        ws.subscribe("/snake/newHighScore", (message) => {
+            let theNewMessage = JSON.parse(message.body);
 
-              document.getElementById('highScore').innerHTML =
-                  theNewMessage.name + " reached " +
-                  theNewMessage.bestScore + " points";
+            document.getElementById('highScore').innerHTML =
+                theNewMessage.name + " reached " +
+                theNewMessage.bestScore + " points";
 
-          });
+        });
 
-          // ws.send("/snake/newD", "", "String");
+        // ws.send("/snake/newD", "", "String");
 
-          that.webSocket = ws;
-          succesFunction();
-      }, function (error) {
-          console.log("STOMP error " + error);
-          //that.webSocket = null;
-      });
-  */
+       // that.webSocket = ws;
+        succesFunction();
+    }, function (error) {
+        console.log("STOMP error " + error);
+        //that.webSocket = null;
+    });
+
 }
 
 // return string of the table´s header

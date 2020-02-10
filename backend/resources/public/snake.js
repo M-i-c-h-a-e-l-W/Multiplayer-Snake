@@ -17,6 +17,8 @@ window.onload = function () {
     check = check.replace("#", "xHashTagx");
 
     ip = window.location.origin;
+    console.log("IP: "+ ip);
+   /// ip = "http://10.62.2.194:8080";
     protocol = window.location.protocol;
     if (protocol === "https:") {
         ipSecure = "s";

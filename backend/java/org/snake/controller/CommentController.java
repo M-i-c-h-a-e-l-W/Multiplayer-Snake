@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost", maxAge = 3600)
 @EnableAutoConfiguration
 @RestController
 @RequestMapping("/api")
