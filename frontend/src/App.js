@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Stomp from 'stompjs'
 import './krone.png'
@@ -7,88 +6,91 @@ import './snake-fodder.png'
 
 var canvas, ctx, playerNr = -1, maxPlayer = 0;
 var fodderX = 100, fodderY = 100;
-var pause = false, check; // oldDirection = "r";
+var check; // oldDirection = "r";
 let ip = "localhost", ipSecure = "", protocol = "";
 let field;
 let table = "";
 
+class Chat extends React.Component {
+    render() {
+        return (
+            <div className="chat">
+                <h2>
+                    <div className="chatHeader">
+                        Chat:
+                    </div>
+                </h2>
+                <div className="chatContent">
+                    <span id="messages"> no messages</span>
+                </div>
+
+                <form>
+                        <textarea placeholder="be nice to each other..."
+                                  type="text" id="chatWindow" className={"tArea"}></textarea>
+                </form>
+                <button type="button" variant="raised" color="accent" onClick={newMessage}>send</button>
+            </div>
+        );
+    }
+}
+
+class Head extends React.Component {
+    render() {
+        return (
+            <div className="App-header">
+                Multiplayer-Snake with React
+            </div>
+        );
+    }
+}
+
+class Foot extends React.Component {
+    render() {
+        return (
+            <div className="footer">
+                Highscore:
+                <span id="highScore"> ERROR nothing available</span>
+                <br></br>
+
+                <a href="index.html"> coming soon</a>
+            </div>
+        );
+    }
+}
+
+class Game extends React.Component {
+    render() {
+        return (
+            <div className="mainGame">
+
+                <div className="score">
+                    <h1>Scores:</h1>
+                    <span id="spanId"> ERROR nothing available</span>
+                </div>
+
+                <br/>
+
+                <canvas width="1000" height="600" id="canvas"></canvas>
+                <br/>
+
+                <Foot/>
+            </div>
+        );
+    }
+}
+
 function App() {
-    /*
-    let rStat = (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo"/>
-                <p>
-                    Edit <code>src/App.js</code> and save to reload.
-                </p>
-
-                <p>
-                    Register is way faster than unregister
-                </p>
-
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
-        </div>
-    );
-
-     */
-
     return (
         <div className="App">
-            <header className="App-header">
-                Multiplayer-Snake with React
-            </header>
-            <body className="App-body">
+            <Head/>
+
             <main>
-                <div className="chat">
-                    <h2>
-                        <div className="chatHeader">
-                            Chat:
-                        </div>
-                    </h2>
-
-                    <span id="messages"> keine Nachrichten</span>
-                    <form onSubmit="newMessage(); return false;">
-                        <input placeholder="be nice to each other..."
-                               type="text" name="" id="chatWindow"></input>
-                    </form>
-
-                </div>
-
-                <div className="mainGame">
-
-                    <div className="score">
-                        <h1>Scores:</h1>
-                        <span id="spanId"> ERROR nothing Avaible</span>
-                    </div>
-
-                    <br/>
-
-                    <canvas width="1000" height="600" id="canvas"></canvas>
-                    <br/>
-
-                    <div className="footer">
-                        Highscore:
-                        <span id="highScore"> ERROR nothing Avaible</span>
-                        <br></br>
-
-                        <a href="index.html"> Kommentarseite</a>
-
-                    </div>
-                </div>
+                <Chat/>
+                <Game/>
             </main>
-            </body>
         </div>
     );
 }
-
 
 window.onload = function () {
     field = new Array(6600);
@@ -110,7 +112,7 @@ window.onload = function () {
 
 // if reload send a message to playerDead in backend
 window.onbeforeunload = function () {
-    if (playerNr === -1 || maxPlayer === 0) {
+    if (playerNr === 0 || maxPlayer === -1) {
         return;
     }
 
@@ -118,7 +120,6 @@ window.onbeforeunload = function () {
         method: 'POST',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     }).then(function (ev) {
-
 
     }).catch((function (error) {
         console.log("Error: ", error);
@@ -146,10 +147,10 @@ function initialization() {
                 return;
             }
 
-            console.log("Erzeugte Snake Klasse ohne JSON:\n\n" + ev.toString());
+            console.log("created Snake class without JSON:\n\n" + ev.toString());
 
             ev.json().then(function (snakeClass) {
-                console.log("Erzeugte Snake Klasse:\n\n" + snakeClass.playerNr);
+                console.log("created Snake class:\n\n" + snakeClass.playerNr);
                 playerNr = snakeClass.playerNr;
             });
             startGame();
@@ -180,7 +181,7 @@ function drawSnakes(color, posX, posY, partOfHead, actBest) {
     ctx.fillStyle = color;
     if (actBest && partOfHead === 0) {
         let img = new Image();
-        img.src = "./krone.png";
+        ////img.src = "./krone.png";
         ctx.drawImage(img, posX - 5, posY - 15, 20, 20);
 
         ctx.strokeStyle = "#000000";
@@ -188,7 +189,7 @@ function drawSnakes(color, posX, posY, partOfHead, actBest) {
         ctx.strokeStyle = "#000000";
     } else if (partOfHead === 4040) {
         let img = new Image();
-        img.src = "./snake-fodder.png";
+        ////img.src = "./snake-fodder.png";
         // without red Point use this
         // ctx.drawImage(img, posX-5, posY-5, 20 , 20); return;
 
@@ -209,13 +210,13 @@ function drawSnakes(color, posX, posY, partOfHead, actBest) {
     ctx.closePath();
 }
 
-let interval = setInterval(getPosition, 5);
+setInterval(getPosition, 5);
 //setTimeout(getPosition, 5);
 
 // input "wasd" and arrow keys and send the input to the backend
 function getPosition() {
     document.onkeydown = function (event) {
-        let keyCode, changeD = "Error";
+        let changeD = "Error", keyCode;
         let sendKeyCode = false;
 
         if (event) {
@@ -231,16 +232,16 @@ function getPosition() {
                 changeD = "l";
                 sendKeyCode = true;
                 break;
-            // up
-            case 87:
-            case 38:
-                changeD = "o";
-                sendKeyCode = true;
-                break;
             // right
             case 68:
             case 39:
                 changeD = "r";
+                sendKeyCode = true;
+                break;
+            // up
+            case 87:
+            case 38:
+                changeD = "o";
                 sendKeyCode = true;
                 break;
             // down
@@ -254,13 +255,13 @@ function getPosition() {
                 sendKeyCode = true;
                 break;
             default:
-                console.log("Fehlerhafte Eingabe Code: " + keyCode);
+                console.log("wrong input Code: " + keyCode);
                 break;
         }
 
-        console.log("Eingabe: " + changeD);
+        console.log("input: " + changeD);
 
-        if (changeD === "pause" || sendKeyCode && changeD !== "Error") {
+        if (changeD === "pause" || (sendKeyCode && changeD !== "Error")) {
             // oldDirection = changeD;  && changeD !== oldDirection
             changeD += ";" + playerNr.toString();
             //changeD = changeD.toString();
@@ -269,8 +270,8 @@ function getPosition() {
                 headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
             }).then(function (ev) {
                 if (ev.status !== 200) {
-                    console.log("Errorcode: " + ev.status);
-                    console.log("ChangeD ist gleich: " + changeD);
+                    console.log("Error code: " + ev.status);
+                    console.log("ChangeD is equal with: " + changeD);
                 }
 
             }).catch((function (error) {
@@ -284,9 +285,8 @@ function getPosition() {
 
 // connection to webSockets with all other clients
 function connectWebSocketChangeDirection(succesFunction) {
-    let socket = new WebSocket("ws" + ipSecure + "://localhost:8080" + "/ws");
+    let socket = new WebSocket("ws" + ipSecure.toString() + "://localhost:8080" + "/ws");
     let ws = Stomp.over(socket);
-    let that = this;
     ws.connect({}, (frame) => {
 
         // get new Position of fodder
@@ -301,25 +301,25 @@ function connectWebSocketChangeDirection(succesFunction) {
         ws.subscribe("/snake/deleted", (message) => {
             let newFodder = JSON.parse(message.body);
             if (newFodder.deletedPlayer != null && newFodder.deletedPlayer === playerNr) {
-                alert("Du bist offensichtlich weniger talentiert als dein Gegner.\nDu bist tot!\nSeite neuladen um wiedereinzusteigen ;-)");
-                alert("Bei \"Ok\" wird die Seite neugeladen");
-               // location.reload(true);
+                alert("You are instead of your enemy really bad, better get more skills.\n" +
+                    "You are Dead!\nReload the side to try it again ;-)");
+
+                alert("Pres \"Ok\" or pres enter to reload the side");
                 socket.close();
+                window.location.reload();
             }
             console.log("NewFodder: ", message);
         });
 
         // get new position of snakes
         ws.subscribe("/snake/changeDofP", (message) => {
-            // console.log("WebSocket is Connected\nVariable Message: ", message);
             clearFieldArray();
             createTable();
-            document.getElementById('spanId').innerHTML = "";
 
             let snakeNewData = JSON.parse(message.body);
+            document.getElementById('spanId').innerHTML = "";
 
             maxPlayer = snakeNewData.length;
-            // console.log("MaxPlayer: " + maxPlayer);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             drawSnakes("#770000", fodderX, fodderY, 4040);
@@ -332,21 +332,20 @@ function connectWebSocketChangeDirection(succesFunction) {
             }
 
 
-            for (var currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
-                // console.log("Player: " + currentPlayer + " has a Score of:"
-                // +snakeNewData[currentPlayer].score + "| is " + snakeNewData[currentPlayer].playTime + " seconds alive |");
+            for (let currentPlayer = 0; currentPlayer < maxPlayer; currentPlayer++) {
 
                 if (snakeNewData[currentPlayer].score !== null && snakeNewData[currentPlayer].score !== 0) {
-                    var playedTime = Math.round(snakeNewData[currentPlayer].playTime / 100);
+                    let playedTime = Math.round(snakeNewData[currentPlayer].playTime / 100);
 
+                    if (actualBest === snakeNewData[currentPlayer].score) {
+                        actBest = true;
+                    }
                     playedTime /= 10;
                     if (playedTime % 1 === 0) {
                         playedTime += ".0";
                     }
-                    if (actualBest === snakeNewData[currentPlayer].score) {
-                        actBest = true;
-                    }
-                    addPlayerToTable(currentPlayer, snakeNewData[currentPlayer].playerName, snakeNewData[currentPlayer].score,
+                    addPlayerToTable(currentPlayer, snakeNewData[currentPlayer].playerName,
+                        snakeNewData[currentPlayer].score,
                         playedTime, snakeNewData[currentPlayer].playerDeaths, snakeNewData[currentPlayer].playerColor, actBest);
                 }
 
@@ -356,7 +355,7 @@ function connectWebSocketChangeDirection(succesFunction) {
                 } else if (snakeNewData[currentPlayer].posX.length === snakeNewData[currentPlayer].posY.length) {
                     fillFieldArray(snakeNewData[currentPlayer].posX, snakeNewData[currentPlayer].posY);
 
-                    for (var i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
+                    for (let i = 0; i < snakeNewData[currentPlayer].posX.length; i++) {
                         drawSnakes(snakeNewData[currentPlayer].playerColor,
                             snakeNewData[currentPlayer].posX[i] * 10,
                             snakeNewData[currentPlayer].posY[i] * 10,
@@ -373,7 +372,7 @@ function connectWebSocketChangeDirection(succesFunction) {
         ws.subscribe("/snake/chat", (message) => {
             let theNewMessage = JSON.parse(message.body);
 
-            console.log(theNewMessage.playerNr + " Message: " + theNewMessage.newMessage);
+            console.log(theNewMessage.playerNr + "  Message: " + theNewMessage.newMessage);
 
             let newM = "<span style='color:" + theNewMessage.playerColor + ";'> " +
                 "ID " + theNewMessage.playerNr +
@@ -396,7 +395,6 @@ function connectWebSocketChangeDirection(succesFunction) {
 
         // ws.send("/snake/newD", "", "String");
 
-       // that.webSocket = ws;
         succesFunction();
     }, function (error) {
         console.log("STOMP error " + error);

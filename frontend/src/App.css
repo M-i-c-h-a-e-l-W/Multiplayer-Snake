@@ -1,16 +1,23 @@
 .App {
   text-align: center;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 5vh;
+  min-height: 90vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+}
+
+.App-header {
+  background-color: #282c34;
+  height: 5vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: deepskyblue;
 }
 
 .App-body {
@@ -36,7 +43,7 @@ body * {
 
 main {
   display: flex;
-  font-size: 1.5vmin;
+  font-size: 1vh;
 }
 canvas {
   border: 5px solid #000000;
@@ -56,14 +63,17 @@ table, th, td {
 
 .mainGame {
   display: block;
+  margin-left: 15vmin;
+  margin-right: 5vmin;
 }
 
 .chat {
   margin-top: 20px;
-  margin-right: 20px;
+  margin-bottom: 20px;
+  margin-left: 40px;
   border: 5px solid black;
-  max-height: 95vh;
-  overflow-y: auto;
+  min-height: 90vh;
+  max-height: 90vh;
   width: 20vw;
 }
 
@@ -71,12 +81,22 @@ table, th, td {
   font-size: 3vmin;
 }
 
+.chatContent{
+  overflow-y: auto;
+  max-height: 75vh;
+  text-align: left;
+}
+
 .score {
-  max-height: 225px;
+  max-height: 15vh;
   overflow-y: auto;
   width: 100%;
 }
 
 .footer{
   text-align: right;
+}
+
+.tArea{
+  width: 100%;
 }
