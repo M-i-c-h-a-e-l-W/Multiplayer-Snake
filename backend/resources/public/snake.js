@@ -44,6 +44,13 @@ window.onbeforeunload = function () {
     }));
 };
 
+window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+}, false);
+
 // connection backend & PlayerGetID from backend
 function initialization() {
     document.getElementById('messages').innerHTML = "";

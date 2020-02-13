@@ -26,7 +26,7 @@ class Chat extends React.Component {
 
                 <form>
                         <textarea placeholder="be nice to each other..."
-                                  type="text" id="chatWindow" className={"tArea"}></textarea>
+                                  type="text" id="chatWindow" className={"tArea"}/>
                 </form>
                 <button type="button" variant="raised" color="accent" onClick={newMessage}>send</button>
             </div>
@@ -50,7 +50,7 @@ class Foot extends React.Component {
             <div className="footer">
                 Highscore:
                 <span id="highScore"> ERROR nothing available</span>
-                <br></br>
+                <br/>
 
                 <a href="index.html"> coming soon</a>
             </div>
@@ -69,8 +69,7 @@ class Game extends React.Component {
                 </div>
 
                 <br/>
-
-                <canvas width="1000" height="600" id="canvas"></canvas>
+                <canvas width="1000" height="600" id="canvas"/>
                 <br/>
 
                 <Foot/>
@@ -91,6 +90,13 @@ function App() {
         </div>
     );
 }
+
+window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+}, false);
 
 window.onload = function () {
     field = new Array(6600);

@@ -5,15 +5,15 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 
-class Car extends React.Component {
+class Component extends React.Component {
     render() {
-        return <h2>Hi, I am a Car!</h2>;
+        return <h2>Component of index.js!</h2>;
     }
 }
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
-ReactDOM.render(<Car />, document.getElementById('footer'));
+ReactDOM.render(<Component />, document.getElementById('footer'));
 
 
 
