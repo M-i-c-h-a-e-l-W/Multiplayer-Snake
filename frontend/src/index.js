@@ -1,20 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import MSnake from './App';
 import * as serviceWorker from './serviceWorker';
+
 
 
 class Component extends React.Component {
     render() {
-        return <h2>Component of index.js!</h2>;
+        return <h2>React Version: {React.version}</h2>;
     }
 }
-
-ReactDOM.render(<App />, document.getElementById('root'));
-
 ReactDOM.render(<Component />, document.getElementById('footer'));
 
+
+ReactDOM.render(<MSnake/>, document.getElementById('root'));
 
 
 // If you want your app to work offline and load faster, you can change

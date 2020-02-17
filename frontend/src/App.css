@@ -1,4 +1,4 @@
-.App {
+.Snake {
   text-align: center;
   min-height: 90vh;
   display: flex;
@@ -27,10 +27,6 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-}
-
-.App-link {
-  color: #61dafb;
 }
 
 canvas{
@@ -68,6 +64,7 @@ table, th, td {
 }
 
 .chat {
+  background-color: lightgray;
   margin-top: 20px;
   margin-bottom: 20px;
   margin-left: 40px;

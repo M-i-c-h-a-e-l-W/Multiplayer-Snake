@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
 import Stomp from 'stompjs'
-import './krone.png'
-import './snake-fodder.png'
+import krone from './krone.png'
+import fodder from './snake-fodder.png'
 
 var canvas, ctx, playerNr = -1, maxPlayer = 0;
 var fodderX = 100, fodderY = 100;
@@ -78,9 +78,9 @@ class Game extends React.Component {
     }
 }
 
-function App() {
+function MSnake() {
     return (
-        <div className="App">
+        <div className="Snake">
             <Head/>
 
             <main>
@@ -91,9 +91,9 @@ function App() {
     );
 }
 
-window.addEventListener("keydown", function(e) {
+window.addEventListener("keydown", function (e) {
     // space and arrow keys
-    if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+    if ([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
         e.preventDefault();
     }
 }, false);
@@ -187,7 +187,7 @@ function drawSnakes(color, posX, posY, partOfHead, actBest) {
     ctx.fillStyle = color;
     if (actBest && partOfHead === 0) {
         let img = new Image();
-        ////img.src = "./krone.png";
+        img.src = krone;
         ctx.drawImage(img, posX - 5, posY - 15, 20, 20);
 
         ctx.strokeStyle = "#000000";
@@ -195,7 +195,7 @@ function drawSnakes(color, posX, posY, partOfHead, actBest) {
         ctx.strokeStyle = "#000000";
     } else if (partOfHead === 4040) {
         let img = new Image();
-        ////img.src = "./snake-fodder.png";
+        img.src = fodder;
         // without red Point use this
         // ctx.drawImage(img, posX-5, posY-5, 20 , 20); return;
 
@@ -473,4 +473,4 @@ function newMessage() {
 }
 
 
-export default App;
+export default MSnake;
