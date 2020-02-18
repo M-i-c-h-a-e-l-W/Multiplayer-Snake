@@ -4,9 +4,8 @@ import Stomp from 'stompjs'
 import krone from './krone.png'
 import fodder from './snake-fodder.png'
 
-var canvas, ctx, playerNr = -1, maxPlayer = 0;
-var fodderX = 100, fodderY = 100;
-var check; // oldDirection = "r";
+let canvas, ctx, playerNr = -1, maxPlayer = 0;
+let fodderX = 100, fodderY = 100, check; // oldDirection = "r";
 let ip = "localhost", ipSecure = "", protocol = "";
 let field;
 let table = "";
@@ -24,7 +23,7 @@ class Chat extends React.Component {
                     <span id="messages"> no messages</span>
                 </div>
 
-                <form>
+                <form className="chatTArea">
                         <textarea placeholder="be nice to each other..."
                                   type="text" id="chatWindow" className={"tArea"}/>
                 </form>
@@ -293,6 +292,9 @@ function getPosition() {
 function connectWebSocketChangeDirection(succesFunction) {
     let socket = new WebSocket("ws" + ipSecure.toString() + "://localhost:8080" + "/ws");
     let ws = Stomp.over(socket);
+
+    // no console logging
+    ws.debug = function (str) {};
     ws.connect({}, (frame) => {
 
         // get new Position of fodder
@@ -393,7 +395,7 @@ function connectWebSocketChangeDirection(succesFunction) {
         ws.subscribe("/snake/newHighScore", (message) => {
             let theNewMessage = JSON.parse(message.body);
 
-            document.getElementById('highScore').innerHTML =
+            document.getElementById('highScore').innerHTML = " " +
                 theNewMessage.name + " reached " +
                 theNewMessage.bestScore + " points";
 

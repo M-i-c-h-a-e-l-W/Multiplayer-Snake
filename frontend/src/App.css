@@ -58,7 +58,7 @@ table, th, td {
 
 .mainGame {
   display: block;
-  margin-left: 15vmin;
+  margin-left: 12.5vmin;
   margin-right: 5vmin;
 }
 
@@ -80,7 +80,9 @@ table, th, td {
 .chatContent{
   overflow-y: auto;
   max-height: 75vh;
+  min-height: 75vh;
   text-align: left;
+
 }
 
 .score {
@@ -95,4 +97,8 @@ table, th, td {
 
 .tArea{
   width: 100%;
+  min-height: 60px;
+}
+
+.chatTArea{
 }
