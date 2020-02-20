@@ -79,10 +79,9 @@ table, th, td {
 
 .chatContent{
   overflow-y: auto;
-  max-height: 75vh;
-  min-height: 75vh;
+  max-height: 72vh;
+  min-height: 72vh;
   text-align: left;
-
 }
 
 .score {
@@ -101,4 +100,8 @@ table, th, td {
 }
 
 .chatTArea{
+}
+
+.sendButton{
+  width: 100%;
 }

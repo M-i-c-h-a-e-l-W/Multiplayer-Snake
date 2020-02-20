@@ -27,7 +27,8 @@ class Chat extends React.Component {
                         <textarea placeholder="be nice to each other..."
                                   type="text" id="chatWindow" className={"tArea"}/>
                 </form>
-                <button type="button" variant="raised" color="accent" onClick={newMessage}>send</button>
+                <button className="sendButton" type="button" variant="raised" color="accent" onClick={newMessage}>send
+                </button>
             </div>
         );
     }
@@ -77,17 +78,22 @@ class Game extends React.Component {
     }
 }
 
-function MSnake() {
-    return (
-        <div className="Snake">
-            <Head/>
+class MSnake extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (
+            <div className="Snake">
+                <Head/>
 
-            <main>
-                <Chat/>
-                <Game/>
-            </main>
-        </div>
-    );
+                <main>
+                    <Chat/>
+                    <Game/>
+                </main>
+            </div>
+        );
+    }
 }
 
 window.addEventListener("keydown", function (e) {
@@ -294,7 +300,8 @@ function connectWebSocketChangeDirection(succesFunction) {
     let ws = Stomp.over(socket);
 
     // no console logging
-    ws.debug = function (str) {};
+    ws.debug = function (str) {
+    };
     ws.connect({}, (frame) => {
 
         // get new Position of fodder

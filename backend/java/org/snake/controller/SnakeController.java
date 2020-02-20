@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -315,11 +316,30 @@ public class SnakeController {
             return;
         }
 
-        if(message.contains("lightOff")){
+
+        /*
+         if (message.contains("lightOff")) {
 
 
         }
 
+        /// DeathCode
+
+        import com.google.cloud.translate.Translate;
+        import com.google.cloud.translate.TranslateOptions;
+        import com.google.cloud.translate.Detection;
+        import com.google.cloud.translate.Translate.TranslateOption;
+        import com.google.cloud.translate.Translation;
+        Translate translate = TranslateOptions.getDefaultInstance().getService();
+        final String mysteriousText = "Hola Mundo";
+        Detection detection = translate.detect(mysteriousText);
+        String detectedLanguage = detection.getLanguage();
+        Translation translation = translate.translate(
+                mysteriousText,
+                TranslateOption.sourceLanguage(detectedLanguage),
+                TranslateOption.targetLanguage("en")
+        );
+*/
 
         // send the message to all clients
         webSocket.convertAndSend("/snake/chat",
