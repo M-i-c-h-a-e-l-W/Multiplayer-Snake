@@ -16,14 +16,6 @@ If you have any questions please contact me.
 - [x] player choose their name and colour
 - [ ] on a server / playing via internet 
 
-<br/> ignore this: <br/>
-**Possible TODO´s :** <br/>
-- Snake Bild als Überschrift
-- Kollision optimieren (Feld Array)
-- Session mit Anmeldefunktion und login
-- parallelität beim Spielstand beachten mutex
-
-
 **Sources** <br/>
 Snake Icon: <br/>
 http://www.iconarchive.com/show/noto-emoji-animals-nature-icons-by-google/22285-snake-icon.html <br/>
