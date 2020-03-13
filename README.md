@@ -1,4 +1,4 @@
-# Website-Multiplayer-Snake
+# Multiplayer-Snake
 
 Hey, <br/>
 this is my Mulitplayer-Snake game.
