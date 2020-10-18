@@ -82,6 +82,7 @@ class MSnake extends React.Component {
     constructor(props) {
         super(props);
     }
+
     render() {
         return (
             <div className="Snake">

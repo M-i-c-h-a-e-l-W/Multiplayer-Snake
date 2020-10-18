@@ -157,7 +157,11 @@ public class SnakeController {
             snake.setPlayedTime(50);
 
             // new body-blocks fodder caused
-            if (snake.getPosXHead() == snakeFodder.getPosX() && snake.getPosYHead() == snakeFodder.getPosY()) {
+            if (snake.getPosXHead() == snakeFodder.getPosX() && snake.getPosYHead() == snakeFodder.getPosY()
+                    || snake.getPosXHead() == snakeFodder.getPosX() + 1 && snake.getPosYHead() == snakeFodder.getPosY()
+                    || snake.getPosXHead() == snakeFodder.getPosX() && snake.getPosYHead() == snakeFodder.getPosY() + 1
+                    || snake.getPosXHead() == snakeFodder.getPosX() - 1 && snake.getPosYHead() == snakeFodder.getPosY()
+                    || snake.getPosXHead() == snakeFodder.getPosX() && snake.getPosYHead() == snakeFodder.getPosY() - 1) {
                 snake.setScore((int) (snake.getScore() * 1.25f) + 3);
                 snakeFodder.setNewPosition();
                 webSocket.convertAndSend("/snake/fodderOfSnake", snakeFodder);
@@ -200,21 +204,26 @@ public class SnakeController {
                 continue;
             }
 
-            if (snakeModels.get(i).getDirection().get(0).equals("u")) {
-                snakeModels.get(i).addPosY(sizeOfBox);
-                snakeModels.get(i).addPosX(0);
+            switch (snakeModels.get(i).getDirection().get(0)) {
+                case "u":
+                    snakeModels.get(i).addPosY(sizeOfBox);
+                    snakeModels.get(i).addPosX(0);
 
-            } else if (snakeModels.get(i).getDirection().get(0).equals("o")) {
-                snakeModels.get(i).addPosY(-sizeOfBox);
-                snakeModels.get(i).addPosX(0);
+                    break;
+                case "o":
+                    snakeModels.get(i).addPosY(-sizeOfBox);
+                    snakeModels.get(i).addPosX(0);
 
-            } else if (snakeModels.get(i).getDirection().get(0).equals("l")) {
-                snakeModels.get(i).addPosX(-sizeOfBox);
-                snakeModels.get(i).addPosY(0);
+                    break;
+                case "l":
+                    snakeModels.get(i).addPosX(-sizeOfBox);
+                    snakeModels.get(i).addPosY(0);
 
-            } else if (snakeModels.get(i).getDirection().get(0).equals("r")) {
-                snakeModels.get(i).addPosX(sizeOfBox);
-                snakeModels.get(i).addPosY(0);
+                    break;
+                case "r":
+                    snakeModels.get(i).addPosX(sizeOfBox);
+                    snakeModels.get(i).addPosY(0);
+                    break;
             }
 
             // remove old direction order
@@ -315,7 +324,6 @@ public class SnakeController {
             snakeModels.get(playerNr).setScore(snakeModels.get(playerNr).getScore() + Integer.parseInt(getScore[1]));
             return;
         }
-
 
         /*
          if (message.contains("lightOff")) {
