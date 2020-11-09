@@ -34,10 +34,10 @@ public class SnakeModel {
         posY.add(y / 10);
 
         if (color != null && !color.equals("notSet")) {
-            // player chose a colour
+            // player chose a color
             playerColor = color;
         } else {
-            // setting a random colour
+            // setting a random color
             Random obj = new Random();
             int rand_num = obj.nextInt(0xffffff + 1);
             playerColor = String.format("#%06x", rand_num);

@@ -8,6 +8,8 @@ body * {
 
 main {
     display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 1.5vmin;
 }
 
@@ -77,6 +79,7 @@ table, th, td {
     margin-right: 20px;
     border: 5px solid black;
     max-height: 95vh;
+    height: 100vh;
     overflow-y: auto;
     width: 20vw;
 }
@@ -91,7 +94,42 @@ table, th, td {
     width: 100%;
 }
 
-.footer{
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     text-align: right;
 }
 
+#control-button {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+
+    background: transparent !important;
+    color: transparent !important;
+}
+
+.controlB {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    height: 33vh;
+}
+
+.overwrite > div {
+    width: 49% !important;
+}
+
+.centeredB {
+    width: 45% !important;
+}
+
+.controlB > div {
+    border: 1px solid #ffffff;
+    height: 33vh;
+    width: 100%!important;
+}

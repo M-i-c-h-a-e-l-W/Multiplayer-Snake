@@ -108,7 +108,7 @@ window.onload = function () {
     field = new Array(6600);
 
     while (check === '' || check == null) {
-        check = prompt('Please set your name, and do not forget your colour ( "Name#HexCode" ) ', '');
+        check = prompt('Please set your name, and do not forget your color ( "Name#HexCode" ) ', '');
     }
     check = check.replace("#", "xHashTagx");
 

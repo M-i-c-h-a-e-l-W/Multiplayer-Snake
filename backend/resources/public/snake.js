@@ -1,7 +1,7 @@
 // 192.168.0.x87 +:8080/snake.html
 var canvas, ctx, playerNr = -1, maxPlayer = 0;
 var fodderX = 100, fodderY = 100;
-var pause = false, check; // oldDirection = "r";
+var pause = false, check, oldDirection = "r";
 let ip = "localhost", ipSecure = "", protocol = "";
 let field;
 let table = "";
@@ -9,16 +9,22 @@ let table = "";
 
 // load site and give own name
 window.onload = function () {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        console.log("None display")
+    } else {
+        document.getElementById("control-button").style.display = "none";
+    }
+
     field = new Array(6600);
 
     while (check === '' || check == null) {
-        check = prompt('Please set your name, and do not forget your colour ( "Name#HexCode" ) ', '');
+        check = prompt('Please set your name, and do not forget your color ( "Name#HexCode" ) ', '');
     }
     check = check.replace("#", "xHashTagx");
 
     ip = window.location.origin;
-    console.log("IP: "+ ip);
-   /// ip = "http://10.62.2.194:8080";
+    console.log("IP: " + ip);
+    /// ip = "http://10.62.2.194:8080";
     protocol = window.location.protocol;
     if (protocol === "https:") {
         ipSecure = "s";
@@ -44,9 +50,9 @@ window.onbeforeunload = function () {
     }));
 };
 
-window.addEventListener("keydown", function(e) {
+window.addEventListener("keydown", function (e) {
     // space and arrow keys
-    if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+    if ([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
         e.preventDefault();
     }
 }, false);
@@ -186,25 +192,7 @@ function getPosition() {
 
         console.log("Eingabe: " + changeD);
 
-        if (changeD === "pause" || sendKeyCode && changeD !== "Error") {
-            // oldDirection = changeD;  && changeD !== oldDirection
-            changeD += ";" + playerNr.toString();
-            //changeD = changeD.toString();
-            fetch(ip + "/api/snake/changeDirection?changeD=" + changeD, {
-                method: 'POST',
-                headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
-            }).then(function (ev) {
-                if (ev.status !== 200) {
-                    console.log("Errorcode: " + ev.status);
-                    console.log("ChangeD ist gleich: " + changeD);
-                }
-
-            }).catch((function (error) {
-                console.log("Error: ", error);
-            }));
-
-            changeD = "Error";
-        }
+        positionSender(changeD, sendKeyCode);
     };
 }
 
@@ -394,3 +382,51 @@ function newMessage() {
     }));
 }
 
+function showChat() {
+    document.getElementById("chat").hidden = !document.getElementById("chat").hidden;
+}
+
+// input "wasd" and arrow keys and send the input to the backend
+function getMobilePosition(position) {
+    //console.log("Eingabe: " + position + "\nSplited" + position.split(";"));
+    /*
+    let array = "";
+    if (position.split(";").length !== 1) {
+        array = position.split(";");
+        if (array[0] === oldDirection) {
+            positionSender(array[0], true);
+            positionSender(array[1], true);
+        } else if (array[1] === oldDirection) {
+            positionSender(array[1], true);
+            positionSender(array[0], true);
+        }
+    } else {
+        positionSender(position, true);
+    }
+     */
+
+    positionSender(position, true);
+}
+
+function positionSender(newDirection, sendCode) {
+    if (newDirection === "pause" || sendCode && newDirection !== "Error") {
+        // oldDirection = changeD;  && changeD !== oldDirection
+        newDirection += ";" + playerNr.toString();
+        //changeD = changeD.toString();
+        fetch(ip + "/api/snake/changeDirection?changeD=" + newDirection, {
+            method: 'POST',
+            headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+        }).then(function (ev) {
+            if (ev.status === 200) {
+                oldDirection = newDirection;
+            } else {
+                console.log("Errorcode: " + ev.status);
+                console.log("ChangeD ist gleich: " + newDirection);
+            }
+        }).catch((function (error) {
+            console.log("Error: ", error);
+        }));
+
+        newDirection = "Error";
+    }
+}

@@ -8,8 +8,30 @@
 </head>
 
 <body>
+<div id="control-button">
+  <div class="controlB">
+    <div class="centeredB" onClick=getMobilePosition("o")>
+      o
+    </div>
+  </div>
+
+  <div class="controlB overwrite">
+    <div onClick=getMobilePosition("l")>
+      l
+    </div>
+    <div onClick=getMobilePosition("r")>
+      r
+    </div>
+  </div>
+
+  <div class="controlB">
+    <div class="centeredB" onClick=getMobilePosition("u")>
+      u
+    </div>
+  </div>
+</div>
 <main>
-  <div class="chat">
+  <div id="chat" class="chat" hidden="true">
     <h2>
       <div class="chatHeader">
         Chat bzw. Console:
@@ -43,11 +65,13 @@
     <br/>
 
     <div class="footer">
-      Highscore:
-      <span id="highScore"> ERROR nothing Avaible</span> <br>
+      <button onclick=showChat()>Show Chat</button>
+      <div>
+        Highscore:
+        <span id="highScore"> ERROR nothing Avaible</span> <br>
 
-      <a href="index.html"> Kommentarseite</a>
-      <br/>
+        <a href="index.html"> Kommentarseite</a>
+      </div>
     </div>
   </div>
 </main>
