@@ -5,6 +5,12 @@ Its possible to play a normal Snake Game with Websockets in your lokal network w
 If you want to  start the program on your computer you have to add the package in IntelliJ or an other IDEA and start the project with Spring Boot (the path of the main class is "org.snake.MainApplication").
 If you have any questions please contact me.
 
+**How to run it:**<br/>
+- run a the ./startDocker.sh Script or: "docker run --name simple-postgresql -e POSTGRES_PASSWORD=test -e POSTGRES_USER=test -e POSTGRES_DB=test -p 127.0.0.1:5433:5432 -d postgres"
+- go in the backend folder and run "mvn clean install"
+- then "mvn spring-boot:run"
+- now you can play it using your ip adress + http://xxx.xxx.xxx.xxx:8080/snake.html
+
 
 **Aim:**<br/>
 - [x] playing a snake which can eat fodder
