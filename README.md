@@ -6,7 +6,7 @@ If you want to  start the program on your computer you have to add the package i
 If you have any questions please contact me.
 
 **How to run it:**<br/>
-- run a the ./startDocker.sh Script or: "docker run --name simple-postgresql -e POSTGRES_PASSWORD=test -e POSTGRES_USER=test -e POSTGRES_DB=test -p 127.0.0.1:5433:5432 -d postgres"
+- run the "./startDocker.sh" Script or: "docker run --name simple-postgresql -e POSTGRES_PASSWORD=test -e POSTGRES_USER=test -e POSTGRES_DB=test -p 127.0.0.1:5433:5432 -d postgres"
 - go in the backend folder and run "mvn clean install"
 - then "mvn spring-boot:run"
 - now you can play it using your ip adress + http://xxx.xxx.xxx.xxx:8080/snake.html
@@ -18,7 +18,7 @@ If you have any questions please contact me.
 - [x] it should be possible to comment the site and communicate with a chatbox 
 - [x] player choose their name and color
 - [ ] adding login
-- [ ] player can play against each other on a server
+- [ ] player can play against each other on a public server
 
 **Sources** <br/>
 Snake Icon: <br/>
