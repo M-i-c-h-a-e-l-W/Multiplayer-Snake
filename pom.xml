@@ -16,6 +16,7 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<start-class>backend/java/org/snake/MainApplication.java</start-class>
 	</properties>
 
 	<dependencies>
