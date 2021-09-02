@@ -312,8 +312,14 @@ public class SnakeController {
     // receive messages of clients and catch orders
     @PostMapping("/chat")
     public void chatController(@RequestParam int playerNr, @RequestParam String message) {
+
+        if (message.toLowerCase().equals("/toggle pause")) {
+            snakeFodder.togglePause();
+            return;
+        }
+
         // reset all variables
-        if (message.equals("/restart Game")) {
+        if (message.toLowerCase().equals("/restart game")) {
             resetFunction();
             return;
         }
